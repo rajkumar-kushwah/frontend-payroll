@@ -1,18 +1,16 @@
-  // client/utils/api.js
-  import axios from 'axios';
+// client/utils/api.js
+import axios from 'axios';
 
-  console.log(" VITE API URL:", import.meta.env.VITE_API_URL);
+const api = axios.create({
+  baseURL: import.meta.env.VITE_API_URL || '/api',// Adjust if your server runs elsewhere
+     headers: { "Content-Type": "application/json" },
+});
 
-  const api = axios.create({
-    baseURL:"https://vercle-backend-payroll.vercel.app/api", // Adjust if your server runs elsewhere
-      headers: { "Content-Type": "application/json" },
-  });
+//(Optional) Agar toen stor karna hai:
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token");
+  if(token) config.headers.Authorization = `Bearer ${token}`;
+  return config;
+})
 
-  //(Optional) Agar toen stor karna hai:
-  api.interceptors.request.use((config) => {
-    const token = localStorage.getItem("token");
-    if(token) config.headers.Authorization = `Bearer ${token}`;
-    return config;
-  })
-
-  export default api;
+export default api;
