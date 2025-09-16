@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaUser, FaEnvelope, FaLock } from 'react-icons/fa';
-import payroll from '../images/payroll.png';
+import Payroll from '../images/Payroll.png';
 import api from "../utils/api";
 
 const Register = () => {
@@ -51,7 +51,7 @@ const Register = () => {
   </p>
   {/* Left Image */}
     <div className="hidden md:flex md:w-2/3 bg-green-50 items-center justify-center p-6">
-      <img src={payroll} alt="Payroll" className="max-h-96 object-contain" />
+      <img src={Payroll} alt="Payroll" className="max-h-96 object-contain" />
     </div>
 </div>
 

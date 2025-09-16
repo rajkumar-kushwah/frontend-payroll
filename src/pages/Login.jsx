@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaEnvelope, FaLock } from 'react-icons/fa';
-import payroll from '../images/payroll.png';
+import Payroll from '../images/Payroll.png';
 import api from "../utils/api";
 import { useUser } from "../context/UserContext";
 
@@ -44,7 +44,7 @@ const { setUser } = useUser();
         {/* Left Side - Image + Text */}
         <div className="hidden md:flex md:w-1/2 bg-green-50 items-center justify-center flex-col p-6 text-center">
           <img
-            src={payroll}
+            src={Payroll}
             alt="Payroll"
             className="max-h-80 object-contain mb-6"
           />
