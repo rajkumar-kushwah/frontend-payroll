@@ -34,7 +34,7 @@ const { setUser } = useUser();
     }
   } catch (err) {
     console.error(err);
-    alert("Something went wrong");
+    alert("Account not registered yet!");
   }
 };
  return (
