@@ -72,41 +72,38 @@ export default function Header({ toggle }) {
 
   const msgCount = Object.keys(unreadMessages).length;
   const notifCount = Object.keys(unreadNotifications).length;
-
+// bg-blue-600 text-white w-full px-4 py-3 flex items-center justify-between shadow fixed top-0 left-0 z-50
   return (
-    <header className="bg-blue-600 text-white px-4 py-3 flex items-center justify-between shadow">
+    <header className="bg-blue-600 text-white px-4 py-3 flex items-center justify-between shadow ">
       {/* Left Side */}
-      <div className="flex items-center gap-2 sm:gap-6">
+      <div className="flex items-center gap-2 sm:gap-4">
         <button onClick={toggle} className="text-2xl">☰</button>
         <div className="flex items-center gap-2 w-40 sm:w-60 md:w-96 bg-white rounded-lg py-1 px-2 text-black">
-          <input type="text" placeholder="Search..." className="flex-1 px-2 py-1  " />
+          <input type="text" placeholder="Search..." className="flex-1 px-2 py-1" />
         </div>
-        <button className="bg-green-600 px-3 py-1 rounded-lg ">Search</button>
+        <button className="bg-green-600 px-3 py-1 rounded-lg">Search</button>
       </div>
 
       {/* Right Side */}
-      <div className="flex items-center gap-4 relative ml-3">
+      <div className="flex items-center gap-4 relative">
         {/* Messages */}
         <div className="relative" ref={msgRef}>
           <button
-            onClick={() =>
-              setDropdown((prev) => (prev === "messages" ? null : "messages"))
-            }
-            className="relative flex items-center gap-1"
-          >
-            {/* Icon + Arrow ek line me */}
-            <i className="fa fa-envelope text-xl"></i>
-            <i className="fa fa-caret-down"></i>
+  onClick={() =>
+    setDropdown((prev) => (prev === "messages" ? null : "messages"))
+  }
+  className="relative flex items-center gap-1 ml-1"
+>
+  <i className="fa fa-envelope text-xl"></i>
+  <i className="fa fa-caret-down text-sm text-gray-400"></i>
 
-            {/* Notification Badge */}
-            {msgCount > 0 && (
-              <span className="absolute -top-1 -right-2 bg-red-600 text-xs px-1 rounded-full">
-                {msgCount}
-              </span>
-            )}
-          </button>
+  {msgCount > 0 && (
+    <span className="absolute -top-1 -right-2 bg-red-600 text-xs px-1 rounded-full">
+      {msgCount}
+    </span>
+  )}
+</button>
 
-          {/* Dropdown Menu */}
           {dropdown === "messages" && (
             <ul className="absolute right-0 mt-2 w-56 bg-white text-gray-700 rounded shadow-lg z-50">
               {messageOptions.map((opt) => (
@@ -129,7 +126,6 @@ export default function Header({ toggle }) {
           )}
         </div>
 
-
         {/* Notifications */}
         <div className="relative" ref={notifRef}>
           <button
@@ -140,19 +136,14 @@ export default function Header({ toggle }) {
             }
             className="relative flex items-center gap-1"
           >
-            {/* Bell + Arrow ek line me */}
             <i className="fa fa-bell text-xl"></i>
-            <i className="fa fa-caret-down"></i>
-
-            {/* Notification Badge */}
+            <i class="fa fa-caret-down text-sm text-gray-400" ></i>
             {notifCount > 0 && (
               <span className="absolute -top-1 -right-2 bg-red-600 text-xs px-1 rounded-full">
                 {notifCount}
               </span>
             )}
           </button>
-
-          {/* Dropdown Menu */}
           {dropdown === "notifications" && (
             <ul className="absolute right-0 mt-2 w-56 bg-white text-gray-700 rounded shadow-lg z-50">
               {notificationOptions.map((opt) => (
@@ -174,7 +165,6 @@ export default function Header({ toggle }) {
             </ul>
           )}
         </div>
-
 
         {/* User Dropdown */}
         <div className="relative" ref={userRef}>
