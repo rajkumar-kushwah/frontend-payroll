@@ -75,14 +75,14 @@ export default function Header({ toggle }) {
 {/* <header className="bg-blue-600 text-white w-full px-4 sm:px-4 md:px-6 py-3 flex items-center justify-between shadow box-border"> */}
 
   return (
-    <header className="bg-blue-600 text-white w-full px-4 py-3 flex items-center justify-between shadow box-border">
+    <header className="bg-blue-600 text-white w-full px-4 py-3 flex items-center justify-between shadow box-border ">
       {/* Left Side */}
-      <div className="flex items-center gap-2 sm:gap-4">
+      <div className="flex items-center gap-2 sm:gap-3">
         <button onClick={toggle} className="text-2xl">☰</button>
-        <div className="flex items-center gap-2 w-40 sm:w-60 md:w-96 bg-white rounded-lg py-1 px-2 text-black">
+        <div className="flex items-center gap-2 w-35 sm:w-60 md:w-96 bg-white rounded-lg py-1 px-2 text-black">
           <input type="text" placeholder="Search..." className="flex-1 px-2 py-1" />
         </div>
-        <button className="bg-green-600 px-3 py-1 rounded-lg">Search</button>
+        <button className="bg-green-600 px-2 py-1 rounded-lg">Search</button>
       </div>
 
       {/* Right Side */}
