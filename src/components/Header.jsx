@@ -75,7 +75,7 @@ export default function Header({ toggle }) {
 {/* <header className="bg-blue-600 text-white w-full px-4 sm:px-4 md:px-6 py-3 flex items-center justify-between shadow box-border"> */}
 
   return (
-    <header className="bg-blue-600 text-white sm:px-4 md:px-6  px-4 py-3 flex items-center justify-between shadow box-border">
+    <header className="bg-blue-600 text-white w-full px-4 py-3 flex items-center justify-between shadow box-border">
       {/* Left Side */}
       <div className="flex items-center gap-2 sm:gap-4">
         <button onClick={toggle} className="text-2xl">☰</button>
