@@ -81,12 +81,13 @@ export default function Header({ toggle }) {
         <button onClick={toggle} className="text-2xl">☰</button>
         <div className="flex items-center gap-2 w-35 sm:w-60 md:w-96 bg-white rounded-lg py-1 px-2 text-black">
           <input type="text" placeholder="Search..." className="flex-1 px-2 py-1" />
+          
         </div>
         <button className="bg-green-600 px-2 py-1 rounded-lg">Search</button>
       </div>
 
       {/* Right Side */}
-      <div className="flex items-center gap-4 relative">
+      <div className="flex items-center gap-2 ml-4 sm:gap-4 relative">
         {/* Messages */}
         <div className="relative" ref={msgRef}>
           <button
