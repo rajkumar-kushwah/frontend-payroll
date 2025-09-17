@@ -27,7 +27,7 @@ export default function Layout({ childern }) {
 
       {/* Main Content */}
       <div
-        className={`flex-1 flex flex-col transition-all duration-300 ${
+        className={`flex-1 flex flex-col transition-all duration-300 w-full overflow-x-hidden ${
           isOpen ? "md:ml-64" : "md:ml-0"
         }`}
       >
