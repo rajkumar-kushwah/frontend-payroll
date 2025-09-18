@@ -72,18 +72,18 @@ export default function Header({ toggle }) {
 
   const msgCount = Object.keys(unreadMessages).length;
   const notifCount = Object.keys(unreadNotifications).length;
-{/* <header className="bg-blue-600 text-white w-full px-4 sm:px-4 md:px-6 py-3 flex items-center justify-between shadow box-border"> */}
+
 
   return (
-    <header className="bg-blue-600 text-white w-full px-4 py-3 flex items-center justify-between shadow box-border ">
+    <header className="bg-blue-600 text-white w-full px-4 py-3  flex items-center justify-between shadow box-border ">
       {/* Left Side */}
       <div className="flex items-center gap-2 sm:gap-3">
-        <button onClick={toggle} className="text-2xl">☰</button>
-        <div className="flex items-center gap-2 w-35 sm:w-60 md:w-96 bg-white rounded-lg py-1 px-2 text-black">
-          <input type="text" placeholder="Search..." className="flex-1 px-2 py-1" />
+        <button onClick={toggle} className="text-2xl cursor-pointer ">☰</button>
+        <div className="flex items-center gap-2 w-35 sm:w-60 md:w-80 bg-white rounded-xl py-1 px-2 text-black">
+          <input type="text" placeholder="Search..." className="w-full px-2 py-1 outline-none" />
           
         </div>
-        <button className="bg-green-600 px-2 py-1 rounded-lg">Search</button>
+        <button className="bg-green-600 px-2 py-1  rounded-xl cursor-pointer">Search</button>
       </div>
 
       {/* Right Side */}
@@ -94,7 +94,7 @@ export default function Header({ toggle }) {
   onClick={() =>
     setDropdown((prev) => (prev === "messages" ? null : "messages"))
   }
-  className="relative flex items-center gap-1 ml-1"
+  className="relative flex items-center gap-1 ml-1 cursor-pointer"
 >
   <i className="fa fa-envelope text-xl"></i>
   <i className="fa fa-caret-down text-sm text-gray-400"></i>
@@ -129,17 +129,17 @@ export default function Header({ toggle }) {
         </div>
 
         {/* Notifications */}
-        <div className="relative" ref={notifRef}>
+        <div className="relative " ref={notifRef}>
           <button
             onClick={() =>
               setDropdown((prev) =>
                 prev === "notifications" ? null : "notifications"
               )
             }
-            className="relative flex items-center gap-1"
+            className="relative flex items-center gap-1 cursor-pointer"
           >
             <i className="fa fa-bell text-xl"></i>
-            <i class="fa fa-caret-down text-sm text-gray-400" ></i>
+            <i className="fa fa-caret-down text-sm text-gray-400" ></i>
             {notifCount > 0 && (
               <span className="absolute -top-1 -right-2 bg-red-600 text-xs px-1 rounded-full">
                 {notifCount}
