@@ -113,6 +113,7 @@ export default function Dashboard() {
       <table className="min-w-full text-sm text-left">
         <thead className="bg-gray-100 border-b">
           <tr>
+            <th className="px-4 py-2">#</th>
             <th className="px-4 py-2">Name</th>
             <th className="px-4 py-2">Email</th>
             <th className="px-4 py-2">Job Role</th>
@@ -125,8 +126,9 @@ export default function Dashboard() {
         </thead>
         <tbody>
           {employees.length > 0 ? (
-            employees.map((emp) => (
+            employees.map((emp,index) => (
               <tr key={emp._id} className="border-b hover:bg-gray-50">
+                <td className="p-2 border">{index + 1}</td> {/* This is your 1,2,3 */}
                 <td className="px-4 py-2 font-bold">{emp.name}</td>
                 <td className="px-4 py-2">{emp.email}</td>
                 <td className="px-4 py-2">{emp.jobRole}</td>
