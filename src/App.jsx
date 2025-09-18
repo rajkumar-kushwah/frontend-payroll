@@ -17,6 +17,8 @@ import Candidates from "./pages/Candidates";
 // import Leaves from "./pages/Leaves";
 // import Payrolls from "./pages/Payrolls";
 // import Settings from "./pages/Settings";
+import EmployeeDetail from "./pages/EmployeeDetail";
+import AddEmployee from "./pages/AddEmployee";
 
 function App() {
   return (
@@ -31,11 +33,13 @@ function App() {
 
 
         {/*  Protected Route */}
-         {/* Protected */}
-        <Route path="/dashboard" element={<ProtectedRoute><Dashboard/></ProtectedRoute>} />
+        {/* Protected */}
+        <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
         {/* <Route path="/profile" element={<ProtectedRoute><Profile/></ProtectedRoute>} /> */}
-        <Route path="/employees" element={<ProtectedRoute><Employees/></ProtectedRoute>} />
-        <Route path="/candidates" element={<ProtectedRoute><Candidates/></ProtectedRoute>} />
+        <Route path="/employees" element={<ProtectedRoute><Employees /></ProtectedRoute>} />
+        <Route path="/employee/add" element={<ProtectedRoute> <AddEmployee /></ProtectedRoute>} />
+        <Route path="/employee/:id" element={<ProtectedRoute><EmployeeDetail /></ProtectedRoute>} />
+        <Route path="/candidates" element={<ProtectedRoute><Candidates /></ProtectedRoute>} />
         {/* <Route path="/messages" element={<ProtectedRoute><Messages/></ProtectedRoute>} /> */}
         {/* <Route path="/jobs" element={<ProtectedRoute><Jobs/></ProtectedRoute>} /> */}
         {/* <Route path="/resumes" element={<ProtectedRoute><Resumes/></ProtectedRoute>} /> */}

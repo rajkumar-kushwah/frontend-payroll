@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import Header from "../components/Header";
 import Sidebar from "./Sidebar";
 
-export default function Layout({ childern }) {
+export default function Layout({ children }) {
   const [isOpen, setIsOpen] = useState(true);
 
   // Mobile view ke liye by default close
@@ -32,7 +32,7 @@ export default function Layout({ childern }) {
         }`}
       >
         <Header toggle={() => setIsOpen((v) => !v)} />
-        <main className="p-4 md:p-6 overflow-y-auto">{childern}</main>
+        <main className="p-4 md:p-6 overflow-y-auto">{children}</main>
       </div>
     </div>
   );
