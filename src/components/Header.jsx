@@ -80,10 +80,10 @@ export default function Header({ toggle }) {
       <div className="flex items-center gap-2 sm:gap-3">
         <button onClick={toggle} className="text-2xl cursor-pointer ">☰</button>
         <div className="flex items-center gap-2 w-35 sm:w-60 md:w-80 bg-white rounded-xl py-1 px-2 text-black">
+          <i className="fa fa-search text-gray-500 px-2 sm:text-blue-500 " aria-hidden="true"></i>
           <input type="text" placeholder="Search..." className="w-full px-2 py-1 outline-none" />
-          
+                  {/* <button className="bg-green-600 px-2 py-1.5  rounded-xl cursor-pointer">Search</button> */}
         </div>
-        <button className="bg-green-600 px-2 py-1  rounded-xl cursor-pointer">Search</button>
       </div>
 
       {/* Right Side */}
