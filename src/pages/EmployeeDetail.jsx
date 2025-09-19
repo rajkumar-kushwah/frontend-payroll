@@ -38,7 +38,7 @@ export default function EmployeeDetail() {
   return (
     <Layout>
       <h2 className="text-2xl font-bold mb-4">{employee.name}</h2>
-      <div className="bg-white p-6 rounded shadow space-y-2">
+      <div className="bg-white p-5 rounded shadow space-y-2">
         <p><strong>Email:</strong> {employee.email}</p>
         <p><strong>Job Role:</strong> {employee.jobrole}</p>
         <p><strong>Department:</strong> {employee.department}</p>
