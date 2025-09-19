@@ -45,6 +45,7 @@ export default function EmployeeAdd() {
 
       <div className="bg-white rounded shadow p-6 max-w-xl mx-auto space-y-4">
         {/* Name */}
+        <label htmlFor="name">Name</label>
         <input
           type="text"
           name="name"
@@ -55,6 +56,7 @@ export default function EmployeeAdd() {
         />
 
         {/* Email */}
+        <label htmlFor="email">Email</label>
         <input
           type="email"
           name="email"
@@ -65,6 +67,7 @@ export default function EmployeeAdd() {
         />
 
         {/* Job Role Dropdown */}
+        <label htmlFor="jobrole">Job Role</label>
         <select
           name="jobrole"
           value={form.jobrole}
@@ -77,6 +80,7 @@ export default function EmployeeAdd() {
         </select>
 
         {/* Department */}
+        <label htmlFor="department">Department</label>
         <input
           type="text"
           name="department"
@@ -87,6 +91,7 @@ export default function EmployeeAdd() {
         />
 
         {/* Join Date */}
+        <label htmlFor="joinDate">Join Date</label>
         <input
           type="date"
           name="joinDate"
@@ -96,6 +101,7 @@ export default function EmployeeAdd() {
         />
 
         {/* Salary */}
+        <label htmlFor="salary">Salary</label>
         <input
           type="number"
           name="salary"
@@ -106,6 +112,7 @@ export default function EmployeeAdd() {
         />
 
         {/* Status Dropdown */}
+        <label htmlFor="status">Status</label>
         <select
           name="status"
           value={form.status}
@@ -118,6 +125,7 @@ export default function EmployeeAdd() {
         </select>
 
         {/* Notes */}
+        <label htmlFor="notes">Notes</label>
         <textarea
           name="notes"
           placeholder="Notes"

@@ -12,6 +12,8 @@ export const updateEmployee = (id, data) => api.put(`/employees/${id}`, data);
 export const deleteEmployee = (id) => api.delete(`/employees/${id}`);
 
 
+
+
 //(Optional) Agar toen stor karna hai:
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");

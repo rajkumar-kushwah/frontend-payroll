@@ -7,7 +7,7 @@ import ForgotPassword from './pages/ForgotPassword';
 import VerifyOtp from './pages/VerifyOtp';
 import ResetPassword from './pages/ResetPassword';
 import Dashboard from './pages/Dashboard';
-import ProtectedRoute from './components/ProtectedRoute';
+import ProtectedRoute from './routes/ProtectedRoute';
 // import Profile from "./pages/Profile";
 import Employees from "./pages/Employees";
 import Candidates from "./pages/Candidates";
@@ -19,18 +19,19 @@ import Candidates from "./pages/Candidates";
 // import Settings from "./pages/Settings";
 import EmployeeDetail from "./pages/EmployeeDetail";
 import AddEmployee from "./pages/AddEmployee";
+import PublicRoute from "./routes/PublicRoute";
+
 
 function App() {
   return (
     <Router >
       <Routes>
-        <Route path="/" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/verify-otp" element={<VerifyOtp />} />
-        <Route path="/reset-password" element={<ResetPassword />} />
-
+        <Route path="/" element={<PublicRoute><Login /></PublicRoute>} />
+        <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
+        <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
+        <Route path="/forgot-password" element={<PublicRoute><ForgotPassword /></PublicRoute>} />
+        <Route path="/verify-otp" element={<PublicRoute><VerifyOtp /></PublicRoute>} />
+        <Route path="/reset-password" element={<PublicRoute><ResetPassword /></PublicRoute>} />
 
         {/*  Protected Route */}
         {/* Protected */}

@@ -16,6 +16,8 @@ const updateUser = (data) => {
 const logout = () => {
   setUser(null);
   localStorage.removeItem("user");
+   localStorage.removeItem("token");      // JWT token remove
+  window.location.href = "/login";       // redirect to login page
 };
 
 
