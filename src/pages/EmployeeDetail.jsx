@@ -2,8 +2,6 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Layout from "../components/Layout";
-import { useHighlight } from "../context/HighlightContext"; // import highlight context
-
 import {
   getEmployeeById,
   getSalariesByEmployee,
@@ -87,14 +85,9 @@ export default function EmployeeDetailPage() {
         await addSalary(payload);
         alert("Salary added successfully");
          //  Add this line to save the employee id for highlighting
-      // localStorage.setItem("highlightEmployeeId", id);
-//  Highlight employee after salary add
-      setHighlightEmployeeId(id);
-      setTimeout(() => setHighlightEmployeeId(null), 5 * 60 * 1000);
+      localStorage.setItem("highlightEmployeeId", id);
       }
-      const salariesRes = await getSalariesByEmployee(id);
-    setSalaries(salariesRes.data);
-
+        setHighlightSalaryId(res.data._id);
       // Reset form
       setNewSalary({ month: "", baseSalary: "", bonus: 0, deductions: 0, leaves: 0 });
       fetchSalaries();
