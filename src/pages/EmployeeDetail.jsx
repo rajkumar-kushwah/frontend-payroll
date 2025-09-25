@@ -27,7 +27,7 @@ export default function EmployeeDetailPage() {
   });
   const [editSalaryId, setEditSalaryId] = useState(null);
   const [loading, setLoading] = useState(true);
-  
+  const [highlightSalaryId, setHighlightSalaryId] = useState(null);
 
   // Fetch Employee
   const fetchEmployee = async () => {
@@ -82,12 +82,17 @@ export default function EmployeeDetailPage() {
         alert("Salary updated successfully");
         setEditSalaryId(null);
       } else {
-        await addSalary(payload);
+       res = await addSalary(payload); // Save the response
         alert("Salary added successfully");
-         //  Add this line to save the employee id for highlighting
-      localStorage.setItem("highlightEmployeeId", id);
       }
-        setHighlightSalaryId(res.data._id);
+       // Highlight the newly added salary
+      if (res?.data?._id) {
+    setHighlightEmployeeId(res.data._id);
+    setTimeout(() => setHighlightEmployeeId(null), 5*60*1000);
+      }
+
+      
+
       // Reset form
       setNewSalary({ month: "", baseSalary: "", bonus: 0, deductions: 0, leaves: 0 });
       fetchSalaries();
@@ -148,10 +153,14 @@ useEffect(()=> {
   };
 
   // Filter salaries by searchText
-  const filteredSalaries = salaries.filter((sal) =>{
-    const monthStr = new Date(sal.month).toLocaleDateString("default", {month: " long", year: "numeric"})
-    return monthStr.toLowerCase().includes(searchText.toLowerCase())
+const filteredSalaries = (salaries || []).filter((sal) => {
+  if (!sal?.month) return false;
+  const date = new Date(sal.month);
+  if (isNaN(date.getTime())) return false; // skip invalid dates
+  const monthStr = date.toLocaleDateString("default", { month: "long", year: "numeric" });
+  return monthStr.toLowerCase().includes(searchText.toLowerCase());
 });
+
 
   if (loading) return <Layout><div className="p-6">Loading...</div></Layout>;
   if (!employee) return <Layout><div className="p-6">Employee not found.</div></Layout>;
