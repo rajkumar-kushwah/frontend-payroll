@@ -95,6 +95,17 @@ export default function EmployeeDetailPage() {
     }
   };
 
+// remove highlight from salary 
+useEffect(()=> {
+  const timer = setTimeout(()=>{
+    setHighlightSalaryId(null);
+  }, 10000);
+  return () => {
+    clearTimeout(timer);
+  }
+  }
+, [highlightSalaryId])
+
   // Edit Salary
   const handleEditSalary = (sal) => {
     setEditSalaryId(sal._id);
@@ -176,8 +187,8 @@ export default function EmployeeDetailPage() {
           <div>
             <label className="block mb-1 font-medium">Month</label>
             <input
-              type="month"
-              value={newSalary.month}
+              type="date"
+              value={newSalary.month ? newSalary.month.slice(0, 7) : ""}
               onChange={(e) => setNewSalary({ ...newSalary, month: e.target.value })}
               className="border p-2 rounded w-full"
             />
