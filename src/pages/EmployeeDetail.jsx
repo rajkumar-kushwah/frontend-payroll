@@ -1,7 +1,8 @@
-// client/pages/EmployeeDetail.jsx
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Layout from "../components/Layout";
+import { useHighlight } from "../context/HighlightContext";
+
 import {
   getEmployeeById,
   getSalariesByEmployee,
@@ -15,6 +16,7 @@ export default function EmployeeDetailPage() {
   const { id } = useParams();
   const navigate = useNavigate();
 
+  const { setHighlightEmployeeId } = useHighlight(); // highlight employee
   const [employee, setEmployee] = useState(null);
   const [salaries, setSalaries] = useState([]);
   const [searchText, setSearchText] = useState("");
@@ -27,9 +29,8 @@ export default function EmployeeDetailPage() {
   });
   const [editSalaryId, setEditSalaryId] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [highlightSalaryId, setHighlightSalaryId] = useState(null);
+  const [highlightSalaryId, setHighlightSalaryId] = useState(null); // ✅ salary highlight
 
-  // Fetch Employee
   const fetchEmployee = async () => {
     try {
       const res = await getEmployeeById(id);
@@ -41,7 +42,6 @@ export default function EmployeeDetailPage() {
     }
   };
 
-  // Fetch Salaries
   const fetchSalaries = async () => {
     try {
       const res = await getSalariesByEmployee(id);
@@ -58,7 +58,6 @@ export default function EmployeeDetailPage() {
     fetchSalaries();
   }, [id]);
 
-  // Add / Update Salary
   const handleSaveSalary = async () => {
     if (!newSalary.month || !newSalary.baseSalary) {
       return alert("Month and Base Salary are required");
@@ -73,46 +72,30 @@ export default function EmployeeDetailPage() {
         Number(newSalary.deductions || 0),
     };
 
-    console.log("Salary Payload:", payload); // Debug
-
     try {
-      let res;
       if (editSalaryId) {
         await updateSalary(editSalaryId, payload);
         alert("Salary updated successfully");
         setEditSalaryId(null);
       } else {
-        await addSalary(payload);
+        const res = await addSalary(payload);
         alert("Salary added successfully");
-      }
-      // Fetch salaries and highlight the last added salary
-    const salariesRes = await getSalariesByEmployee(id);
-    setSalaries(salariesRes.data);
+        setHighlightEmployeeId(id); // highlight employee
+        setTimeout(() => setHighlightEmployeeId(null), 5 * 60 * 1000);
 
-    if (salariesRes.data.length > 0) {
-      const lastSalary = salariesRes.data[salariesRes.data.length - 1];
-      setHighlightSalaryId(lastSalary._id);
-    }
-      // Reset form
+        setHighlightSalaryId(res.data._id); // highlight salary row
+        setTimeout(() => setHighlightSalaryId(null), 10000);
+      }
+
+      const salariesRes = await getSalariesByEmployee(id);
+      setSalaries(salariesRes.data);
       setNewSalary({ month: "", baseSalary: "", bonus: 0, deductions: 0, leaves: 0 });
-      fetchSalaries();
     } catch (err) {
       console.error(err);
       alert(err.response?.data?.message || "Salary save failed");
     }
   };
 
-// remove highlight from salary 
-useEffect(() => {
-  if (!highlightSalaryId) return; // sirf jab highlight set ho
-  const timer = setTimeout(() => {
-    setHighlightSalaryId(null);
-  }, 5 * 60 * 1000); // 5 minutes
-  return () => clearTimeout(timer);
-}, [highlightSalaryId]);
-
-
-  // Edit Salary
   const handleEditSalary = (sal) => {
     setEditSalaryId(sal._id);
     setNewSalary({
@@ -125,7 +108,6 @@ useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
-  // Delete Salary
   const handleDeleteSalary = async (salaryId) => {
     if (!window.confirm("Are you sure to delete this salary?")) return;
     try {
@@ -138,7 +120,6 @@ useEffect(() => {
     }
   };
 
-  // Delete Employee
   const handleDeleteEmployee = async () => {
     if (!window.confirm("Are you sure to delete this employee?")) return;
     try {
@@ -151,14 +132,13 @@ useEffect(() => {
     }
   };
 
-  // Filter salaries by searchText
- const filteredSalaries = salaries.filter((sal) => {
-  if (!sal.month) return false;
-  const date = new Date(sal.month);
-  const monthStr = date.toLocaleDateString("default", { month: "long", year: "numeric" });
-  return monthStr.toLowerCase().includes(searchText.toLowerCase());
-});
-
+  const filteredSalaries = salaries.filter((sal) => {
+    const monthStr = new Date(sal.month).toLocaleDateString("default", {
+      month: "long",
+      year: "numeric",
+    });
+    return monthStr.toLowerCase().includes(searchText.toLowerCase());
+  });
 
   if (loading) return <Layout><div className="p-6">Loading...</div></Layout>;
   if (!employee) return <Layout><div className="p-6">Employee not found.</div></Layout>;
@@ -176,78 +156,34 @@ useEffect(() => {
         <p><strong>Status:</strong> {employee.status}</p>
         <p><strong>Join Date:</strong> {employee.joinDate ? new Date(employee.joinDate).toLocaleDateString() : "-"}</p>
         <p><strong>Notes:</strong> {employee.notes || "-"}</p>
-        <p><strong>Total Salaries:</strong>{salaries.length}</p>
-        <p><strong>Last salary added: </strong>{salaries.length ? salaries[salaries.length -1 ].month : "-"} </p>
+        <p><strong>Total Salaries:</strong> {salaries.length}</p>
+        <p><strong>Last salary added:</strong> {salaries.length ? salaries[salaries.length -1].month : "-"}</p>
       </div>
 
       {/* Action Buttons */}
       <div className="flex gap-2 mb-6">
-        <button onClick={handleDeleteEmployee} className="bg-red-500 text-white px-4 py-2 rounded">
-          Delete Employee
-        </button>
-        <button onClick={() => navigate("/employees")} className="bg-gray-500 text-white px-4 py-2 rounded">
-          Back
-        </button>
+        <button onClick={handleDeleteEmployee} className="bg-red-500 text-white px-4 py-2 rounded">Delete Employee</button>
+        <button onClick={() => navigate("/employees")} className="bg-gray-500 text-white px-4 py-2 rounded">Back</button>
       </div>
 
       {/* Add / Edit Salary Form */}
       <div className="bg-white p-4 rounded shadow mb-6">
         <h3 className="font-bold mb-2">{editSalaryId ? "Edit Salary" : "Add Salary"}</h3>
         <div className="grid grid-cols-1 md:grid-cols-5 gap-3 mb-4">
-          <div>
-            <label className="block mb-1 font-medium">Date</label>
-            <input
-              type="date"
-              value={newSalary.month || ""}
-              onChange={(e) => setNewSalary({ ...newSalary, month: e.target.value })}
-              className="border p-2 rounded w-full"
-            />
-          </div>
-          <div>
-            <label className="block mb-1 font-medium">Base Salary</label>
-            <input
-              type="number"
-              placeholder="Base Salary"
-              value={newSalary.baseSalary}
-              onChange={(e) => setNewSalary({ ...newSalary, baseSalary: e.target.value })}
-              className="border p-2 rounded w-full"
-            />
-          </div>
-          <div>
-            <label className="block mb-1 font-medium">Bonus</label>
-            <input
-              type="number"
-              placeholder="Bonus"
-              value={newSalary.bonus}
-              onChange={(e) => setNewSalary({ ...newSalary, bonus: e.target.value })}
-              className="border p-2 rounded w-full"
-            />
-          </div>
-          <div>
-            <label className="block mb-1 font-medium">Deductions</label>
-            <input
-              type="number"
-              placeholder="Deductions"
-              value={newSalary.deductions}
-              onChange={(e) => setNewSalary({ ...newSalary, deductions: e.target.value })}
-              className="border p-2 rounded w-full"
-            />
-          </div>
-          <div>
-            <label className="block mb-1 font-medium">Leaves</label>
-            <input
-              type="number"
-              placeholder="Leaves"
-              value={newSalary.leaves}
-              onChange={(e) => setNewSalary({ ...newSalary, leaves: e.target.value })}
-              className="border p-2 rounded w-full"
-            />
-          </div>
+          {["month","baseSalary","bonus","deductions","leaves"].map((field) => (
+            <div key={field}>
+              <label className="block mb-1 font-medium">{field === "month" ? "Date" : field.charAt(0).toUpperCase()+field.slice(1)}</label>
+              <input
+                type={field === "month" ? "date" : "number"}
+                placeholder={field}
+                value={newSalary[field]}
+                onChange={(e) => setNewSalary({...newSalary, [field]: e.target.value})}
+                className="border p-2 rounded w-full"
+              />
+            </div>
+          ))}
         </div>
-        <button
-          onClick={handleSaveSalary}
-          className="bg-green-600 text-white px-4 py-2 rounded"
-        >
+        <button onClick={handleSaveSalary} className="bg-green-600 text-white px-4 py-2 rounded">
           {editSalaryId ? "Update Salary" : "Add Salary"}
         </button>
       </div>
@@ -279,36 +215,22 @@ useEffect(() => {
             </tr>
           </thead>
           <tbody>
-            {filteredSalaries.length ? (
-              filteredSalaries.map((sal) => (
-                <tr key={sal._id} className={`hover:bg-gray-50 ${sal._id === highlightSalaryId ? "bg-green-100" : ""}`}>
-                  <td className="p-2 border">{sal.month ? new Date(sal.month).toDateString() : "-"}</td>
-                  <td className="p-2 border">₹{sal.baseSalary}</td>
-                  <td className="p-2 border">₹{sal.bonus}</td>
-                  <td className="p-2 border">₹{sal.deductions}</td>
-                  <td className="p-2 border">{sal.leaves}</td>
-                  <td className="p-2 border font-bold">₹{sal.netPay}</td>
-                  <td className="p-2 border flex gap-1">
-                    <button
-                      onClick={() => handleEditSalary(sal)}
-                      className="bg-blue-500 text-white px-2 py-1 rounded"
-                    >
-                      Edit
-                    </button>
-                    <button
-                      onClick={() => handleDeleteSalary(sal._id)}
-                      className="bg-red-500 text-white px-2 py-1 rounded"
-                    >
-                      Delete
-                    </button>
-                  </td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="7" className="text-center py-4 text-gray-500 italic">
-                  No salary records found.
+            {filteredSalaries.length ? filteredSalaries.map((sal) => (
+              <tr key={sal._id} className={`hover:bg-gray-50 ${sal._id === highlightSalaryId ? "bg-green-100" : ""}`}>
+                <td className="p-2 border">{sal.month ? new Date(sal.month).toDateString() : "-"}</td>
+                <td className="p-2 border">₹{sal.baseSalary}</td>
+                <td className="p-2 border">₹{sal.bonus}</td>
+                <td className="p-2 border">₹{sal.deductions}</td>
+                <td className="p-2 border">{sal.leaves}</td>
+                <td className="p-2 border font-bold">₹{sal.netPay}</td>
+                <td className="p-2 border flex gap-1">
+                  <button onClick={() => handleEditSalary(sal)} className="bg-blue-500 text-white px-2 py-1 rounded">Edit</button>
+                  <button onClick={() => handleDeleteSalary(sal._id)} className="bg-red-500 text-white px-2 py-1 rounded">Delete</button>
                 </td>
+              </tr>
+            )) : (
+              <tr>
+                <td colSpan="7" className="text-center py-4 text-gray-500 italic">No salary records found.</td>
               </tr>
             )}
           </tbody>

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Layout from "../components/Layout";
 import { getEmployees, addEmployee, deleteEmployee } from "../utils/api";
+import { useHighlight } from "../context/HighlightContext"; // import highlight context
 
 export default function Employees() {
   const [employees, setEmployees] = useState([]);
@@ -10,7 +11,7 @@ export default function Employees() {
   });
   const [search, setSearch] = useState("");
   const navigate = useNavigate();
-  const [highlightEmployeeId, setHighlightEmployeeId] = useState(null);
+  const { highlightEmployeeId, setHighlightEmployeeId } = useHighlight(); // use context
 
   const fetchEmployees = async () => {
     try {
@@ -25,23 +26,34 @@ export default function Employees() {
 
   const handleAdd = async () => {
     if (!newEmp.name || !newEmp.email || !newEmp.department) return alert("Fill required fields");
-    // Convert joinDate to ISO string
-    const payload = {
-    ...newEmp,
-    salary: Number(newEmp.salary) || 0,
-    joinDate: newEmp.joinDate ? new Date(newEmp.joinDate).toISOString() : undefined
-  };
-
     try {
-      const res = await addEmployee(newEmp);
+       const payload = {
+        ...newEmp,
+        salary: Number(newEmp.salary) || 0,
+        joinDate: newEmp.joinDate ? new Date(newEmp.joinDate).toISOString() : undefined
+      };
+
+      // await addEmployee(newEmp);
+      const res = await addEmployee(payload); // get added employee id
       setNewEmp({ name: "", email: "", jobrole: "employee", department: "", joinDate: "", salary: "", status: "active", notes: "" });
-      fetchEmployees();
-       // highlight new employee for 5 minutes
-    setHighlightEmployeeId(res.data._id);
-    setTimeout(() => setHighlightEmployeeId(null), 5*60*1000);
+      fetchEmployees();// refresh table
+
+      setHighlightEmployeeId(res.data._id); // highlight new employee
+      setTimeout(() => setHighlightEmployeeId(null), 5 * 60 * 1000); // remove highlight after 5 mins
+     
       alert("Employee added successfully!");
     } catch (err) { console.error(err); }
   };
+
+  useEffect(() => {
+  const highlightId = localStorage.getItem("highlightEmployeeId");
+  if (highlightId) {
+    setHighlightEmployeeId(highlightId);
+    localStorage.removeItem("highlightEmployeeId");
+    setTimeout(() => setHighlightEmployeeId(null), 5 * 60 * 1000);
+  }
+}, []);
+
 
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure?")) return;
