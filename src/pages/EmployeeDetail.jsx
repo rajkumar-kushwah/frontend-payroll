@@ -37,7 +37,8 @@ export default function EmployeeDetailPage() {
     } catch (err) {
       console.error(err);
       alert(err.response?.data?.message || "Employee not found");
-      navigate("/employees");
+      await addSalary(payload);
+      navigate("/employees", { state: { refresh: true } });
     }
   };
 
@@ -86,12 +87,10 @@ export default function EmployeeDetailPage() {
         alert("Salary added successfully");
       }
        // Highlight the newly added salary
-      if (res?.data?._id) {
-    setHighlightEmployeeId(res.data._id);
-    setTimeout(() => setHighlightEmployeeId(null), 5*60*1000);
-      }
-
-      
+     if (res?.data?._id) {
+  setHighlightSalaryId(res.data._id);
+  setTimeout(() => setHighlightSalaryId(null), 5*60*1000); // highlight for 5 min
+}
 
       // Reset form
       setNewSalary({ month: "", baseSalary: "", bonus: 0, deductions: 0, leaves: 0 });
@@ -106,7 +105,7 @@ export default function EmployeeDetailPage() {
 useEffect(()=> {
   const timer = setTimeout(()=>{
     setHighlightSalaryId(null);
-  }, 10000);
+  }, 5*60*1000);
   return () => {
     clearTimeout(timer);
   }

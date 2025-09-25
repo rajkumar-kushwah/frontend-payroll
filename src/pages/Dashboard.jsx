@@ -4,7 +4,7 @@ import api from "../utils/api";
 import { useNavigate } from "react-router-dom";
 
 export default function Dashboard() {
-    const [openDropdown, setOpenDropdown] = useState(null);
+  const [openDropdown, setOpenDropdown] = useState(null);
   const [stats, setStats] = useState({
     employees: 0,
     totalSalary: 0,
@@ -12,10 +12,9 @@ export default function Dashboard() {
     reports: 0,
   });
 
-    const toggleDropdown = (id) => {
+  const toggleDropdown = (id) => {
     setOpenDropdown(openDropdown === id ? null : id);
   };
-
 
   const [employees, setEmployees] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -32,6 +31,7 @@ export default function Dashboard() {
         const employeeData = eRes.status === "fulfilled" ? eRes.value.data : [];
         const payrolls = pRes.status === "fulfilled" ? pRes.value.data.length : 0;
 
+        // ✅ Salary ka calculation (latest salaries se)
         const totalSalary = employeeData.reduce(
           (acc, emp) => acc + (emp.salary || 0),
           0
@@ -59,6 +59,11 @@ export default function Dashboard() {
         <div className="p-6">Loading dashboard...</div>
       </Layout>
     );
+
+  // ✅ Sirf last 4 employees (recent added)
+  const recentEmployees = [...employees]
+    .sort((a, b) => new Date(b.joinDate) - new Date(a.joinDate)) // latest pehle
+    .slice(0, 4);
 
   return (
     <Layout>
@@ -100,88 +105,86 @@ export default function Dashboard() {
         >
           + Add Employee
         </button>
-         <button
-            className="bg-gray-600 text-white px-4 py-2 rounded"
-            onClick={() => navigate("/employees")}
-          >
-            View All
-          </button>
+        <button
+          className="bg-gray-600 text-white px-4 py-2 rounded"
+          onClick={() => navigate("/employees")}
+        >
+          View All
+        </button>
       </div>
 
-      {/* Employee List (Full row style) */}
-       <div className="bg-white rounded shadow overflow-x-auto">
-      <table className="min-w-full text-sm text-left">
-        <thead className="bg-gray-100 border-b">
-          <tr>
-            <th className="px-4 py-2">#</th>
-            <th className="px-4 py-2">Name</th>
-            <th className="px-4 py-2">Email</th>
-            <th className="px-4 py-2">Job Role</th>
-            <th className="px-4 py-2">Department</th>
-            <th className="px-4 py-2">Salary</th>
-            <th className="px-4 py-2">Status</th>
-            <th className="px-4 py-2">Join Date</th>
-            <th className="px-4 py-2 text-right">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {employees.length > 0 ? (
-            employees.map((emp,index) => (
-              <tr key={emp._id} className="border-b hover:bg-gray-50">
-                <td className="p-2 border">{index + 1}</td> {/* This is your 1,2,3 */}
-                <td className="px-4 py-2 font-bold">{emp.name}</td>
-                <td className="px-4 py-2">{emp.email}</td>
-                <td className="px-4 py-2">{emp.jobRole}</td>
-                <td className="px-4 py-2">{emp.department}</td>
-                <td className="px-4 py-2">₹{emp.salary}</td>
-                <td className="px-4 py-2">{emp.status}</td>
-                <td className="px-4 py-2">
-                  {new Date(emp.joinDate).toLocaleDateString()}
-                </td>
-                <td className="px-4 py-2 text-right relative">
-                  {/* Actions Dropdown Button */}
-                  <button
-                    className="bg-gray-200 px-2 py-1 rounded hover:bg-gray-300"
-                    onClick={() => toggleDropdown(emp._id)}
-                  >
-                    ⋮
-                  </button>
+      {/* Recent Employees List */}
+      <div className="bg-white rounded shadow overflow-x-auto">
+        <table className="min-w-full text-sm text-left">
+          <thead className="bg-gray-100 border-b">
+            <tr>
+              <th className="px-4 py-2">#</th>
+              <th className="px-4 py-2">Name</th>
+              <th className="px-4 py-2">Email</th>
+              <th className="px-4 py-2">Job Role</th>
+              <th className="px-4 py-2">Department</th>
+              <th className="px-4 py-2">Salary</th>
+              <th className="px-4 py-2">Status</th>
+              <th className="px-4 py-2">Join Date</th>
+              <th className="px-4 py-2 text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {recentEmployees.length > 0 ? (
+              recentEmployees.map((emp, index) => (
+                <tr key={emp._id} className="border-b hover:bg-gray-50">
+                  <td className="p-2 border">{index + 1}</td>
+                  <td className="px-4 py-2 font-bold">{emp.name}</td>
+                  <td className="px-4 py-2">{emp.email}</td>
+                  <td className="px-4 py-2">{emp.jobRole}</td>
+                  <td className="px-4 py-2">{emp.department}</td>
+                  <td className="px-4 py-2">₹{emp.salary}</td>
+                  <td className="px-4 py-2">{emp.status}</td>
+                  <td className="px-4 py-2">
+                    {new Date(emp.joinDate).toLocaleDateString()}
+                  </td>
+                  <td className="px-4 py-2 text-right relative">
+                    {/* Actions Dropdown Button */}
+                    <button
+                      className="bg-gray-200 px-2 py-1 rounded hover:bg-gray-300"
+                      onClick={() => toggleDropdown(emp._id)}
+                    >
+                      ⋮
+                    </button>
 
-                  {/* Dropdown Menu */}
-                  {openDropdown === emp._id && (
-                    <div className="absolute right-0 mt-2 w-32 bg-white border rounded shadow z-10">
-                      <button
-                        onClick={() => navigate(`/employee/${emp._id}`)}
-                        className="block w-full text-left px-4 py-2 hover:bg-gray-100"
-                      >
-                        View
-                      </button>
-                      <button className="block w-full text-left px-4 py-2 hover:bg-gray-100">
-                        Update
-                      </button>
-                      <button className="block w-full text-left px-4 py-2 text-red-600 hover:bg-gray-100">
-                        Delete
-                      </button>
-                    </div>
-                  )}
+                    {/* Dropdown Menu */}
+                    {openDropdown === emp._id && (
+                      <div className="absolute right-0 mt-2 w-32 bg-white border rounded shadow z-10">
+                        <button
+                          onClick={() => navigate(`/employee/${emp._id}`)}
+                          className="block w-full text-left px-4 py-2 hover:bg-gray-100"
+                        >
+                          View
+                        </button>
+                        <button className="block w-full text-left px-4 py-2 hover:bg-gray-100">
+                          Update
+                        </button>
+                        <button className="block w-full text-left px-4 py-2 text-red-600 hover:bg-gray-100">
+                          Delete
+                        </button>
+                      </div>
+                    )}
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td
+                  colSpan="8"
+                  className="text-center py-4 text-gray-500 italic"
+                >
+                  No employees found. Add your first employee.
                 </td>
               </tr>
-            ))
-          ) : (
-            <tr>
-              <td
-                colSpan="8"
-                className="text-center py-4 text-gray-500 italic"
-              >
-                No employees found. Add your first employee.
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
-    </div>
-  
-
+            )}
+          </tbody>
+        </table>
+      </div>
     </Layout>
   );
 }

@@ -7,10 +7,10 @@ export default function EmployeeAdd() {
   const [form, setForm] = useState({
     name: "",
     email: "",
-    jobrole: "employee",
+    jobrole: "employee", // backend field name
     department: "",
     joinDate: "",
-    salary: "0",
+    salary: 0,
     status: "active",
     notes: "",
   });
@@ -20,7 +20,10 @@ export default function EmployeeAdd() {
   // Handle input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setForm({ ...form, [name]: name === "salary" ? Number(value) : value });
+    setForm({
+      ...form,
+      [name]: name === "salary" ? Number(value) : value,
+    });
   };
 
   // Handle form submit
@@ -30,12 +33,18 @@ export default function EmployeeAdd() {
     }
 
     try {
-      await api.post("/employees", form);
-      alert("Employee added successfully!");
-      navigate("/dashboard");
+      const res = await api.post("/employees", form);
+      
+      if (res?.data) {
+        alert("Employee added successfully!");
+        // Navigate to dashboard & trigger refresh
+        navigate("/dashboard", { state: { refresh: true } });
+      } else {
+        alert("Failed to add employee");
+      }
     } catch (err) {
       console.error(err);
-      alert("Error adding employee");
+      alert(err.response?.data?.message || "Error adding employee");
     }
   };
 
@@ -44,30 +53,25 @@ export default function EmployeeAdd() {
       <h2 className="text-2xl font-bold mb-6">Add New Employee</h2>
 
       <div className="bg-white rounded shadow p-6 max-w-xl mx-auto space-y-4">
-        {/* Name */}
-        <label htmlFor="name">Name</label>
+        <label>Name</label>
         <input
           type="text"
           name="name"
-          placeholder="Full Name"
           value={form.name}
           onChange={handleChange}
           className="border p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
         />
 
-        {/* Email */}
-        <label htmlFor="email">Email</label>
+        <label>Email</label>
         <input
           type="email"
           name="email"
-          placeholder="Email"
           value={form.email}
           onChange={handleChange}
           className="border p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
         />
 
-        {/* Job Role Dropdown */}
-        <label htmlFor="jobrole">Job Role</label>
+        <label>Job Role</label>
         <select
           name="jobrole"
           value={form.jobrole}
@@ -79,19 +83,16 @@ export default function EmployeeAdd() {
           <option value="admin">Admin</option>
         </select>
 
-        {/* Department */}
-        <label htmlFor="department">Department</label>
+        <label>Department</label>
         <input
           type="text"
           name="department"
-          placeholder="Department"
           value={form.department}
           onChange={handleChange}
           className="border p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
         />
 
-        {/* Join Date */}
-        <label htmlFor="joinDate">Join Date</label>
+        <label>Join Date</label>
         <input
           type="date"
           name="joinDate"
@@ -100,19 +101,16 @@ export default function EmployeeAdd() {
           className="border p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
         />
 
-        {/* Salary */}
-        <label htmlFor="salary">Salary</label>
+        <label>Salary</label>
         <input
           type="number"
           name="salary"
-          placeholder="Salary"
           value={form.salary}
           onChange={handleChange}
           className="border p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
         />
 
-        {/* Status Dropdown */}
-        <label htmlFor="status">Status</label>
+        <label>Status</label>
         <select
           name="status"
           value={form.status}
@@ -124,18 +122,15 @@ export default function EmployeeAdd() {
           <option value="terminated">Terminated</option>
         </select>
 
-        {/* Notes */}
-        <label htmlFor="notes">Notes</label>
+        <label>Notes</label>
         <textarea
           name="notes"
-          placeholder="Notes"
           value={form.notes}
           onChange={handleChange}
           className="border p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
           rows="3"
         />
 
-        {/* Buttons */}
         <div className="flex justify-end gap-2">
           <button
             onClick={handleSubmit}
