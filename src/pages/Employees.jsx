@@ -10,7 +10,6 @@ export default function Employees() {
   });
   const [search, setSearch] = useState("");
   const navigate = useNavigate();
-  const [highlightEmployeeId, setHighlightEmployeeId] = useState(null);
 
   const fetchEmployees = async () => {
     try {
@@ -29,8 +28,6 @@ export default function Employees() {
       await addEmployee(newEmp);
       setNewEmp({ name: "", email: "", jobrole: "employee", department: "", joinDate: "", salary: "", status: "active", notes: "" });
       fetchEmployees();
-       setHighlightEmployeeId(res.data._id); // highlight new employee
-    setTimeout(() => setHighlightEmployeeId(null), 10000); // remove highlight after 10s
       alert("Employee added successfully!");
     } catch (err) { console.error(err); }
   };

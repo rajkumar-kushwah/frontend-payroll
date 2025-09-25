@@ -38,7 +38,7 @@ export default function EmployeeDetailPage() {
       console.error(err);
       alert(err.response?.data?.message || "Employee not found");
       await addSalary(payload);
-      navigate("/employees", { state: { refresh: true } });
+      navigate("/employees");
     }
   };
 
