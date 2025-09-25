@@ -25,6 +25,13 @@ export default function Employees() {
 
   const handleAdd = async () => {
     if (!newEmp.name || !newEmp.email || !newEmp.department) return alert("Fill required fields");
+    // Convert joinDate to ISO string
+    const payload = {
+    ...newEmp,
+    salary: Number(newEmp.salary) || 0,
+    joinDate: newEmp.joinDate ? new Date(newEmp.joinDate).toISOString() : undefined
+  };
+
     try {
       const res = await addEmployee(newEmp);
       setNewEmp({ name: "", email: "", jobrole: "employee", department: "", joinDate: "", salary: "", status: "active", notes: "" });
