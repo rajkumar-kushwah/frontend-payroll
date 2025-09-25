@@ -185,10 +185,10 @@ useEffect(()=> {
         <h3 className="font-bold mb-2">{editSalaryId ? "Edit Salary" : "Add Salary"}</h3>
         <div className="grid grid-cols-1 md:grid-cols-5 gap-3 mb-4">
           <div>
-            <label className="block mb-1 font-medium">Month</label>
+            <label className="block mb-1 font-medium">Date</label>
             <input
               type="date"
-              value={newSalary.month ? newSalary.month.slice(0, 7) : ""}
+              value={newSalary.month || ""}
               onChange={(e) => setNewSalary({ ...newSalary, month: e.target.value })}
               className="border p-2 rounded w-full"
             />
