@@ -146,10 +146,13 @@ useEffect(()=> {
   };
 
   // Filter salaries by searchText
-  const filteredSalaries = salaries.filter((sal) =>{
-    const monthStr = new Date(sal.month).toLocaleDateString("default", {month: " long", year: "numeric"});
-    return monthStr.toLowerCase().includes(searchText.toLowerCase())
+ const filteredSalaries = salaries.filter((sal) => {
+  if (!sal.month) return false;
+  const date = new Date(sal.month);
+  const monthStr = date.toLocaleDateString("default", { month: "long", year: "numeric" });
+  return monthStr.toLowerCase().includes(searchText.toLowerCase());
 });
+
 
   if (loading) return <Layout><div className="p-6">Loading...</div></Layout>;
   if (!employee) return <Layout><div className="p-6">Employee not found.</div></Layout>;
