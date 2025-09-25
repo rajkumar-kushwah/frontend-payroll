@@ -85,7 +85,16 @@ export default function EmployeeDetailPage() {
         await addSalary(payload);
         alert("Salary added successfully");
       }
-        setHighlightSalaryId(res.data._id);
+        // Fetch salaries again
+       const salariesRes = await getSalariesByEmployee(id);
+  setSalaries(salariesRes.data);
+  
+ // Highlight the last added salary
+  if (salariesRes.data.length > 0) {
+    const lastSalary = salariesRes.data[salariesRes.data.length - 1];
+    setHighlightSalaryId(lastSalary._id);
+  }
+
       // Reset form
       setNewSalary({ month: "", baseSalary: "", bonus: 0, deductions: 0, leaves: 0 });
       fetchSalaries();

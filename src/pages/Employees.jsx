@@ -10,6 +10,7 @@ export default function Employees() {
   });
   const [search, setSearch] = useState("");
   const navigate = useNavigate();
+  const [highlightEmployeeId, setHighlightEmployeeId] = useState(null);
 
   const fetchEmployees = async () => {
     try {
@@ -28,6 +29,8 @@ export default function Employees() {
       await addEmployee(newEmp);
       setNewEmp({ name: "", email: "", jobrole: "employee", department: "", joinDate: "", salary: "", status: "active", notes: "" });
       fetchEmployees();
+       setHighlightEmployeeId(res.data._id); // highlight new employee
+    setTimeout(() => setHighlightEmployeeId(null), 10000); // remove highlight after 10s
       alert("Employee added successfully!");
     } catch (err) { console.error(err); }
   };
@@ -82,7 +85,7 @@ export default function Employees() {
           </thead>
           <tbody>
             {filteredEmployees.length ? filteredEmployees.map((emp,index)=> (
-              <tr key={emp._id} className="hover:bg-gray-50">
+              <tr key={emp._id} className={`hover:bg-gray-50 ${emp._id === highlightEmployeeId ? "bg-green-100" : ""}`}>
                 <td className="p-2 border">{index + 1}</td> {/* This is your 1,2,3 */}
                 <td className="p-2 border">{emp.name}</td>
                 <td className="p-2 border">{emp.email}</td>
