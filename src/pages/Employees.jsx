@@ -27,27 +27,26 @@ const handleAdd = async () => {
     return alert("Fill required fields");
 
   try {
-    // Convert salary to number
-    const payload = { ...newEmp, salary: Number(newEmp.salary) };
+    const payload = {
+      ...newEmp,
+      salary: Number(newEmp.salary),
+      joinDate: newEmp.joinDate ? new Date(newEmp.joinDate) : undefined
+    };
 
-    // Add employee and wait for response
     const res = await addEmployee(payload);
 
-    // Reset form
+    setEmployees(prev => [res.data, ...prev]); // add to table immediately
     setNewEmp({
       name: "", email: "", jobrole: "employee", department: "", joinDate: "", salary: "", status: "active", notes: ""
     });
 
-    // Update employees state immediately with the new employee
-    setEmployees(prev => [res.data, ...prev]);
-
-    // Success alert
     alert("Employee added successfully!");
   } catch (err) {
     console.error(err);
     alert(err.response?.data?.message || "Error adding employee");
   }
 };
+
 
 
   const handleDelete = async (id) => {
