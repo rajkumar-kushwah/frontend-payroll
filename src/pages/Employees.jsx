@@ -30,7 +30,7 @@ export default function Employees() {
       setNewEmp({ name: "", email: "", jobrole: "employee", department: "", joinDate: "", salary: "", status: "active", notes: "" });
       fetchEmployees();
        setHighlightEmployeeId(res.data._id); // highlight new employee
-    setTimeout(() => setHighlightEmployeeId(null), 10000); // remove highlight after 10s
+    setTimeout(() => setHighlightEmployeeId(null), 5*60*1000); // remove highlight after 10s
       alert("Employee added successfully!");
     } catch (err) { console.error(err); }
   };
