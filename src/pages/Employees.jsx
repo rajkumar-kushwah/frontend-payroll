@@ -5,6 +5,7 @@ import { getEmployees, addEmployee, deleteEmployee } from "../utils/api";
 
 export default function Employees() {
   const [employees, setEmployees] = useState([]);
+  const [showForm, setShowForm] = useState(false); // toggle state
   const [newEmp, setNewEmp] = useState({
     name: "", email: "", jobrole: "employee", department: "", joinDate: "", salary: "", status: "active", notes: ""
   });
@@ -25,9 +26,15 @@ export default function Employees() {
   const handleAdd = async () => {
     if (!newEmp.name || !newEmp.email || !newEmp.department) return alert("Fill required fields");
     try {
-      await addEmployee(newEmp);
+      const payload = {
+        ...newEmp,
+        salary: Number(newEmp.salary),
+        joinDate: newEmp.joinDate ? new Date(newEmp.joinDate) : undefined
+      };
+      await addEmployee(payload);
       setNewEmp({ name: "", email: "", jobrole: "employee", department: "", joinDate: "", salary: "", status: "active", notes: "" });
       fetchEmployees();
+      setShowForm(false); // form close after add
       alert("Employee added successfully!");
     } catch (err) { console.error(err); }
   };
@@ -54,21 +61,30 @@ export default function Employees() {
       <h2 className="text-2xl font-bold mb-4">Employees</h2>
       <input type="text" placeholder="Search..." value={search} onChange={e => setSearch(e.target.value)} className="border p-2 rounded mb-4 w-1/3"/>
       
-      {/* Add Form */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 bg-white p-4 rounded shadow">
-        {["name","email","jobrole","department","salary","status","notes"].map(f => (
-          <input key={f} type="text" placeholder={f} value={newEmp[f]} onChange={e => setNewEmp({...newEmp,[f]: e.target.value})} className="border p-2 rounded"/>
-        ))}
-        <input type="date" value={newEmp.joinDate} onChange={e=>setNewEmp({...newEmp,joinDate:e.target.value})} className="border p-2 rounded"/>
-        <button onClick={handleAdd} className="bg-green-600 text-white px-4 py-2 rounded md:col-span-2">Add Employee</button>
-      </div>
+      {/* Toggle Add Employee Form */}
+      <button 
+        onClick={() => setShowForm(prev => !prev)} 
+        className="bg-green-600 text-white px-4 py-2 flex  ml-auto rounded mb-4"
+      >
+        {showForm ? "Close Add Employee Form" : "+Add Employee"}
+      </button>
+
+      {showForm && (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 bg-white p-4 rounded shadow">
+          {["name","email","jobrole","department","salary","status","notes"].map(f => (
+            <input key={f} type="text" placeholder={f} value={newEmp[f]} onChange={e => setNewEmp({...newEmp,[f]: e.target.value})} className="border p-2 rounded"/>
+          ))}
+          <input type="date" value={newEmp.joinDate} onChange={e=>setNewEmp({...newEmp,joinDate:e.target.value})} className="border p-2 rounded"/>
+          <button onClick={handleAdd} className="bg-green-700 text-white px-4 py-2 rounded md:col-span-2">Submit</button>
+        </div>
+      )}
 
       {/* Employees Table */}
       <div className="overflow-x-auto bg-white rounded shadow">
         <table className="w-full text-sm">
           <thead>
             <tr className="bg-gray-100">
-              <th className="p-2 border">#</th> {/* Serial Number */}
+              <th className="p-2 border">#</th>
               <th className="p-2 border">Name</th>
               <th className="p-2 border">Email</th>
               <th className="p-2 border">Job Role</th>
@@ -83,7 +99,7 @@ export default function Employees() {
           <tbody>
             {filteredEmployees.length ? filteredEmployees.map((emp,index)=> (
               <tr key={emp._id} className="hover:bg-gray-50">
-                <td className="p-2 border">{index + 1}</td> {/* This is your 1,2,3 */}
+                <td className="p-2 border">{index + 1}</td>
                 <td className="p-2 border">{emp.name}</td>
                 <td className="p-2 border">{emp.email}</td>
                 <td className="p-2 border">{emp.jobrole}</td>
