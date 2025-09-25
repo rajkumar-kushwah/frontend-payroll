@@ -22,32 +22,15 @@ export default function Employees() {
 
   useEffect(() => { fetchEmployees(); }, []);
 
-const handleAdd = async () => {
-  if (!newEmp.name || !newEmp.email || !newEmp.department) 
-    return alert("Fill required fields");
-
-  try {
-    const payload = {
-      ...newEmp,
-      salary: Number(newEmp.salary),
-      joinDate: newEmp.joinDate ? new Date(newEmp.joinDate) : undefined
-    };
-
-    const res = await addEmployee(payload);
-
-    setEmployees(prev => [res.data, ...prev]); // add to table immediately
-    setNewEmp({
-      name: "", email: "", jobrole: "employee", department: "", joinDate: "", salary: "", status: "active", notes: ""
-    });
-
-    alert("Employee added successfully!");
-  } catch (err) {
-    console.error(err);
-    alert(err.response?.data?.message || "Error adding employee");
-  }
-};
-
-
+  const handleAdd = async () => {
+    if (!newEmp.name || !newEmp.email || !newEmp.department) return alert("Fill required fields");
+    try {
+      await addEmployee(newEmp);
+      setNewEmp({ name: "", email: "", jobrole: "employee", department: "", joinDate: "", salary: "", status: "active", notes: "" });
+      fetchEmployees();
+      alert("Employee added successfully!");
+    } catch (err) { console.error(err); }
+  };
 
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure?")) return;
