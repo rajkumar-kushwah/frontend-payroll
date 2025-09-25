@@ -11,7 +11,11 @@ export const addEmployee = (data) => api.post("/employees", data);
 export const updateEmployee = (id, data) => api.put(`/employees/${id}`, data);
 export const deleteEmployee = (id) => api.delete(`/employees/${id}`);
 
-
+// Salary APIs
+export const addSalary = (data) => api.post("/salaries", data);
+export const getSalariesByEmployee = (employeeId) => api.get(`/salaries/employee/${employeeId}`);
+export const updateSalary = (id, data) => api.put(`/salaries/${id}`, data);
+export const deleteSalary = (id) => api.delete(`/salaries/${id}`);
 
 
 //(Optional) Agar toen stor karna hai:
