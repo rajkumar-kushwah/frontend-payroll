@@ -88,7 +88,7 @@ export default function EmployeeDetailPage() {
         // Fetch salaries again
        const salariesRes = await getSalariesByEmployee(id);
   setSalaries(salariesRes.data);
-  
+
  // Highlight the last added salary
   if (salariesRes.data.length > 0) {
     const lastSalary = salariesRes.data[salariesRes.data.length - 1];
@@ -108,7 +108,7 @@ export default function EmployeeDetailPage() {
 useEffect(()=> {
   const timer = setTimeout(()=>{
     setHighlightSalaryId(null);
-  }, 10000);
+  }, 5*60*1000);
   return () => {
     clearTimeout(timer);
   }
