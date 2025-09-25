@@ -27,6 +27,7 @@ export default function EmployeeDetailPage() {
   });
   const [editSalaryId, setEditSalaryId] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [highlightSalaryId, setHighlightSalaryId] = useState(null);
 
   // Fetch Employee
   const fetchEmployee = async () => {
@@ -75,6 +76,7 @@ export default function EmployeeDetailPage() {
     console.log("Salary Payload:", payload); // Debug
 
     try {
+      let res;
       if (editSalaryId) {
         await updateSalary(editSalaryId, payload);
         alert("Salary updated successfully");
@@ -83,7 +85,7 @@ export default function EmployeeDetailPage() {
         await addSalary(payload);
         alert("Salary added successfully");
       }
-
+        setHighlightSalaryId(res.data._id);
       // Reset form
       setNewSalary({ month: "", baseSalary: "", bonus: 0, deductions: 0, leaves: 0 });
       fetchSalaries();
@@ -153,6 +155,8 @@ export default function EmployeeDetailPage() {
         <p><strong>Status:</strong> {employee.status}</p>
         <p><strong>Join Date:</strong> {employee.joinDate ? new Date(employee.joinDate).toLocaleDateString() : "-"}</p>
         <p><strong>Notes:</strong> {employee.notes || "-"}</p>
+        <p><strong>Total Salaries:</strong>{salaries.length}</p>
+        <p><strong>Last salary added: </strong>{salaries.length ? salaries[salaries.length -1 ].month : "-"} </p>
       </div>
 
       {/* Action Buttons */}
@@ -256,8 +260,8 @@ export default function EmployeeDetailPage() {
           <tbody>
             {filteredSalaries.length ? (
               filteredSalaries.map((sal) => (
-                <tr key={sal._id} className="hover:bg-gray-50">
-                  <td className="p-2 border">{sal.month}</td>
+                <tr key={sal._id} className={`hover:bg-gray-50 ${sal._id === highlightSalaryId ? "bg-green-100" : ""}`}>
+                  <td className="p-2 border">{sal.month ? new Date(sal.month).toDateString() : "-"}</td>
                   <td className="p-2 border">₹{sal.baseSalary}</td>
                   <td className="p-2 border">₹{sal.bonus}</td>
                   <td className="p-2 border">₹{sal.deductions}</td>
