@@ -85,16 +85,14 @@ export default function EmployeeDetailPage() {
         await addSalary(payload);
         alert("Salary added successfully");
       }
-        // Fetch salaries again
-       const salariesRes = await getSalariesByEmployee(id);
-  setSalaries(salariesRes.data);
+      // Fetch salaries and highlight the last added salary
+    const salariesRes = await getSalariesByEmployee(id);
+    setSalaries(salariesRes.data);
 
- // Highlight the last added salary
-  if (salariesRes.data.length > 0) {
-    const lastSalary = salariesRes.data[salariesRes.data.length - 1];
-    setHighlightSalaryId(lastSalary._id);
-  }
-
+    if (salariesRes.data.length > 0) {
+      const lastSalary = salariesRes.data[salariesRes.data.length - 1];
+      setHighlightSalaryId(lastSalary._id);
+    }
       // Reset form
       setNewSalary({ month: "", baseSalary: "", bonus: 0, deductions: 0, leaves: 0 });
       fetchSalaries();
@@ -105,15 +103,14 @@ export default function EmployeeDetailPage() {
   };
 
 // remove highlight from salary 
-useEffect(()=> {
-  const timer = setTimeout(()=>{
+useEffect(() => {
+  if (!highlightSalaryId) return; // sirf jab highlight set ho
+  const timer = setTimeout(() => {
     setHighlightSalaryId(null);
-  }, 5*60*1000);
-  return () => {
-    clearTimeout(timer);
-  }
-  }
-, [highlightSalaryId])
+  }, 5 * 60 * 1000); // 5 minutes
+  return () => clearTimeout(timer);
+}, [highlightSalaryId]);
+
 
   // Edit Salary
   const handleEditSalary = (sal) => {
