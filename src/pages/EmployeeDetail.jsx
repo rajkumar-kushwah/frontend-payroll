@@ -5,8 +5,6 @@ import Layout from "../components/Layout";
 import {
   getEmployeeById,
   getSalariesByEmployee,
-  addSalary,
-  updateSalary,
   deleteSalary,
   deleteEmployee,
 } from "../utils/api";
@@ -18,14 +16,6 @@ export default function EmployeeDetailPage() {
   const [employee, setEmployee] = useState(null);
   const [salaries, setSalaries] = useState([]);
   const [searchText, setSearchText] = useState("");
-  const [newSalary, setNewSalary] = useState({
-    month: "",
-    baseSalary: "",
-    bonus: 0,
-    deductions: 0,
-    leaves: 0,
-  });
-  const [editSalaryId, setEditSalaryId] = useState(null);
   const [loading, setLoading] = useState(true);
   const [highlightSalaryId, setHighlightSalaryId] = useState(null);
 
@@ -37,7 +27,6 @@ export default function EmployeeDetailPage() {
     } catch (err) {
       console.error(err);
       alert(err.response?.data?.message || "Employee not found");
-      await addSalary(payload);
       navigate("/employees");
     }
   };
@@ -59,72 +48,6 @@ export default function EmployeeDetailPage() {
     fetchSalaries();
   }, [id]);
 
-  // Add / Update Salary
-  const handleSaveSalary = async () => {
-    if (!newSalary.month || !newSalary.baseSalary) {
-      return alert("Month and Base Salary are required");
-    }
-
-    const payload = {
-      ...newSalary,
-      EmployeeId: id,
-      netPay:
-        Number(newSalary.baseSalary) +
-        Number(newSalary.bonus || 0) -
-        Number(newSalary.deductions || 0),
-    };
-
-    console.log("Salary Payload:", payload); // Debug
-
-    try {
-      let res;
-      if (editSalaryId) {
-        await updateSalary(editSalaryId, payload);
-        alert("Salary updated successfully");
-        setEditSalaryId(null);
-      } else {
-       res = await addSalary(payload); // Save the response
-        alert("Salary added successfully");
-      }
-       // Highlight the newly added salary
-     if (res?.data?._id) {
-  setHighlightSalaryId(res.data._id);
-  setTimeout(() => setHighlightSalaryId(null), 5*60*1000); // highlight for 5 min
-}
-
-      // Reset form
-      setNewSalary({ month: "", baseSalary: "", bonus: 0, deductions: 0, leaves: 0 });
-      fetchSalaries();
-    } catch (err) {
-      console.error(err);
-      alert(err.response?.data?.message || "Salary save failed");
-    }
-  };
-
-// remove highlight from salary 
-useEffect(()=> {
-  const timer = setTimeout(()=>{
-    setHighlightSalaryId(null);
-  }, 5*60*1000);
-  return () => {
-    clearTimeout(timer);
-  }
-  }
-, [highlightSalaryId])
-
-  // Edit Salary
-  const handleEditSalary = (sal) => {
-    setEditSalaryId(sal._id);
-    setNewSalary({
-      month: sal.month,
-      baseSalary: sal.baseSalary,
-      bonus: sal.bonus,
-      deductions: sal.deductions,
-      leaves: sal.leaves,
-    });
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
-
   // Delete Salary
   const handleDeleteSalary = async (salaryId) => {
     if (!window.confirm("Are you sure to delete this salary?")) return;
@@ -137,6 +60,7 @@ useEffect(()=> {
       alert(err.response?.data?.message || "Delete failed");
     }
   };
+ 
 
   // Delete Employee
   const handleDeleteEmployee = async () => {
@@ -151,15 +75,11 @@ useEffect(()=> {
     }
   };
 
-  // Filter salaries by searchText
-const filteredSalaries = (salaries || []).filter((sal) => {
-  if (!sal?.month) return false;
-  const date = new Date(sal.month);
-  if (isNaN(date.getTime())) return false; // skip invalid dates
-  const monthStr = date.toLocaleDateString("default", { month: "long", year: "numeric" });
-  return monthStr.toLowerCase().includes(searchText.toLowerCase());
-});
-
+  // Filter salaries by month search
+  const filteredSalaries = (salaries || []).filter((sal) => {
+    if (!sal?.month) return false;
+    return sal.month.toLowerCase().includes(searchText.toLowerCase());
+  });
 
   if (loading) return <Layout><div className="p-6">Loading...</div></Layout>;
   if (!employee) return <Layout><div className="p-6">Employee not found.</div></Layout>;
@@ -178,7 +98,7 @@ const filteredSalaries = (salaries || []).filter((sal) => {
         <p><strong>Join Date:</strong> {employee.joinDate ? new Date(employee.joinDate).toLocaleDateString() : "-"}</p>
         <p><strong>Notes:</strong> {employee.notes || "-"}</p>
         <p><strong>Total Salaries:</strong>{salaries.length}</p>
-        <p><strong>Last salary added: </strong>{salaries.length ? salaries[salaries.length -1 ].month : "-"} </p>
+        <p><strong>Last salary added: </strong>{salaries.length ? salaries[salaries.length - 1].month : "-"} </p>
       </div>
 
       {/* Action Buttons */}
@@ -188,68 +108,6 @@ const filteredSalaries = (salaries || []).filter((sal) => {
         </button>
         <button onClick={() => navigate("/employees")} className="bg-gray-500 text-white px-4 py-2 rounded">
           Back
-        </button>
-      </div>
-
-      {/* Add / Edit Salary Form */}
-      <div className="bg-white p-4 rounded shadow mb-6">
-        <h3 className="font-bold mb-2">{editSalaryId ? "Edit Salary" : "Add Salary"}</h3>
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-3 mb-4">
-          <div>
-            <label className="block mb-1 font-medium">Date</label>
-            <input
-              type="date"
-              value={newSalary.month || ""}
-              onChange={(e) => setNewSalary({ ...newSalary, month: e.target.value })}
-              className="border p-2 rounded w-full"
-            />
-          </div>
-          <div>
-            <label className="block mb-1 font-medium">Base Salary</label>
-            <input
-              type="number"
-              placeholder="Base Salary"
-              value={newSalary.baseSalary}
-              onChange={(e) => setNewSalary({ ...newSalary, baseSalary: e.target.value })}
-              className="border p-2 rounded w-full"
-            />
-          </div>
-          <div>
-            <label className="block mb-1 font-medium">Bonus</label>
-            <input
-              type="number"
-              placeholder="Bonus"
-              value={newSalary.bonus}
-              onChange={(e) => setNewSalary({ ...newSalary, bonus: e.target.value })}
-              className="border p-2 rounded w-full"
-            />
-          </div>
-          <div>
-            <label className="block mb-1 font-medium">Deductions</label>
-            <input
-              type="number"
-              placeholder="Deductions"
-              value={newSalary.deductions}
-              onChange={(e) => setNewSalary({ ...newSalary, deductions: e.target.value })}
-              className="border p-2 rounded w-full"
-            />
-          </div>
-          <div>
-            <label className="block mb-1 font-medium">Leaves</label>
-            <input
-              type="number"
-              placeholder="Leaves"
-              value={newSalary.leaves}
-              onChange={(e) => setNewSalary({ ...newSalary, leaves: e.target.value })}
-              className="border p-2 rounded w-full"
-            />
-          </div>
-        </div>
-        <button
-          onClick={handleSaveSalary}
-          className="bg-green-600 text-white px-4 py-2 rounded"
-        >
-          {editSalaryId ? "Update Salary" : "Add Salary"}
         </button>
       </div>
 
@@ -267,15 +125,16 @@ const filteredSalaries = (salaries || []).filter((sal) => {
       {/* Salary Table */}
       <div className="bg-white p-4 rounded shadow overflow-x-auto">
         <h3 className="font-bold mb-2">Salary History</h3>
-        <table className="w-full text-sm">
+        <table className="w-full text-sm min-w-max border">
           <thead>
             <tr className="bg-gray-100">
               <th className="p-2 border">Month</th>
-              <th className="p-2 border">Base Salary</th>
-              <th className="p-2 border">Bonus</th>
+              <th className="p-2 border">Basic</th>
+              <th className="p-2 border">HRA</th>
+              <th className="p-2 border">Allowances</th>
               <th className="p-2 border">Deductions</th>
               <th className="p-2 border">Leaves</th>
-              <th className="p-2 border">Net Pay</th>
+              <th className="p-2 border">Net Salary</th>
               <th className="p-2 border">Actions</th>
             </tr>
           </thead>
@@ -283,19 +142,21 @@ const filteredSalaries = (salaries || []).filter((sal) => {
             {filteredSalaries.length ? (
               filteredSalaries.map((sal) => (
                 <tr key={sal._id} className={`hover:bg-gray-50 ${sal._id === highlightSalaryId ? "bg-green-100" : ""}`}>
-                  <td className="p-2 border">{sal.month ? new Date(sal.month).toDateString() : "-"}</td>
-                  <td className="p-2 border">₹{sal.baseSalary}</td>
-                  <td className="p-2 border">₹{sal.bonus}</td>
+                  <td className="p-2 border">{sal.month}</td>
+                  <td className="p-2 border">₹{sal.basic}</td>
+                  <td className="p-2 border">₹{sal.hra}</td>
+                  <td className="p-2 border">₹{sal.allowances}</td>
                   <td className="p-2 border">₹{sal.deductions}</td>
                   <td className="p-2 border">{sal.leaves}</td>
-                  <td className="p-2 border font-bold">₹{sal.netPay}</td>
+                  <td className="p-2 border font-bold">₹{sal.netSalary}</td>
                   <td className="p-2 border flex gap-1">
                     <button
-                      onClick={() => handleEditSalary(sal)}
+                      onClick={() => navigate(`/employee/${id}/add-salary/${sal._id}`)}
                       className="bg-blue-500 text-white px-2 py-1 rounded"
                     >
                       Edit
                     </button>
+
                     <button
                       onClick={() => handleDeleteSalary(sal._id)}
                       className="bg-red-500 text-white px-2 py-1 rounded"
@@ -307,7 +168,7 @@ const filteredSalaries = (salaries || []).filter((sal) => {
               ))
             ) : (
               <tr>
-                <td colSpan="7" className="text-center py-4 text-gray-500 italic">
+                <td colSpan="8" className="text-center py-4 text-gray-500 italic">
                   No salary records found.
                 </td>
               </tr>

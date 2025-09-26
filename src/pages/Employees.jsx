@@ -76,17 +76,20 @@ export default function Employees() {
   };
 
   const handleAddSalary = () => {
-    if (selectedEmployees.length !== 1) return alert("Select exactly one employee to add salary");
-    navigate(`/employee/${selectedEmployees[0]}/add-salary`);
-  };
+  if (selectedEmployees.length !== 1) {
+    return alert("Select exactly one employee to add salary");
+  }
+  navigate(`/employee/${selectedEmployees[0]}/add-salary`);
+};
 
+ 
   return (
     <Layout>
       <h2 className="text-2xl font-bold mb-4">Employees</h2>
 
       <div className="flex gap-2 mb-4">
         <input type="text" placeholder="Search..." value={search} onChange={e => setSearch(e.target.value)} className="border p-2 rounded w-1/3"/>
-        <button onClick={() => handleAddSalary(emp._id)} className="bg-green-500 text-white px-4 py-2 rounded">+ Add Salary</button>
+        <button  onClick={handleAddSalary}  className="bg-green-500 text-white px-4 py-2 rounded">+ Add Salary</button>
         <button onClick={() => setShowForm(prev => !prev)} className="bg-blue-500 text-white px-4 py-2 rounded">
           {showForm ? "Close Add Employee Form" : "+ Add Employee"}
         </button>

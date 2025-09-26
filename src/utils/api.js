@@ -18,6 +18,8 @@ export const getSalariesByEmployee = (employeeId) => api.get(`/salary/${employee
 export const updateSalary = (id, data) => api.put(`/salary/${id}`, data);
 export const deleteSalary = (id) => api.delete(`/salary/${id}`);
 export const markSalaryPaid = (id) => api.put(`/salary/pay/${id}`);
+export const getSalaryById = (id) => api.get(`/salary/single/${id}`);
+
 
 
 
