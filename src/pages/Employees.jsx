@@ -5,11 +5,14 @@ import { getEmployees, addEmployee, deleteEmployee } from "../utils/api";
 
 export default function Employees() {
   const [employees, setEmployees] = useState([]);
-  const [showForm, setShowForm] = useState(false); // toggle state
+  const [showForm, setShowForm] = useState(false);
   const [newEmp, setNewEmp] = useState({
     name: "", email: "", jobrole: "employee", department: "", joinDate: "", salary: "", status: "active", notes: ""
   });
   const [search, setSearch] = useState("");
+  const [selectedEmployees, setSelectedEmployees] = useState([]);
+  const [selectAll, setSelectAll] = useState(false);
+
   const navigate = useNavigate();
 
   const fetchEmployees = async () => {
@@ -34,7 +37,7 @@ export default function Employees() {
       await addEmployee(payload);
       setNewEmp({ name: "", email: "", jobrole: "employee", department: "", joinDate: "", salary: "", status: "active", notes: "" });
       fetchEmployees();
-      setShowForm(false); // form close after add
+      setShowForm(false);
       alert("Employee added successfully!");
     } catch (err) { console.error(err); }
   };
@@ -56,18 +59,38 @@ export default function Employees() {
     emp.department.toLowerCase().includes(search.toLowerCase())
   );
 
+  const toggleSelect = (id) => {
+    setSelectedEmployees(prev =>
+      prev.includes(id) ? prev.filter(eid => eid !== id) : [...prev, id]
+    );
+  };
+
+  const toggleSelectAll = () => {
+    if (selectAll) {
+      setSelectedEmployees([]);
+      setSelectAll(false);
+    } else {
+      setSelectedEmployees(filteredEmployees.map(emp => emp._id));
+      setSelectAll(true);
+    }
+  };
+
+  const handleAddSalary = () => {
+    if (selectedEmployees.length !== 1) return alert("Select exactly one employee to add salary");
+    navigate(`/employee/${selectedEmployees[0]}/add-salary`);
+  };
+
   return (
     <Layout>
       <h2 className="text-2xl font-bold mb-4">Employees</h2>
-      <input type="text" placeholder="Search..." value={search} onChange={e => setSearch(e.target.value)} className="border p-2 rounded mb-4 w-1/3"/>
-      
-      {/* Toggle Add Employee Form */}
-      <button 
-        onClick={() => setShowForm(prev => !prev)} 
-        className="bg-green-600 text-white px-4 py-2 flex  ml-auto rounded mb-4"
-      >
-        {showForm ? "Close Add Employee Form" : "+Add Employee"}
-      </button>
+
+      <div className="flex gap-2 mb-4">
+        <input type="text" placeholder="Search..." value={search} onChange={e => setSearch(e.target.value)} className="border p-2 rounded w-1/3"/>
+        <button onClick={() => handleAddSalary(emp._id)} className="bg-green-500 text-white px-4 py-2 rounded">+ Add Salary</button>
+        <button onClick={() => setShowForm(prev => !prev)} className="bg-blue-500 text-white px-4 py-2 rounded">
+          {showForm ? "Close Add Employee Form" : "+ Add Employee"}
+        </button>
+      </div>
 
       {showForm && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 bg-white p-4 rounded shadow">
@@ -79,11 +102,13 @@ export default function Employees() {
         </div>
       )}
 
-      {/* Employees Table */}
       <div className="overflow-x-auto bg-white rounded shadow">
         <table className="w-full text-sm">
           <thead>
             <tr className="bg-gray-100">
+              <th className="p-2 border">
+                <input type="checkbox" checked={selectAll} onChange={toggleSelectAll}/>
+              </th>
               <th className="p-2 border">#</th>
               <th className="p-2 border">Name</th>
               <th className="p-2 border">Email</th>
@@ -99,6 +124,9 @@ export default function Employees() {
           <tbody>
             {filteredEmployees.length ? filteredEmployees.map((emp,index)=> (
               <tr key={emp._id} className="hover:bg-gray-50">
+                <td className="p-2 border">
+                  <input type="checkbox" checked={selectedEmployees.includes(emp._id)} onChange={() => toggleSelect(emp._id)}/>
+                </td>
                 <td className="p-2 border">{index + 1}</td>
                 <td className="p-2 border">{emp.name}</td>
                 <td className="p-2 border">{emp.email}</td>
@@ -113,7 +141,7 @@ export default function Employees() {
                   <button onClick={() => handleDelete(emp._id)} className="bg-red-500 text-white px-2 py-1 rounded">Delete</button>
                 </td>
               </tr>
-            )) : <tr><td colSpan="9" className="text-center py-4 text-gray-500 italic">No employees found.</td></tr>}
+            )) : <tr><td colSpan="11" className="text-center py-4 text-gray-500 italic">No employees found.</td></tr>}
           </tbody>
         </table>
       </div>

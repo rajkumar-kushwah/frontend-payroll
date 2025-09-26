@@ -1,6 +1,7 @@
 // client/utils/api.js
 import axios from 'axios';
 
+
 const api = axios.create({
   baseURL: "https://project-payroll.onrender.com/api", 
      headers: { "Content-Type": "application/json" },
@@ -12,10 +13,12 @@ export const updateEmployee = (id, data) => api.put(`/employees/${id}`, data);
 export const deleteEmployee = (id) => api.delete(`/employees/${id}`);
 
 // Salary APIs
-export const addSalary = (data) => api.post("/salaries", data);
-export const getSalariesByEmployee = (employeeId) => api.get(`/salaries/employee/${employeeId}`);
-export const updateSalary = (id, data) => api.put(`/salaries/${id}`, data);
-export const deleteSalary = (id) => api.delete(`/salaries/${id}`);
+export const addSalary = (data) => api.post("/salary", data);
+export const getSalariesByEmployee = (employeeId) => api.get(`/salary/${employeeId}`);
+export const updateSalary = (id, data) => api.put(`/salary/${id}`, data);
+export const deleteSalary = (id) => api.delete(`/salary/${id}`);
+export const markSalaryPaid = (id) => api.put(`/salary/pay/${id}`);
+
 
 
 //(Optional) Agar toen stor karna hai:
