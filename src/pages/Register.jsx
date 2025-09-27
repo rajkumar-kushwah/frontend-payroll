@@ -31,7 +31,7 @@ const Register = () => {
     }
   } catch (err) {
     console.error(err);
-    alert("Email already registered!");
+    alert(err.response?.data?.message || "Email already registered!");
   }
 };
 

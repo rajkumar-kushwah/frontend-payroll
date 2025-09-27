@@ -22,7 +22,7 @@ const { setUser } = useUser();
   e.preventDefault();
   try {
     const res = await api.post("/auth/login", formData); // Axios wrapper se call
-
+    console.log(res.data.user.lastLogin);
     if (res.data.token) {
       alert("Login successful!");
       localStorage.setItem("token", res.data.token);
@@ -34,7 +34,7 @@ const { setUser } = useUser();
     }
   } catch (err) {
     console.error(err);
-    alert("Account not registered yet!");
+    alert(err.response?.data?.message || "Account not registered yet!");
   }
 };
  return (
