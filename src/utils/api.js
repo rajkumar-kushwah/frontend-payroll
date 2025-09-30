@@ -6,6 +6,11 @@ const api = axios.create({
   baseURL: "https://project-payroll.onrender.com/api", 
      headers: { "Content-Type": "application/json" },
 });
+
+
+
+
+// Employee APIs
 export const getEmployees = () => api.get("/employees");
 export const getEmployeeById = (id) => api.get(`/employees/${id}`);
 export const addEmployee = (data) => api.post("/employees", data);
