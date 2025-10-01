@@ -19,18 +19,24 @@ const Register = () => {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const res = await api.post("/auth/register", formData);
+  e.preventDefault();
+  try {
+    const res = await api.post("/auth/register", formData);
 
-      // Backend se message return hota hai
-      setMessage(res.data.message || "Registered successfully. Please check your email for verification.");
-    } catch (err) {
-      console.error("Full Axios error:", err);
-       console.log(err.response?.data);
-      setMessage(err.response?.data?.message || "Registration failed!");
-    }
-  };
+    // Backend se success message
+    setMessage(res.data.message || "Registered successfully. Please check your email for verification.");
+
+    // Email verify page pe redirect (optional, UX better karne ke liye)
+    const email = formData.email;
+    setTimeout(() => {
+      navigate(`/verify-email?email=${encodeURIComponent(email)}`);
+    }, 2000); // 2 sec delay, message dekhne ke liye
+  } catch (err) {
+    console.error("Full Axios error:", err);
+    setMessage(err.response?.data?.message || "Registration failed!");
+  }
+};
+
 
   return (
     <div className="min-h-screen bg-green-600 flex items-center justify-center px-2">

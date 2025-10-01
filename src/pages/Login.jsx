@@ -48,7 +48,7 @@ const Login = () => {
   const handleVerifyOtp = async () => {
     try {
       const res = await api.post("/auth/verify-login-otp", { userId, otp });
-      alert("Login Success ✅");
+      alert("Login Success ");
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("user", JSON.stringify(res.data.user));
       setUser(res.data.user);
