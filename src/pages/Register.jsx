@@ -26,7 +26,8 @@ const Register = () => {
       // Backend se message return hota hai
       setMessage(res.data.message || "Registered successfully. Please check your email for verification.");
     } catch (err) {
-      console.error(err);
+      console.error("Full Axios error:", err);
+       console.log(err.response?.data);
       setMessage(err.response?.data?.message || "Registration failed!");
     }
   };
@@ -37,7 +38,7 @@ const Register = () => {
 
         {/* Left Side */}
         <div className="hidden md:flex flex-col items-center justify-center p-8 bg-green-100 rounded-l-lg">
-          <h2 className="text-3xl font-bold text-green-700 mb-4">Smart Payroll System</h2>
+          <h2 className="text-3xl font-bold text-green-700 mb-4"> Payroll Management</h2>
           <p className="text-gray-700 text-lg text-center">
             Manage your employees’ salaries, attendance, and tax deductions seamlessly.
           </p>
