@@ -19,20 +19,21 @@ const Register = () => {
     try {
       const res = await api.post("/auth/register", formData);
 
-      // ✅ Show toast popup
+      // ✅ Show success toast
       toast.success(res.data.message || "Registered successfully!", {
         position: "top-right",
-        autoClose: 3000, // 3 sec
+        autoClose: 3000,
         hideProgressBar: false,
         closeOnClick: true,
         pauseOnHover: true,
         draggable: true,
-        progress: undefined,
       });
 
-      // Redirect to login after 3 seconds
+      // Redirect to login after toast
       setTimeout(() => navigate("/login"), 3000);
+
     } catch (err) {
+      // ✅ Show error toast
       toast.error(err.response?.data?.message || "Registration failed!", {
         position: "top-right",
         autoClose: 3000,
@@ -45,7 +46,7 @@ const Register = () => {
 
   return (
     <div className="min-h-screen bg-green-600 flex items-center justify-center px-2">
-      <ToastContainer /> {/* This renders the toast popup */}
+      <ToastContainer /> {/* Toast popups */}
       <div className="max-w-5xl w-full bg-white rounded-lg shadow-lg grid grid-cols-1 md:grid-cols-2">
 
         {/* Left side */}
