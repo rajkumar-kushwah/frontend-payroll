@@ -15,9 +15,22 @@ export default function Sidebar({ isOpen }) {
       <div className="h-full flex flex-col">
         {/* 🔹 Profile Section (fixed at top, no scroll) */}
         <div className="p-6 border-b flex flex-col items-center shrink-0">
-          <div className="w-16 h-16 rounded-full bg-blue-600 flex items-center justify-center text-2xl font-bold text-white">
-            <span>{user?.name?.charAt(0).toUpperCase() || "U"}</span>
-          </div>
+
+          {user?.avatar ? (
+            <img
+              src={user.avatar}
+              alt="avatar"
+              className="w-16 h-16 rounded-full"
+            />
+          ) : (
+
+            <div className="w-16 h-16 rounded-full bg-blue-600 flex items-center justify-center text-2xl font-bold text-white">
+              <span>{user?.name?.charAt(0).toUpperCase() || "U"}</span>
+            </div>
+
+          )}
+
+          {/* Name and Role */}
           <h1 className="text-lg font-semibold mt-2">{user?.name || "User"}</h1>
           <p className="text-sm text-gray-500">
             {user?.role
@@ -43,10 +56,9 @@ export default function Sidebar({ isOpen }) {
               key={link.to}
               to={link.to}
               className={({ isActive }) =>
-                `block w-full p-2 rounded transition ${
-                  isActive
-                    ? "bg-blue-100 font-medium text-blue-600"
-                    : "hover:bg-gray-100"
+                `block w-full p-2 rounded transition ${isActive
+                  ? "bg-blue-100 font-medium text-blue-600"
+                  : "hover:bg-gray-100"
                 }`
               }
             >

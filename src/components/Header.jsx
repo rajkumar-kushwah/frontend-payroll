@@ -174,9 +174,18 @@ export default function Header({ toggle }) {
             className="flex items-center gap-2 cursor-pointer"
             onClick={() => setDropdown(prev => prev === "user" ? null : "user")}
           >
+
+          {user?.avatar ? (
+      <img
+        src={user.avatar}
+        alt="avatar"
+        className="w-8 h-8 rounded-full"
+      />
+            ) : (
             <div className="w-8 h-8 rounded-full bg-gray-400 flex items-center justify-center text-white font-bold">
               {user?.name?.charAt(0).toUpperCase() || "U"}
             </div>
+            )}
             <span className="hidden md:inline">{user?.name || "User"}</span>
           </div>
 

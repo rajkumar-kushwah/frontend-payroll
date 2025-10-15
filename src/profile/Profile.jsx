@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
 import { useUser } from "../context/UserContext";
 import { getProfile, updateProfile } from "../utils/api";
+import { useNavigate } from "react-router-dom";
 
 export default function Profile() {
   const { user, setUser } = useUser();
   const [edit, setEdit] = useState(false);
   const [form, setForm] = useState(user || {});
   const [avatarFile, setAvatarFile] = useState(null); // File for avatar upload
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (!user) {
@@ -42,6 +44,7 @@ export default function Profile() {
       setForm(res.data.user);
       setEdit(false);
       setAvatarFile(null);
+      navigate("/dashboard");
     } catch (err) {
       console.log("Update failed:", err);
     }
@@ -167,7 +170,7 @@ export default function Profile() {
           <p><b>Address:</b> {user.address?.Stream}, {user.address?.city}, {user.address?.state}, {user.address?.country} - {user.address?.pinCode}</p>
           <div className="flex justify-between mt-4">
             <button className="bg-yellow-400 px-4 py-2 rounded hover:bg-yellow-500" onClick={() => setEdit(true)}>Edit Profile</button>
-            <button className="bg-red-500 px-4 py-2 rounded text-white hover:bg-red-600" onClick={() => { localStorage.removeItem("token"); window.location.href="/login"; }}>Logout</button>
+            <button className="bg-red-500 px-4 py-2 rounded text-white hover:bg-red-600" onClick={() => { navigate("/dashboard") }}>Cancel</button>
           </div>
         </div>
       )}
