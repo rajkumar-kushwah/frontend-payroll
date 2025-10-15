@@ -1,5 +1,7 @@
 // src/context/UserContext.jsx
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useState,useEffect } from "react";
+import { getProfile } from "../utils/api";
+
 
 const UserContext = createContext();
 
@@ -19,6 +21,23 @@ const logout = () => {
    localStorage.removeItem("token");      // JWT token remove
   window.location.href = "/login";       // redirect to login page
 };
+
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const token = localStorage.getItem("token");
+      if (!token) return;
+      try {
+        const res = await getProfile();
+        setUser(res.data);
+        updateUser(res.data);
+      } catch (err) {
+        console.log(err);
+        localStorage.removeItem("token");
+      }
+    };
+    fetchUser();
+  }, []);
 
 
   return (

@@ -25,7 +25,12 @@ export const deleteSalary = (id) => api.delete(`/salary/${id}`);
 export const markSalaryPaid = (id) => api.put(`/salary/pay/${id}`);
 export const getSalaryById = (id) => api.get(`/salary/single/${id}`);
 
-
+// Profile APIs
+export const getProfile = () => api.get("/auth/profile");
+export const updateProfile = (data, isFormData = false) =>
+  api.put("/auth/profile", data, {
+    headers: isFormData ? { "Content-Type": "multipart/form-data" } : {},
+  });
 
 
 //(Optional) Agar toen stor karna hai:

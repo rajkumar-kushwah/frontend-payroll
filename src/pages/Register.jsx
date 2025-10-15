@@ -19,7 +19,7 @@ const Register = () => {
     try {
       const res = await api.post("/auth/register", formData);
 
-      // ✅ Show success toast
+      //  Show success toast
       toast.success(res.data.message || "Registered successfully!", {
         position: "top-right",
         autoClose: 3000,
@@ -33,7 +33,7 @@ const Register = () => {
       setTimeout(() => navigate("/login"), 3000);
 
     } catch (err) {
-      // ✅ Show error toast
+      //  Show error toast
       toast.error(err.response?.data?.message || "Registration failed!", {
         position: "top-right",
         autoClose: 3000,

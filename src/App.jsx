@@ -8,7 +8,8 @@ import VerifyOtp from './pages/VerifyOtp';
 import ResetPassword from './pages/ResetPassword';
 import Dashboard from './pages/Dashboard';
 import ProtectedRoute from './routes/ProtectedRoute';
-// import Profile from "./pages/Profile";
+import { UserProvider } from './context/UserContext';
+import Profile from './profile/Profile';
 import Employees from "./pages/Employees";
 import Candidates from "./pages/Candidates";
 // import Messages from "./pages/Messages";
@@ -22,14 +23,16 @@ import AddEmployee from "./pages/AddEmployee";
 import PublicRoute from "./routes/PublicRoute";
 import AddSalary from "./pages/AddSalary";
 
-
 function App() {
   return (
+     <UserProvider>
+    
     <Router >
       <Routes>
         <Route path="/" element={<PublicRoute><Login /></PublicRoute>} />
         <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
         <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
+        <Route path="/profile" element={<ProtectedRoute><Profile/></ProtectedRoute>} />
         <Route path="/forgot-password" element={<PublicRoute><ForgotPassword /></PublicRoute>} />
         <Route path="/verify-otp" element={<PublicRoute><VerifyOtp /></PublicRoute>} />
         <Route path="/reset-password" element={<PublicRoute><ResetPassword /></PublicRoute>} />
@@ -37,7 +40,6 @@ function App() {
         {/*  Protected Route */}
         {/* Protected */}
         <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-        {/* <Route path="/profile" element={<ProtectedRoute><Profile/></ProtectedRoute>} /> */}
         <Route path="/employees" element={<ProtectedRoute><Employees /></ProtectedRoute>} />
         <Route path="/employee/add" element={<ProtectedRoute> <AddEmployee /></ProtectedRoute>} />
         <Route path="/employee/:employeeId/add-salary/:salaryId?" element={<ProtectedRoute><AddSalary /></ProtectedRoute>} />
@@ -52,6 +54,8 @@ function App() {
         {/* protected route end */}
       </Routes>
     </Router>
+
+    </UserProvider>
   );
 }
 

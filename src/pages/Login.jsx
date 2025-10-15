@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaEnvelope, FaLock } from "react-icons/fa";
 import Payroll from "../images/Payroll.png";
-import api from "../utils/api";
+import api  from "../utils/api";
 import { useUser } from "../context/UserContext";
 
 const Login = () => {
@@ -37,7 +37,7 @@ const Login = () => {
         localStorage.setItem("token", res.data.token);
         localStorage.setItem("user", JSON.stringify(res.data.user));
         setUser(res.data.user);
-        navigate("/dashboard");
+        navigate("/profile");
       }
     } catch (err) {
       alert(err.response?.data?.message || "Login failed!");
