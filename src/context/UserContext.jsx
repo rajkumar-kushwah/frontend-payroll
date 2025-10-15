@@ -37,12 +37,20 @@ const logout = () => {
         const res = await getProfile({
           headers: { "Cache-Control": "no-cache" }, // Force fresh data
         });
-    const profileData = res.data || JSON.parse(localStorage.getItem("user"));
+        if (res.data) {
+        updateUser(res.data);
+      } else {
+        setUser(null);
+        localStorage.removeItem("user");
+        localStorage.removeItem("token");
+      }
       //  setUser(res.data);
         updateUser(res.data);
       } catch (err) {
         console.log(err);
         localStorage.removeItem("token");
+         localStorage.removeItem("user"); // ← add this
+         setUser(null); // ← add this
       } finally {
         setLoading(false);
       }
