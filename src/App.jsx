@@ -22,6 +22,7 @@ import EmployeeDetail from "./pages/EmployeeDetail";
 import AddEmployee from "./pages/AddEmployee";
 import PublicRoute from "./routes/PublicRoute";
 import AddSalary from "./pages/AddSalary";
+import NotFound from "./notfound/NotFound";
 
 function App() {
   return (
@@ -30,6 +31,7 @@ function App() {
     <Router >
       <Routes>
         <Route path="/" element={<PublicRoute><Login /></PublicRoute>} />
+        <Route path="*" element={<PublicRoute><NotFound /></PublicRoute>} />
         <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
         <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
         <Route path="/profile" element={<ProtectedRoute><Profile/></ProtectedRoute>} />

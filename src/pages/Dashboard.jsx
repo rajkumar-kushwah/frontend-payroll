@@ -2,9 +2,14 @@ import React, { useEffect, useState } from "react";
 import Layout from "../components/Layout";
 import api from "../utils/api";
 import { useNavigate } from "react-router-dom";
+import { Users, UserCog, IndianRupee, FileClock, CalendarCheck, } from "lucide-react";
+import { useUser } from "../context/UserContext";
+import Clock from "../clock/Clock";
+import DashboardCalendar from "../calendar/DashboardCalendar";
 
 export default function Dashboard() {
   const [openDropdown, setOpenDropdown] = useState(null);
+  const { user } = useUser();
   const [stats, setStats] = useState({
     employees: 0,
     totalSalary: 0,
@@ -77,46 +82,69 @@ export default function Dashboard() {
 
   return (
     <Layout>
-      <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
-
+      <Users className="text-blue-500 " />
+      {/* Dashboard Content */}
+      {user?.name && (
+        <h1 className="text-2xl font-bold mb-4 text-blue-600">Welcome,{user.name}</h1>
+      )}
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-2  ">
+      {/* Clock and Calendar */}
+      <div className="p-4 justify-center items-center ">
+        <Clock />
+        <DashboardCalendar />
+      </div>
+       
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-        <div className="bg-white p-6 rounded shadow text-center">
-          <div className="text-sm text-gray-600">Employees</div>
+      <div className=" flex-wrap gap-4 grid grid-cols-1 md:grid-cols-2 mx-auto mb-5 mt-10 overflow-x-auto min-w-full  ">
+        <div className="bg-white p-6 rounded-sm shadow text-center grid">
+          <div className="flex items-center justify-center ">
+            <UserCog className="text-green-500 w-6 h-6"  />
+            <div className="text-sm text-gray-600 font-medium">Total Employees</div>
+          </div>
           <div className="text-3xl font-bold text-green-600 mt-2">
             {stats.employees}
           </div>
         </div>
-        <div className="bg-white p-6 rounded shadow text-center">
-          <div className="text-sm text-gray-600">Total Salary</div>
+        
+        <div className="bg-white p-6 rounded-sm shadow text-center grid">
+          <div className="flex items-center justify-center ">
+            <IndianRupee className="text-blue-500 w-6 h-6" />
+            <div className="text-sm text-gray-600 font-medium">Total Salary</div>
+          </div>
           <div className="text-3xl font-bold text-blue-600 mt-2">
             ₹{stats.totalSalary}
           </div>
         </div>
-        <div className="bg-white p-6 rounded shadow text-center">
-          <div className="text-sm text-gray-600">Leaves</div>
+        <div className="bg-white p-6 rounded-sm shadow text-center grid">
+          <div className="flex items-center justify-center ">
+            <CalendarCheck className="text-yellow-500 w-6 h-6"  />
+            <div className="text-sm text-gray-600 font-medium">Leaves</div>
+          </div>
           <div className="text-3xl font-bold text-yellow-600 mt-2">
             {stats.leaves}
           </div>
         </div>
-        <div className="bg-white p-6 rounded shadow text-center">
-          <div className="text-sm text-gray-600">Pending Reports</div>
+        <div className="bg-white p-6 rounded-sm shadow text-center grid">
+          <div className="flex items-center justify-center ">
+            <FileClock  className="text-red-500 w-6 h-6" />
+            <div className="text-sm text-gray-600 font-medium">Pending Reports</div>
+          </div>
           <div className="text-3xl font-bold text-red-600 mt-2">
             {stats.reports}
           </div>
         </div>
       </div>
-
+</div>
       {/* Add Employee & View All Buttons */}
       <div className="flex justify-end mb-4 gap-3">
         <button
-          className="bg-blue-500 text-white px-4 py-2 rounded"
+          className="bg-blue-500 text-white px-4 py-2  rounded  hover:bg-blue-600 transition"
           onClick={() => navigate("/employee/add")}
         >
           + Add Employee
         </button>
         <button
-          className="bg-gray-600 text-white px-4 py-2 rounded"
+          className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 transition"
           onClick={() => navigate("/employees")}
         >
           View All
@@ -124,8 +152,8 @@ export default function Dashboard() {
       </div>
 
       {/* Latest 4 Employees Table */}
-      <div className="bg-white rounded shadow overflow-x-auto">
-        <table className="min-w-full text-sm text-left">
+      <div className="p-1 bg-white rounded shadow overflow-x-auto ">
+        <table className="min-w-full text-sm text-left  ">
           <thead className="bg-gray-100 border-b">
             <tr>
               <th className="px-4 py-2">#</th>

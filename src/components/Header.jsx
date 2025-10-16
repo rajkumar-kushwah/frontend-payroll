@@ -82,7 +82,7 @@ export default function Header({ toggle }) {
         <div className="flex items-center gap-2 w-35 sm:w-60 md:w-80 bg-white rounded-xl py-1 px-2 text-black">
           <i className="fa fa-search text-gray-500 px-2 sm:text-blue-500 " aria-hidden="true"></i>
           <input type="text" placeholder="Search..." className="w-full px-2 py-1 outline-none" />
-                  {/* <button className="bg-green-600 px-2 py-1.5  rounded-xl cursor-pointer">Search</button> */}
+          {/* <button className="bg-green-600 px-2 py-1.5  rounded-xl cursor-pointer">Search</button> */}
         </div>
       </div>
 
@@ -91,20 +91,20 @@ export default function Header({ toggle }) {
         {/* Messages */}
         <div className="relative" ref={msgRef}>
           <button
-  onClick={() =>
-    setDropdown((prev) => (prev === "messages" ? null : "messages"))
-  }
-  className="relative flex items-center gap-1 ml-1 cursor-pointer"
->
-  <i className="fa fa-envelope text-xl"></i>
-  <i className="fa fa-caret-down text-sm text-gray-400"></i>
+            onClick={() =>
+              setDropdown((prev) => (prev === "messages" ? null : "messages"))
+            }
+            className="relative flex items-center gap-1 ml-1 cursor-pointer"
+          >
+            <i className="fa fa-envelope text-xl"></i>
+            <i className="fa fa-caret-down text-sm text-gray-400"></i>
 
-  {msgCount > 0 && (
-    <span className="absolute -top-1 -right-2 bg-red-600 text-xs px-1 rounded-full">
-      {msgCount}
-    </span>
-  )}
-</button>
+            {msgCount > 0 && (
+              <span className="absolute -top-1 -right-2 bg-red-600 text-xs px-1 rounded-full">
+                {msgCount}
+              </span>
+            )}
+          </button>
 
           {dropdown === "messages" && (
             <ul className="absolute right-0 mt-2 w-56 bg-white text-gray-700 rounded shadow-lg z-50">
@@ -175,33 +175,57 @@ export default function Header({ toggle }) {
             onClick={() => setDropdown(prev => prev === "user" ? null : "user")}
           >
 
-          {user?.avatar ? (
-      <img
-        src={user.avatar}
-        alt="avatar"
-        className="w-8 h-8 rounded-full"
-      />
+            {user?.avatar ? (
+              <img
+                src={user.avatar}
+                alt="avatar"
+                className="w-8 h-8 rounded-full"
+              />
             ) : (
-            <div className="w-8 h-8 rounded-full bg-gray-400 flex items-center justify-center text-white font-bold">
-              {user?.name?.charAt(0).toUpperCase() || "U"}
-            </div>
+              <div className="w-8 h-8 rounded-full bg-gray-400 flex items-center justify-center text-white font-bold">
+                {user?.name?.charAt(0).toUpperCase() || "U"}
+              </div>
             )}
             <span className="hidden md:inline">{user?.name || "User"}</span>
           </div>
 
           {dropdown === "user" && (
-            <ul className="absolute right-0 mt-2 w-40 bg-white text-gray-700 rounded shadow-lg z-50">
+            <ul className="absolute right-0 mt-2 w-75 bg-white text-gray-700 rounded shadow-lg z-50">
               <li
-                className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
+                className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2"
                 onClick={() => navigate("/profile")}
               >
-                Profile
+
+                 {/* user avatar header profile */}
+                {user?.avatar ? (
+                  <img
+                    src={user.avatar}
+                    alt="avatar"
+                    className="w-8 h-8 rounded-full"
+                  />
+                ) : (
+                  <div className=" w-8 h-8 rounded-full bg-gray-400 flex items-center justify-center text-white font-bold">
+                    {user?.name?.charAt(0).toUpperCase() || "U"}
+                  </div>
+                )}  
+              {/* user and email */}
+
+                <div className="flex flex-col text-sm w-sm max-md">
+               My Profile
+                <span className="text-sm">{user?.email || "email"}</span>
+                </div>
+
               </li>
               <li
                 className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
                 onClick={() => navigate("/settings")}
               >
+
+                <div className="flex items-center gap-2">
+                <i class="fa fa-cog " aria-hidden="true"></i>
                 Settings
+                </div>
+
               </li>
               <li
                 className="px-4 py-2 hover:bg-gray-100 cursor-pointer"
@@ -210,7 +234,10 @@ export default function Header({ toggle }) {
                   navigate("/login");
                 }}
               >
+                <div className="flex items-center gap-2 ">
+                <i class="fa fa-sign-out" aria-hidden="true"></i>
                 Logout
+                </div>
               </li>
             </ul>
           )}
