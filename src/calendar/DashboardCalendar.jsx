@@ -6,7 +6,7 @@ export default function DashboardCalendar() {
   const [date, setDate] = useState(new Date());
 
   return (
-    <div className=" w-full p-4 ml-5 justify-start mx-auto border-none">
+    <div className=" w-full p-4 ml-5 justify-start mx-auto  ">
       <Calendar className="border rounded-lg bg-gray-100 "
         onChange={setDate}
         value={date}

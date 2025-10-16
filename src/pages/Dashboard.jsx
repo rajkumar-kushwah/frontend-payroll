@@ -85,7 +85,7 @@ export default function Dashboard() {
       <Users className="text-blue-500 " />
       {/* Dashboard Content */}
       {user?.name && (
-        <h1 className="text-2xl font-bold mb-4 text-blue-600">Welcome,{user.name}</h1>
+        <h1 className="text-2xl font-bold mb-4 text-blue-500">Welcome,{user.name}</h1>
       )}
     <div className="grid grid-cols-1 md:grid-cols-2 gap-2  ">
       {/* Clock and Calendar */}
@@ -95,56 +95,58 @@ export default function Dashboard() {
       </div>
        
       {/* Stats Cards */}
-      <div className=" flex-wrap gap-4 grid grid-cols-1 md:grid-cols-2 mx-auto mb-5 mt-10 overflow-x-auto min-w-full  ">
-        <div className="bg-white p-6 rounded-sm shadow text-center grid">
+      <div className="border-none shadow-sm rounded-xl bg-gray-100 mb-12 ml-1 mr-1 p-6 w-full ">
+      <div className=" flex-wrap gap-2 grid grid-cols-1 md:grid-cols-2 mx-auto mb-5 mt-10 overflow-x-auto min-w-full  ">
+        <div className="bg-white p-6 rounded-sm shadow text-center grid hover:bg-gray-50 ">
           <div className="flex items-center justify-center ">
-            <UserCog className="text-green-500 w-6 h-6"  />
+            <UserCog className="text-green-400 w-6 h-6"  />
             <div className="text-sm text-gray-600 font-medium">Total Employees</div>
           </div>
-          <div className="text-3xl font-bold text-green-600 mt-2">
+          <div className="text-3xl font-bold text-green-400 mt-2">
             {stats.employees}
           </div>
         </div>
         
-        <div className="bg-white p-6 rounded-sm shadow text-center grid">
+        <div className="bg-white p-6 rounded-sm shadow text-center grid  hover:bg-gray-50">
           <div className="flex items-center justify-center ">
-            <IndianRupee className="text-blue-500 w-6 h-6" />
+            <IndianRupee className="text-blue-400 w-6 h-6" />
             <div className="text-sm text-gray-600 font-medium">Total Salary</div>
           </div>
-          <div className="text-3xl font-bold text-blue-600 mt-2">
+          <div className="text-3xl font-bold text-blue-400 mt-2">
             ₹{stats.totalSalary}
           </div>
         </div>
-        <div className="bg-white p-6 rounded-sm shadow text-center grid">
+        <div className="bg-white p-6 rounded-sm shadow text-center grid  hover:bg-gray-50">
           <div className="flex items-center justify-center ">
-            <CalendarCheck className="text-yellow-500 w-6 h-6"  />
+            <CalendarCheck className="text-yellow-400 w-6 h-6"  />
             <div className="text-sm text-gray-600 font-medium">Leaves</div>
           </div>
-          <div className="text-3xl font-bold text-yellow-600 mt-2">
+          <div className="text-3xl font-bold text-yellow-400 mt-2">
             {stats.leaves}
           </div>
         </div>
-        <div className="bg-white p-6 rounded-sm shadow text-center grid">
+        <div className="bg-white p-6 rounded-sm shadow text-center grid  hover:bg-gray-50">
           <div className="flex items-center justify-center ">
-            <FileClock  className="text-red-500 w-6 h-6" />
+            <FileClock  className="text-red-400 w-6 h-6" />
             <div className="text-sm text-gray-600 font-medium">Pending Reports</div>
           </div>
-          <div className="text-3xl font-bold text-red-600 mt-2">
+          <div className="text-3xl font-bold text-red-400 mt-2">
             {stats.reports}
           </div>
         </div>
+      </div>
       </div>
 </div>
       {/* Add Employee & View All Buttons */}
       <div className="flex justify-end mb-4 gap-3">
         <button
-          className="bg-blue-500 text-white px-4 py-2  rounded  hover:bg-blue-600 transition"
+          className="bg-blue-400 text-white px-4 py-2  rounded  hover:bg-blue-500 transition"
           onClick={() => navigate("/employee/add")}
         >
           + Add Employee
         </button>
         <button
-          className="bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 transition"
+          className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition"
           onClick={() => navigate("/employees")}
         >
           View All
