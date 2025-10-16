@@ -49,7 +49,7 @@ export default function Sidebar({ isOpen }) {
             <img
               src={user.avatar}
               alt="avatar"
-              className="w-16 h-16 rounded-full"
+              className="w-16 h-16 rounded-full border-2 border-green-600"
             />
           ) : (
 
@@ -79,8 +79,8 @@ export default function Sidebar({ isOpen }) {
                 className={({ isActive }) =>
                   `flex items-center gap-3 w-full p-2 rounded-lg transition-all ${
                     isActive
-                      ? "bg-blue-100 font-medium text-blue-600"
-                      : "hover:bg-blue-50 text-gray-700"
+                      ? "bg-green-400 font-medium text-black"
+                      : "hover:bg-green-100 text-gray-700"
                   }`
                 }
               >

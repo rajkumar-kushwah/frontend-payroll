@@ -135,7 +135,7 @@ export default function Employees() {
           onChange={e => setSearch(e.target.value)}
           className="border p-2 rounded w-1/3"
         />
-        <button onClick={handleAddSalary} className="bg-green-500 text-white px-4 py-2 rounded">+ Add Salary</button>
+        <button onClick={handleAddSalary} className="bg-green-500 text-black px-4 py-2 rounded">+ Add Salary</button>
         <button onClick={() => setShowForm(prev => !prev)} className="bg-blue-500 text-white px-4 py-2 rounded">
           {showForm ? "Close Add Employee Form" : "+ Add Employee"}
         </button>
@@ -198,8 +198,8 @@ export default function Employees() {
                 <td className="p-2 border">{emp.joinDate ? new Date(emp.joinDate).toLocaleDateString() : "-"}</td>
                 <td className="p-2 border">{emp.notes || "-"}</td>
                 <td className="p-2 border flex gap-1">
-                  <button onClick={() => navigate(`/employee/${emp._id}`)} className="bg-blue-500 text-white px-2 py-1 rounded">View</button>
-                  <button onClick={() => handleDelete(emp._id)} className="bg-red-500 text-white px-2 py-1 rounded">Delete</button>
+                  <button onClick={() => navigate(`/employee/${emp._id}`)} className="bg-green-500  text-black px-2 py-1 rounded">View</button>
+                  <button onClick={() => handleDelete(emp._id)} className="bg-red-500 text-black px-2 py-1 rounded">Delete</button>
                 </td>
               </tr>
             )) : (

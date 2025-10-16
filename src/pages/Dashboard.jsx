@@ -82,10 +82,12 @@ export default function Dashboard() {
 
   return (
     <Layout>
-      <Users className="text-blue-500 " />
+     
+      <Users className="text-black drop-shadow-[0_2px_0_rgba(16,185,129,1)]" />
+
       {/* Dashboard Content */}
       {user?.name && (
-        <h1 className="text-2xl font-bold mb-4 text-blue-500">Welcome,{user.name}</h1>
+        <h1 className="text-2xl font-bold mb-4 text-black"><span className="text-green-400">Welcome,</span>{user.name}</h1>
       )}
     <div className="grid grid-cols-1 md:grid-cols-2 gap-2  ">
       {/* Clock and Calendar */}
@@ -99,10 +101,10 @@ export default function Dashboard() {
       <div className=" flex-wrap gap-2 grid grid-cols-1 md:grid-cols-2 mx-auto mb-5 mt-10 overflow-x-auto min-w-full  ">
         <div className="bg-white p-6 rounded-sm shadow text-center grid hover:bg-gray-50 ">
           <div className="flex items-center justify-center ">
-            <UserCog className="text-green-400 w-6 h-6"  />
+            <UserCog className="text-green-300 w-6 h-6"  />
             <div className="text-sm text-gray-600 font-medium">Total Employees</div>
           </div>
-          <div className="text-3xl font-bold text-green-400 mt-2">
+          <div className="text-3xl font-bold text-green-300 mt-2">
             {stats.employees}
           </div>
         </div>
@@ -140,7 +142,7 @@ export default function Dashboard() {
       {/* Add Employee & View All Buttons */}
       <div className="flex justify-end mb-4 gap-3">
         <button
-          className="bg-blue-400 text-white px-4 py-2  rounded  hover:bg-blue-500 transition"
+          className="bg-green-400 text-black px-4 py-2  rounded  hover:bg-green-500 transition"
           onClick={() => navigate("/employee/add")}
         >
           + Add Employee

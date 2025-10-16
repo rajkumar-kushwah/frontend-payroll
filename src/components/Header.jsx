@@ -75,11 +75,11 @@ export default function Header({ toggle }) {
 
 
   return (
-    <header className="bg-blue-600 text-white w-full px-4 py-3  flex items-center justify-between shadow box-border ">
+    <header className="bg-green-500 w-full px-4 py-3  flex items-center justify-between shadow box-border ">
       {/* Left Side */}
       <div className="flex items-center gap-2 sm:gap-3">
-        <button onClick={toggle} className="text-2xl cursor-pointer ">☰</button>
-        <div className="flex items-center gap-2 w-35 sm:w-60 md:w-80 bg-white rounded-xl py-1 px-2 text-black">
+        <button onClick={toggle} className="text-2xl cursor-pointer  ">☰</button>
+        <div className="flex items-center gap-2 w-35 sm:w-60 md:w-80 bg-white border-black border-1 rounded-xl py-1 px-2 text-black">
           <i className="fa fa-search text-gray-500 px-2 sm:text-blue-500 " aria-hidden="true"></i>
           <input type="text" placeholder="Search..." className="w-full px-2 py-1 outline-none" />
           {/* <button className="bg-green-600 px-2 py-1.5  rounded-xl cursor-pointer">Search</button> */}
@@ -179,7 +179,7 @@ export default function Header({ toggle }) {
               <img
                 src={user.avatar}
                 alt="avatar"
-                className="w-8 h-8 rounded-full"
+                className="w-8 h-8 rounded-full border-1 border-black"
               />
             ) : (
               <div className="w-8 h-8 rounded-full bg-gray-400 flex items-center justify-center text-white font-bold">
@@ -201,7 +201,7 @@ export default function Header({ toggle }) {
                   <img
                     src={user.avatar}
                     alt="avatar"
-                    className="w-8 h-8 rounded-full"
+                    className="w-8 h-8 rounded-full border-2 border-green-600"
                   />
                 ) : (
                   <div className=" w-8 h-8 rounded-full bg-gray-400 flex items-center justify-center text-white font-bold">
