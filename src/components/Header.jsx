@@ -210,7 +210,8 @@ export default function Header({ toggle }) {
                 )}  
               {/* user and email */}
 
-                <div className="flex flex-col text-sm w-sm max-md">
+
+                <div className="flex flex-col text-sm w-sm max-md ">
                My Profile
                 <span className="text-sm">{user?.email || "email"}</span>
                 </div>

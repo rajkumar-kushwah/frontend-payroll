@@ -13,7 +13,7 @@ export default function Layout({ children }) {
   }, []);
 
   return (
-    <div className="flex h-screen bg-gray-100 relative">
+    <div className="flex h-screen bg-gray-100  ">
       {/* Sidebar */}
       <Sidebar isOpen={isOpen} toggle={() => setIsOpen((v) => !v)} />
 

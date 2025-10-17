@@ -116,7 +116,7 @@ export default function Profile() {
   const canEditRole = !form.roleUpdated;
 
   return (
-    <div className="bg-green-600 min-h-screen flex items-center  ">
+    <div className=" flex items-center dashboard-bg min-h-screen relative  ">
     <div className="max-w-md mx-auto mt-10 p-15 bg-white  shadow-md rounded-xl">
       <h2 className="text-2xl font-bold mb-4 text-center">My Profile</h2>
 

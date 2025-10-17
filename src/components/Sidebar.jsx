@@ -41,19 +41,27 @@ export default function Sidebar({ isOpen }) {
       className={`fixed top-0 left-0 h-full w-64 bg-white shadow-md z-50 transform transition-transform duration-300
         ${isOpen ? "translate-x-0" : "-translate-x-full"}`}
     >
+     
       <div className="h-full flex flex-col">
+        <h1 className=" text-2xl mt-2 ml-15 font-bold text-black drop-shadow-[0_2px_0_rgba(16,185,129,1)] dashboard-bg w-fit rounded-4xl  ">
+  Nabu Payroll
+</h1>
+
+
         {/* 🔹 Profile Section (fixed at top, no scroll) */}
-        <div className="p-6 border-b flex flex-col items-center shrink-0">
+        <div className="  p-6 border-b flex flex-col items-center shrink-0 font-extrabold text-black drop-shadow-[0_2px_0_rgba(16,185,129,1) ]">
+
 
           {user ? (
             user.avatar ? (
+              
               <img
                 src={user.avatar}
                 alt="avatar"
-                className="w-16 h-16 rounded-full border-2 border-green-600"
+                className=" w-16 h-16 rounded-full border-2 border-green-600 object-cover   "
               />
             ) : (
-              <div className="w-16 h-16 rounded-full bg-blue-600 flex items-center justify-center text-2xl font-bold text-white">
+              <div className="w-16 h-16 rounded-full bg-green-600 flex items-center justify-center text-2xl font-bold text-white ">
                 {user.name?.charAt(0).toUpperCase() || "U"}
               </div>
             )
@@ -63,7 +71,7 @@ export default function Sidebar({ isOpen }) {
             </div>
           )}
 
-          <h1 className="text-lg font-semibold mt-2">
+          <h1 className="text-lg font-semibold mt-2  ">
             {user?.name || "User"}
           </h1>
           <p className="text-sm text-gray-500">

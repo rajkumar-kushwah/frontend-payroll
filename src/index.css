@@ -6,3 +6,64 @@
   box-shadow:inset 0 0 0 0px #4CAF50 !important;
   border-radius: 8px !important;
 }
+
+.react-calendar__tile--active{
+  background-color: #4CAF50 !important;
+  
+}
+
+.react-calendar__navigation button{
+    background: #4CAF50 !important;
+    color: black !important;
+    font-weight: bold !important;
+
+}
+
+.ai-glow {
+  color: white;
+  text-shadow:
+    0 0 8px #3b82f6,   /* Blue */
+    0 0 16px #8b5cf6,  /* Purple */
+    0 0 24px #facc15,  /* Yellow */
+    0 0 32px #3b82f6;  /* Blue again for depth */
+}
+
+
+.ai-halo {
+  border-radius: 50%;
+  padding: 4px; /* thickness of halo */
+  background: conic-gradient(
+    from 0deg, 
+    #3b82f6, #8b5cf6, #facc15, #3b82f6
+  );
+  animation: spin 8s linear infinite;
+}
+
+/* Spin animation */
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+
+/* index.css ya App.css me add karo */
+.ai-text-gradient {
+  background: linear-gradient(90deg, #00c6ff, #8a2be2, #ff6ec7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.dashboard-bg {
+  position: relative;
+  background: linear-gradient(to top, #3b82f6 0%, #8b5cf6 50%, #facc15 100%);
+  background-size: 100% 200%; /* double height for smooth move */
+  animation: moveGradient 10s linear infinite;
+}
+
+/* Smooth vertical animation */
+@keyframes moveGradient {
+  0% { background-position: 0% 100%; }   /* bottom */
+  50% { background-position: 0% 0%; }    /* top */
+  100% { background-position: 0% 100%; } /* bottom again */
+}
+

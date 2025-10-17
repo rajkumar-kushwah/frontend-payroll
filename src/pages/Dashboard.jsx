@@ -81,13 +81,13 @@ export default function Dashboard() {
     );
 
   return (
-    <Layout>
+    <Layout >
      
       <Users className="text-black drop-shadow-[0_2px_0_rgba(16,185,129,1)]" />
 
       {/* Dashboard Content */}
       {user?.name && (
-        <h1 className="text-2xl font-bold mb-4 text-black"><span className="text-green-400">Welcome,</span>{user.name}</h1>
+        <h1 className="text-2xl font-bold mb-4 text-black"><span className="ai-text-gradient">Welcome,</span>{user.name}</h1>
       )}
     <div className="grid grid-cols-1 md:grid-cols-2 gap-2  ">
       {/* Clock and Calendar */}
@@ -99,7 +99,7 @@ export default function Dashboard() {
       {/* Stats Cards */}
       <div className="border-none shadow-sm rounded-xl bg-gray-100 mb-12 ml-1 mr-1 p-6 w-full ">
       <div className=" flex-wrap gap-2 grid grid-cols-1 md:grid-cols-2 mx-auto mb-5 mt-10 overflow-x-auto min-w-full  ">
-        <div className="bg-gray-50 p-6 rounded-sm shadow text-center grid hover:bg-gray-100 ">
+        <div className="bg-gray-50 p-6 rounded-sm shadow text-center grid hover:bg-gray-100 transition-transform duration-300 md:hover:-translate-y-2  ">
           <div className="flex items-center justify-center ">
             <UserCog className="text-green-300 w-6 h-6"  />
             <div className="text-sm text-gray-600 font-medium">Total Employees</div>
@@ -109,16 +109,16 @@ export default function Dashboard() {
           </div>
         </div>
         
-        <div className="bg-gray-50 p-6 rounded-sm shadow text-center grid  hover:bg-gray-100">
+        <div className="bg-gray-50 p-6 rounded-sm shadow text-center grid  hover:bg-gray-100 transition-transform duration-300 md:hover:-translate-y-2">
           <div className="flex items-center justify-center ">
             <IndianRupee className="text-blue-400 w-6 h-6" />
-            <div className="text-sm text-gray-600 font-medium">Total Salary</div>
+            <div className="text-sm text-gray-600 font-medium ">Total Salary</div>
           </div>
           <div className="text-3xl font-bold text-blue-400 mt-2">
             ₹{stats.totalSalary}
           </div>
         </div>
-        <div className="bg-gray-50 p-6 rounded-sm shadow text-center grid  hover:bg-gray-100">
+        <div className="bg-gray-50 p-6 rounded-sm shadow text-center grid  hover:bg-gray-100 transition-transform duration-300 md:hover:-translate-y-2">
           <div className="flex items-center justify-center ">
             <CalendarCheck className="text-yellow-400 w-6 h-6"  />
             <div className="text-sm text-gray-600 font-medium">Leaves</div>
@@ -127,7 +127,7 @@ export default function Dashboard() {
             {stats.leaves}
           </div>
         </div>
-        <div className="bg-gray-50 p-6 rounded-sm shadow text-center grid  hover:bg-gray-100">
+        <div className="bg-gray-50 p-6 rounded-sm shadow text-center grid  hover:bg-gray-100 transition-transform duration-300 md:hover:-translate-y-2">
           <div className="flex items-center justify-center ">
             <FileClock  className="text-red-400 w-6 h-6" />
             <div className="text-sm text-gray-600 font-medium">Pending Reports</div>
@@ -142,7 +142,7 @@ export default function Dashboard() {
       {/* Add Employee & View All Buttons */}
       <div className="flex justify-end mb-4 gap-3">
         <button
-          className="bg-green-400 text-black px-4 py-2  rounded  hover:bg-green-500 transition"
+          className="bg-green-400 text-black px-4 py-2  rounded  hover:bg-green-500 transition "
           onClick={() => navigate("/employee/add")}
         >
           + Add Employee
