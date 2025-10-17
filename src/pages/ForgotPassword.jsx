@@ -11,12 +11,12 @@ const ForgotPassword = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // ✅ सिर्फ email भेजना है
+    
       const res = await api.post('/send-otp', { email });
 
       setMessage(res.data.message);
 
-      // ✅ localStorage में save
+     
       localStorage.setItem('resetEmail', email);
 
       setTimeout(() => {

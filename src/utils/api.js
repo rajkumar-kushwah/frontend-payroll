@@ -33,6 +33,9 @@ export const updateProfile = (data, isFormData = false) =>
   });
 
 
+  // DELETE Account
+export const deleteAccount = () => api.delete("/auth/delete-account");
+
 //(Optional) Agar toen stor karna hai:
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem("token");

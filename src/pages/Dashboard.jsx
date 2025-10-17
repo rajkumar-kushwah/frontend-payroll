@@ -99,7 +99,7 @@ export default function Dashboard() {
       {/* Stats Cards */}
       <div className="border-none shadow-sm rounded-xl bg-gray-100 mb-12 ml-1 mr-1 p-6 w-full ">
       <div className=" flex-wrap gap-2 grid grid-cols-1 md:grid-cols-2 mx-auto mb-5 mt-10 overflow-x-auto min-w-full  ">
-        <div className="bg-white p-6 rounded-sm shadow text-center grid hover:bg-gray-50 ">
+        <div className="bg-gray-50 p-6 rounded-sm shadow text-center grid hover:bg-gray-100 ">
           <div className="flex items-center justify-center ">
             <UserCog className="text-green-300 w-6 h-6"  />
             <div className="text-sm text-gray-600 font-medium">Total Employees</div>
@@ -109,7 +109,7 @@ export default function Dashboard() {
           </div>
         </div>
         
-        <div className="bg-white p-6 rounded-sm shadow text-center grid  hover:bg-gray-50">
+        <div className="bg-gray-50 p-6 rounded-sm shadow text-center grid  hover:bg-gray-100">
           <div className="flex items-center justify-center ">
             <IndianRupee className="text-blue-400 w-6 h-6" />
             <div className="text-sm text-gray-600 font-medium">Total Salary</div>
@@ -118,7 +118,7 @@ export default function Dashboard() {
             ₹{stats.totalSalary}
           </div>
         </div>
-        <div className="bg-white p-6 rounded-sm shadow text-center grid  hover:bg-gray-50">
+        <div className="bg-gray-50 p-6 rounded-sm shadow text-center grid  hover:bg-gray-100">
           <div className="flex items-center justify-center ">
             <CalendarCheck className="text-yellow-400 w-6 h-6"  />
             <div className="text-sm text-gray-600 font-medium">Leaves</div>
@@ -127,7 +127,7 @@ export default function Dashboard() {
             {stats.leaves}
           </div>
         </div>
-        <div className="bg-white p-6 rounded-sm shadow text-center grid  hover:bg-gray-50">
+        <div className="bg-gray-50 p-6 rounded-sm shadow text-center grid  hover:bg-gray-100">
           <div className="flex items-center justify-center ">
             <FileClock  className="text-red-400 w-6 h-6" />
             <div className="text-sm text-gray-600 font-medium">Pending Reports</div>

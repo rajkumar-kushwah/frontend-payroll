@@ -17,7 +17,7 @@ import Candidates from "./pages/Candidates";
 // import Resumes from "./pages/Resumes";
 // import Leaves from "./pages/Leaves";
 // import Payrolls from "./pages/Payrolls";
-// import Settings from "./pages/Settings";
+import Settings from "./components/settings/SettingsPage";
 import EmployeeDetail from "./pages/EmployeeDetail";
 import AddEmployee from "./pages/AddEmployee";
 import PublicRoute from "./routes/PublicRoute";
@@ -52,7 +52,7 @@ function App() {
         {/* <Route path="/resumes" element={<ProtectedRoute><Resumes/></ProtectedRoute>} /> */}
         {/* <Route path="/leaves" element={<ProtectedRoute><Leaves/></ProtectedRoute>} /> */}
         {/* <Route path="/payrolls" element={<ProtectedRoute><Payrolls/></ProtectedRoute>} /> */}
-        {/* <Route path="/settings" element={<ProtectedRoute><Settings/></ProtectedRoute>} /> */}
+        <Route path="/settings" element={<ProtectedRoute><Settings/></ProtectedRoute>} />
         {/* protected route end */}
       </Routes>
     </Router>

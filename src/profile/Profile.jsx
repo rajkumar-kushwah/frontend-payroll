@@ -116,7 +116,8 @@ export default function Profile() {
   const canEditRole = !form.roleUpdated;
 
   return (
-    <div className="max-w-md mx-auto mt-10 p-6 bg-white shadow-md rounded-lg">
+    <div className="bg-green-600 min-h-screen flex items-center  ">
+    <div className="max-w-md mx-auto mt-10 p-15 bg-white  shadow-md rounded-xl">
       <h2 className="text-2xl font-bold mb-4 text-center">My Profile</h2>
 
       {edit ? (
@@ -217,7 +218,7 @@ export default function Profile() {
           <div className="flex justify-between">
             <button
               type="submit"
-              className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+              className="bg-green-500 text-black px-4 py-2 rounded hover:bg-green-600"
             >
               Save
             </button>
@@ -295,6 +296,7 @@ export default function Profile() {
           </div>
         </div>
       )}
+    </div>
     </div>
   );
 }
