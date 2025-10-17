@@ -21,7 +21,7 @@ import {
 export default function Sidebar({ isOpen }) {
   const { user } = useUser();
 
-// 🧩 Navigation links with icons
+  // 🧩 Navigation links with icons
   const navLinks = [
     { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
     { to: "/messages", label: "Messages", icon: MessageSquare },
@@ -45,27 +45,33 @@ export default function Sidebar({ isOpen }) {
         {/* 🔹 Profile Section (fixed at top, no scroll) */}
         <div className="p-6 border-b flex flex-col items-center shrink-0">
 
-          {user?.avatar ? (
-            <img
-              src={user.avatar}
-              alt="avatar"
-              className="w-16 h-16 rounded-full border-2 border-green-600"
-            />
+          {user ? (
+            user.avatar ? (
+              <img
+                src={user.avatar}
+                alt="avatar"
+                className="w-16 h-16 rounded-full border-2 border-green-600"
+              />
+            ) : (
+              <div className="w-16 h-16 rounded-full bg-blue-600 flex items-center justify-center text-2xl font-bold text-white">
+                {user.name?.charAt(0).toUpperCase() || "U"}
+              </div>
+            )
           ) : (
-
-            <div className="w-16 h-16 rounded-full bg-blue-600 flex items-center justify-center text-2xl font-bold text-white">
-              <span>{user?.name?.charAt(0).toUpperCase() || "U"}</span>
+            <div className="w-16 h-16 rounded-full bg-gray-300 flex items-center justify-center">
+              ?
             </div>
-
           )}
 
-          {/* Name and Role */}
-          <h1 className="text-lg font-semibold mt-2">{user?.name || "User"}</h1>
+          <h1 className="text-lg font-semibold mt-2">
+            {user?.name || "User"}
+          </h1>
           <p className="text-sm text-gray-500">
             {user?.role
               ? user.role.charAt(0).toUpperCase() + user.role.slice(1)
               : "No role"}
           </p>
+
         </div>
 
         {/* 🔹 Scrollable Nav Section */}
@@ -77,10 +83,9 @@ export default function Sidebar({ isOpen }) {
                 key={link.to}
                 to={link.to}
                 className={({ isActive }) =>
-                  `flex items-center gap-3 w-full p-2 rounded-lg transition-all ${
-                    isActive
-                      ? "bg-green-400 font-medium text-black"
-                      : "hover:bg-green-100 text-gray-700"
+                  `flex items-center gap-3 w-full p-2 rounded-lg transition-all ${isActive
+                    ? "bg-green-400 font-medium text-black"
+                    : "hover:bg-green-100 text-gray-700"
                   }`
                 }
               >
