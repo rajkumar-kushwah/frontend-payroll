@@ -204,7 +204,7 @@ export default function ProfileSettings() {
           checked={form.newsletter}
           onChange={(e) => setForm({ ...form, newsletter: e.target.checked })}
         />
-        <span>Send me marketing tips and news about Brevo updates.</span>
+        <span>Send me the profile update newsletter</span>
       </label>
 
       {/* Update button */}

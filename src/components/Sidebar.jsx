@@ -43,7 +43,7 @@ export default function Sidebar({ isOpen }) {
     >
      
       <div className="h-full flex flex-col">
-        <h1 className=" text-2xl mt-2 ml-15 font-bold text-black drop-shadow-[0_2px_0_rgba(16,185,129,1)] dashboard-bg w-fit rounded-4xl  ">
+        <h1 className=" text-2xl mt-2 ml-15 font-bold text-black drop-shadow-[0_2px_0_rgba(16,185,129,1)] ">
   Nabu Payroll
 </h1>
 
