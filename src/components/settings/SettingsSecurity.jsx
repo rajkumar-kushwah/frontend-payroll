@@ -119,13 +119,13 @@ export default function SecuritySettings() {
 
           <button
             type="submit"
-            className="w-full bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+            className="w-full bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
           >
             Update Password
           </button>
 
           <p
-            className="text-sm text-blue-600 cursor-pointer mt-2"
+            className="text-sm text-green-600 cursor-pointer mt-2"
             onClick={() => setStep("forgotEmail")}
           >
             Forgot Password?

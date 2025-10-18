@@ -86,9 +86,9 @@ export default function ProfileSettings() {
   };
 
   return (
-    <form onSubmit={handleUpdate} className="space-y-4 max-w-md">
+    <form onSubmit={handleUpdate} className="space-y-6 max-w-md mx-auto mt-6 ">
       {/* Personal Info */}
-      <h3 className="font-semibold text-lg">Personal Information</h3>
+      <h3 className="font-semibold text-lg ">Personal Information</h3>
 
       <label>Email address*</label>
       <input
