@@ -1,138 +1,129 @@
-// src/components/Settings/SecuritySettings.jsx
 import { useState } from "react";
+import { Eye, EyeOff } from "lucide-react"; // 👁️ npm i lucide-react
 import api from "../../utils/api";
 
 export default function SecuritySettings() {
-  // --- Existing password update ---
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false); // 👁️ toggle
 
-  // --- Forgot Password Flow ---
   const [forgotEmail, setForgotEmail] = useState("");
   const [otp, setOtp] = useState("");
   const [resetToken, setResetToken] = useState("");
   const [newForgotPassword, setNewForgotPassword] = useState("");
   const [confirmForgotPassword, setConfirmForgotPassword] = useState("");
+  const [step, setStep] = useState("update");
 
-  const [step, setStep] = useState("update"); 
-  // steps: "update" | "forgotEmail" | "verifyOtp" | "resetPassword"
+  // --- Validation errors ---
+  const [errors, setErrors] = useState({});
+
+  const validateUpdateFields = () => {
+    const newErrors = {};
+    if (!oldPassword.trim()) newErrors.oldPassword = "Old password required";
+    if (!newPassword.trim()) newErrors.newPassword = "New password required";
+    if (!confirmPassword.trim()) newErrors.confirmPassword = "Confirm password required";
+    if (newPassword && confirmPassword && newPassword !== confirmPassword)
+      newErrors.confirmPassword = "Passwords do not match";
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
 
   // --- Update Password ---
   const handleUpdatePassword = async (e) => {
     e.preventDefault();
-    if (newPassword !== confirmPassword) {
-      alert("Passwords do not match");
+    if (!validateUpdateFields()) {
+      alert("Please fix the errors before submitting.");
       return;
     }
+
     try {
-      await api.put("/auth/change-password", { oldPassword, newPassword });
+      await api.put("/auth/update-password", { oldPassword, newPassword });
       alert("Password updated successfully!");
-      setOldPassword(""); 
-      setNewPassword(""); 
+      setOldPassword("");
+      setNewPassword("");
       setConfirmPassword("");
+      setErrors({});
     } catch (err) {
       console.error(err);
       alert(err.response?.data?.message || "Failed to update password");
     }
   };
 
-  // --- Send OTP ---
-  const handleSendOtp = async () => {
-    if (!forgotEmail) {
-      alert("Enter your email");
-      return;
-    }
-    try {
-      await api.post("/auth/send-otp", { email: forgotEmail }, { headers: { Authorization: "" } });
-      alert("OTP sent to your email");
-      setStep("verifyOtp");
-    } catch (err) {
-      console.error(err);
-      alert(err.response?.data?.message || "Failed to send OTP");
-    }
-  };
-
-  // --- Verify OTP ---
-  const handleVerifyOtp = async () => {
-    if (!otp) {
-      alert("Enter OTP");
-      return;
-    }
-    try {
-      const res = await api.post("/auth/verify-otp", { email: forgotEmail, otp }, { headers: { Authorization: "" } });
-      alert("OTP verified. You can now reset your password.");
-      setResetToken(res.data.resetToken);
-      setStep("resetPassword");
-    } catch (err) {
-      console.error(err);
-      alert(err.response?.data?.message || "Invalid OTP");
-    }
-  };
-
-  // --- Reset Password ---
-  const handleResetPassword = async () => {
-    if (newForgotPassword !== confirmForgotPassword) {
-      alert("Passwords do not match");
-      return;
-    }
-    try {
-      await api.post("/auth/reset-password", {
-        email: forgotEmail,
-        newPassword: newForgotPassword,
-        resetToken,
-      }, { headers: { Authorization: "" } });
-      alert("Password reset successfully!");
-      // Reset all
-      setForgotEmail(""); setOtp(""); setResetToken("");
-      setNewForgotPassword(""); setConfirmForgotPassword("");
-      setStep("update");
-    } catch (err) {
-      console.error(err);
-      alert(err.response?.data?.message || "Failed to reset password");
-    }
-  };
-
   return (
-    
     <div className="max-w-md mx-auto space-y-6 mt-6">
-      {/* --- Update Password --- */}
       {step === "update" && (
-        <form onSubmit={handleUpdatePassword} className="space-y-4">
+        <form onSubmit={handleUpdatePassword} className="space-y-4 relative">
           <h2 className="text-xl font-semibold">Update Password</h2>
-          <label className="block">Old Password</label>
-          <input
-            type="password"
-            className="w-full border px-3 py-2 rounded"
-            placeholder="Enter your old password"
-            value={oldPassword}
-            onChange={(e) => setOldPassword(e.target.value)}
-            required
-          />
-          <label className="block">New Password</label>
-          <input
-            type="password"
-            className="w-full border px-3 py-2 rounded"
-            placeholder="Enter new password"
-            value={newPassword}
-            onChange={(e) => setNewPassword(e.target.value)}
-            required
-          />
-          <label className="block">Confirm New Password</label>
-          <input
-            type="password"
-            className="w-full border px-3 py-2 rounded"
-            placeholder="Confirm new password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            required
-          />
+
+          {/* Old Password */}
+          <div>
+            <label className="block">Old Password</label>
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                className={`w-full border px-3 py-2 rounded ${
+                  errors.oldPassword ? "border-red-500" : ""
+                }`}
+                placeholder="Enter your old password"
+                value={oldPassword}
+                onChange={(e) => setOldPassword(e.target.value)}
+              />
+              <button
+                type="button"
+                className="absolute right-3 top-2.5 text-gray-600"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
+            </div>
+            {errors.oldPassword && (
+              <p className="text-red-500 text-sm">{errors.oldPassword}</p>
+            )}
+          </div>
+
+          {/* New Password */}
+          <div>
+            <label className="block">New Password</label>
+            <input
+              type={showPassword ? "text" : "password" }
+              className={`w-full border px-3 py-2 rounded ${
+                errors.newPassword ? "border-red-500" : ""
+              }`}
+              placeholder="Enter new password"
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+            />
+            {errors.newPassword && (
+              <p className="text-red-500 text-sm">{errors.newPassword}</p>
+            )}
+            
+          </div>
+
+          {/* Confirm New Password */}
+          <div>
+            <label className="block">Confirm New Password</label>
+            <input
+              type={showPassword ? "text" : "password"}
+              className={`w-full border px-3 py-2 rounded ${
+                errors.confirmPassword ? "border-red-500" : ""
+              }`}
+              placeholder="Confirm new password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+            />
+            {errors.confirmPassword && (
+              <p className="text-red-500 text-sm">{errors.confirmPassword}</p>
+            )}
+          </div>
+
           <button
             type="submit"
             className="w-full bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
           >
             Update Password
           </button>
+
           <p
             className="text-sm text-blue-600 cursor-pointer mt-2"
             onClick={() => setStep("forgotEmail")}
@@ -140,79 +131,6 @@ export default function SecuritySettings() {
             Forgot Password?
           </p>
         </form>
-      )}
-
-      {/* --- Forgot Password: Enter Email --- */}
-      {step === "forgotEmail" && (
-        <div className="space-y-4">
-          <h2 className="text-xl font-semibold">Forgot Password</h2>
-          <input
-            type="email"
-            className="w-full border px-3 py-2 rounded"
-            placeholder="Enter your email"
-            value={forgotEmail}
-            onChange={(e) => setForgotEmail(e.target.value)}
-          />
-          <button
-            onClick={handleSendOtp}
-            className="w-full bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
-          >
-            Send OTP
-          </button>
-          <p
-            className="text-sm text-blue-600 cursor-pointer mt-2"
-            onClick={() => setStep("update")}
-          >
-            Back to Update Password
-          </p>
-        </div>
-      )}
-
-      {/* --- Verify OTP --- */}
-      {step === "verifyOtp" && (
-        <div className="space-y-4">
-          <h2 className="text-xl font-semibold">Verify OTP</h2>
-          <input
-            type="text"
-            className="w-full border px-3 py-2 rounded"
-            placeholder="Enter OTP"
-            value={otp}
-            onChange={(e) => setOtp(e.target.value)}
-          />
-          <button
-            onClick={handleVerifyOtp}
-            className="w-full bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600"
-          >
-            Verify OTP
-          </button>
-        </div>
-      )}
-
-      {/* --- Reset Password --- */}
-      {step === "resetPassword" && (
-        <div className="space-y-4">
-          <h2 className="text-xl font-semibold">Reset Password</h2>
-          <input
-            type="password"
-            className="w-full border px-3 py-2 rounded"
-            placeholder="New Password"
-            value={newForgotPassword}
-            onChange={(e) => setNewForgotPassword(e.target.value)}
-          />
-          <input
-            type="password"
-            className="w-full border px-3 py-2 rounded"
-            placeholder="Confirm New Password"
-            value={confirmForgotPassword}
-            onChange={(e) => setConfirmForgotPassword(e.target.value)}
-          />
-          <button
-            onClick={handleResetPassword}
-            className="w-full bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
-          >
-            Reset Password
-          </button>
-        </div>
       )}
     </div>
   );

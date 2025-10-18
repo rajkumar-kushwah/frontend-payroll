@@ -35,6 +35,7 @@ export const updateProfile = (data, isFormData = false) =>
 
   // DELETE Account
 export const deleteAccount = () => api.delete("/auth/delete-account");
+export const updatePassword = (data) => api.put("/auth/update-password", data);
 
 //(Optional) Agar toen stor karna hai:
 api.interceptors.request.use((config) => {
