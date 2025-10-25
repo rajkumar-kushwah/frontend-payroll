@@ -3,7 +3,7 @@ import React from "react";
 import { NavLink } from "react-router-dom";
 import { useUser } from "../context/UserContext"; // global user context
 
-// 🧩 Import icons from lucide-react
+//  Import icons from lucide-react
 import {
   LayoutDashboard,
   MessageSquare,
@@ -21,7 +21,7 @@ import {
 export default function Sidebar({ isOpen }) {
   const { user } = useUser();
 
-  // 🧩 Navigation links with icons
+  //  Navigation links with icons
   const navLinks = [
     { to: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
     { to: "/messages", label: "Messages", icon: MessageSquare },
@@ -91,9 +91,9 @@ export default function Sidebar({ isOpen }) {
                 key={link.to}
                 to={link.to}
                 className={({ isActive }) =>
-                  `flex items-center gap-3 w-full p-2 rounded-lg transition-all ${isActive
+                  `flex items-center gap-3 w-full p-2 rounded-lg  transition-all ${isActive
                     ? "bg-green-400 font-medium text-black"
-                    : "hover:bg-green-100 text-gray-700"
+                    : "hover:bg-green-100 duration-600 text-gray-700"
                   }`
                 }
               >
