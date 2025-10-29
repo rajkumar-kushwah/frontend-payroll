@@ -50,8 +50,11 @@ export default function Profile() {
       }
     };
 
-    if (!user) fetchProfile();
-    else {
+     fetchProfile();
+    }, []);
+    
+     useEffect(() => {
+         if (!user) {
       setForm({
         name: user.name || "",
         email: user.email || "",
@@ -70,7 +73,10 @@ export default function Profile() {
         roleUpdated: user.roleUpdated || false,
       });
     }
-  }, [user, setUser]);
+  }, [user]);
+  
+    
+   
 
   const handleUpdate = async (e) => {
     e.preventDefault();
@@ -169,6 +175,7 @@ export default function Profile() {
           </select>
 
           {/* DOB */}
+          <label htmlFor="">dateofBirth</label>
           <input
             type="date"
             className="w-full border px-3 py-2 rounded"
