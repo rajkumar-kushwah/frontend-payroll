@@ -140,15 +140,16 @@ export default function Dashboard() {
       </div>
 </div>
       {/* Add Employee & View All Buttons */}
-      <div className="flex justify-end mb-4 gap-3">
+      <div className="flex justify-end mb-4 gap-3 ">
         <button
-          className="bg-green-400 text-black px-4 py-2  rounded  hover:bg-green-500 transition "
+        
+          className="bg-green-400 text-black px-2   py-1.5 text-sm sm:px-3 sm:py-2 sm:text-base  rounded  hover:bg-green-500 transition "
           onClick={() => navigate("/employee/add")}
         >
           + Add Employee
         </button>
         <button
-          className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition"
+          className="bg-gray-500 text-white px-2 py-1.5 text-sm sm:px-3 sm:py-2 sm:text-base  rounded hover:bg-gray-600 transition"
           onClick={() => navigate("/employees")}
         >
           View All
