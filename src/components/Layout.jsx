@@ -9,7 +9,9 @@ export default function Layout({ children }) {
   useEffect(() => {
     if (window.innerWidth < 768) {
       setIsOpen(false);
-    }
+    } else{
+      setIsOpen(true);
+    } 
   }, []);
 
   return (

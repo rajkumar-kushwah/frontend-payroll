@@ -11,6 +11,8 @@ export default function Header({ toggle }) {
   const [query, setQuery] = useState("");        // search input
   const [results, setResults] = useState([]);    // search results
   const [loading, setLoading] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
 
   // 🔹 Refs for dropdowns
   const msgRef = useRef(null);
@@ -106,7 +108,12 @@ export default function Header({ toggle }) {
     <header className="bg-green-500 w-full px-4  py-3 flex items-center justify-between shadow box-border">
       {/* Left Side */}
       <div className="flex items-center gap-2 sm:gap-3">
-        <button onClick={toggle} className="text-2xl cursor-pointer">☰</button>
+        <button onClick={() => {
+          toggle(); 
+        setIsMenuOpen(!isMenuOpen);
+        }}
+       className="text-2xl text-white cursor-pointer">{isMenuOpen ? "×" : "☰"}
+       </button>
 
         {/* Search Box */}
         <div className="relative flex items-center gap-2 w-full bg-white border border-black rounded-xl py-1 px-2 text-black">
