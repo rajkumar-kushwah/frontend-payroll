@@ -41,7 +41,11 @@ export default function Sidebar({ isOpen , toggle }) {
       className={`fixed top-0 left-0 h-full w-64 bg-white shadow-md z-50 transform transition-transform duration-300
         ${isOpen ? "translate-x-0" : "-translate-x-full"}`}
     >
-       {/* 🔹 Mobile close icon */}
+      
+     
+      <div className="h-full flex flex-col">
+        <h1 className=" text-2xl mt-2 ml-15 font-bold text-black drop-shadow-[0_2px_0_rgba(16,185,129,1)] ">
+           {/* 🔹 Mobile close icon */}
       <div className="flex justify-end md:hidden">
         <button
           onClick={toggle}
@@ -50,9 +54,6 @@ export default function Sidebar({ isOpen , toggle }) {
           ×
         </button>
       </div>
-     
-      <div className="h-full flex flex-col">
-        <h1 className=" text-2xl mt-2 ml-15 font-bold text-black drop-shadow-[0_2px_0_rgba(16,185,129,1)] ">
   Nabu Payroll
 </h1>
 

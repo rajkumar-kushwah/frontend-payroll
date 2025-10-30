@@ -11,7 +11,7 @@ export default function Layout({ children }) {
       setIsOpen(false);
     } else{
       setIsOpen(true);
-    } 
+    }
   }, []);
 
   return (

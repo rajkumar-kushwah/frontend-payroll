@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import api from "../utils/api";
 import { useUser } from "../context/UserContext";
 
-export default function Header({ toggle }) {
+export default function Header({ toggle , isMobile, isOpen  }) {
   const navigate = useNavigate();
   const { user } = useUser();
 
@@ -112,7 +112,8 @@ export default function Header({ toggle }) {
           toggle(); 
         setIsMenuOpen(!isMenuOpen);
         }}
-       className="text-2xl text-white cursor-pointer">{isMenuOpen ? "×" : "☰"}
+       className="text-2xl text-white cursor-pointer ">{isOpen ? "×" : "☰"}
+       
        </button>
 
         {/* Search Box */}
