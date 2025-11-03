@@ -47,7 +47,7 @@ export default function Employees() {
       const payload = {
         name: newEmp.name,
         email: newEmp.email,
-        jobRole: newEmp.jobrole, // match backend schema
+        jobRole: newEmp.jobrole,
         department: newEmp.department,
         salary: Number(newEmp.salary) || 0,
         status: newEmp.status || "active",
@@ -58,7 +58,6 @@ export default function Employees() {
       await addEmployee(payload);
       alert("Employee added successfully!");
 
-      // Reset form
       setNewEmp({
         name: "",
         email: "",
@@ -70,7 +69,7 @@ export default function Employees() {
         notes: ""
       });
       setShowForm(false);
-      fetchEmployees(); // refresh table
+      fetchEmployees();
     } catch (err) {
       console.error("Add Employee Error:", err);
       alert(err.response?.data?.message || "Failed to add employee");
@@ -107,7 +106,6 @@ export default function Employees() {
     }
   };
 
-  // Navigate to Add Salary page for selected employee
   const handleAddSalary = () => {
     if (selectedEmployees.length !== 1) {
       return alert("Select exactly one employee to add salary");
@@ -115,7 +113,6 @@ export default function Employees() {
     navigate(`/employee/${selectedEmployees[0]}/add-salary`);
   };
 
-  // Filter employees by search
   const filteredEmployees = employees.filter(emp =>
     emp.name.toLowerCase().includes(search.toLowerCase()) ||
     emp.email.toLowerCase().includes(search.toLowerCase()) ||
@@ -127,40 +124,68 @@ export default function Employees() {
       <h2 className="text-2xl font-bold mb-4">Employees</h2>
 
       {/* Search + Actions */}
-      <div className="flex gap-2 mb-4">
+      <div className="flex flex-col sm:flex-row gap-2 mb-4">
         <input
           type="text"
           placeholder="Search by name, email, department..."
           value={search}
           onChange={e => setSearch(e.target.value)}
-          className="border p-2 rounded w-1/3"
+          className="border p-2 rounded w-full sm:w-1/3"
         />
-        <button onClick={handleAddSalary} className="bg-green-500 text-black px-4 py-2 rounded">+ Add Salary</button>
-        <button onClick={() => setShowForm(prev => !prev)} className="bg-blue-500 text-white px-4 py-2 rounded">
-          {showForm ? "Close Add Employee Form" : "+ Add Employee"}
-        </button>
+        <div className="flex gap-2">
+          <button
+            onClick={handleAddSalary}
+            className="bg-green-500 text-black px-3 py-2 rounded text-sm sm:text-base w-full sm:w-auto"
+          >
+            + Add Salary
+          </button>
+          <button
+            onClick={() => setShowForm(prev => !prev)}
+            className="bg-blue-500 text-white px-3 py-2 rounded text-sm sm:text-base w-full sm:w-auto"
+          >
+            {showForm ? "Close Form" : "+ Add Employee"}
+          </button>
+        </div>
       </div>
 
       {/* Add Employee Form */}
       {showForm && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 bg-white p-4 rounded shadow">
-          {["name","email","jobrole","department","salary","status","notes"].map(f => (
+          {[
+            { label: "Full Name", field: "name", type: "text" },
+            { label: "Email Address", field: "email", type: "email" },
+            { label: "Job Role", field: "jobrole", type: "text" },
+            { label: "Department", field: "department", type: "text" },
+            { label: "Salary (₹)", field: "salary", type: "number" },
+            { label: "Status", field: "status", type: "text" },
+            { label: "Notes", field: "notes", type: "text" }
+          ].map(({ label, field, type }) => (
+            <div key={field} className="flex flex-col">
+              <label className="text-sm font-semibold mb-1">{label}</label>
+              <input
+                type={type}
+                placeholder={label}
+                value={newEmp[field]}
+                onChange={e => setNewEmp({ ...newEmp, [field]: e.target.value })}
+                className="border p-2 rounded"
+              />
+            </div>
+          ))}
+          <div className="flex flex-col">
+            <label className="text-sm font-semibold mb-1">Join Date</label>
             <input
-              key={f}
-              type={f === "salary" ? "number" : "text"}
-              placeholder={f}
-              value={newEmp[f]}
-              onChange={e => setNewEmp({...newEmp,[f]: e.target.value})}
+              type="date"
+              value={newEmp.joinDate}
+              onChange={e => setNewEmp({ ...newEmp, joinDate: e.target.value })}
               className="border p-2 rounded"
             />
-          ))}
-          <input
-            type="date"
-            value={newEmp.joinDate}
-            onChange={e => setNewEmp({...newEmp, joinDate: e.target.value})}
-            className="border p-2 rounded"
-          />
-          <button onClick={handleAdd} className="bg-green-700 text-white px-4 py-2 rounded md:col-span-2">Submit</button>
+          </div>
+          <button
+            onClick={handleAdd}
+            className="bg-green-700 text-white px-4 py-2 rounded md:col-span-2 hover:bg-green-800"
+          >
+            Submit
+          </button>
         </div>
       )}
 
@@ -169,7 +194,9 @@ export default function Employees() {
         <table className="w-full text-sm">
           <thead>
             <tr className="bg-gray-100">
-              <th className="p-2 border"><input type="checkbox" checked={selectAll} onChange={toggleSelectAll}/></th>
+              <th className="p-2 border">
+                <input type="checkbox" checked={selectAll} onChange={toggleSelectAll} />
+              </th>
               <th className="p-2 border">#</th>
               <th className="p-2 border">Name</th>
               <th className="p-2 border">Email</th>
@@ -183,28 +210,48 @@ export default function Employees() {
             </tr>
           </thead>
           <tbody>
-            {filteredEmployees.length ? filteredEmployees.map((emp,index)=> (
-              <tr key={emp._id} className="hover:bg-gray-50">
-                <td className="p-2 border">
-                  <input type="checkbox" checked={selectedEmployees.includes(emp._id)} onChange={() => toggleSelect(emp._id)}/>
-                </td>
-                <td className="p-2 border">{index + 1}</td>
-                <td className="p-2 border">{emp.name}</td>
-                <td className="p-2 border">{emp.email}</td>
-                <td className="p-2 border">{emp.jobrole}</td>
-                <td className="p-2 border">{emp.department}</td>
-                <td className="p-2 border">₹{emp.salary}</td>
-                <td className="p-2 border">{emp.status}</td>
-                <td className="p-2 border">{emp.joinDate ? new Date(emp.joinDate).toLocaleDateString() : "-"}</td>
-                <td className="p-2 border">{emp.notes || "-"}</td>
-                <td className="p-2 border flex gap-1">
-                  <button onClick={() => navigate(`/employee/${emp._id}`)} className="bg-green-500  text-black px-2 py-1 rounded">View</button>
-                  <button onClick={() => handleDelete(emp._id)} className="bg-red-500 text-black px-2 py-1 rounded">Delete</button>
-                </td>
-              </tr>
-            )) : (
+            {filteredEmployees.length ? (
+              filteredEmployees.map((emp, index) => (
+                <tr key={emp._id} className="hover:bg-gray-50">
+                  <td className="p-2 border">
+                    <input
+                      type="checkbox"
+                      checked={selectedEmployees.includes(emp._id)}
+                      onChange={() => toggleSelect(emp._id)}
+                    />
+                  </td>
+                  <td className="p-2 border">{index + 1}</td>
+                  <td className="p-2 border">{emp.name}</td>
+                  <td className="p-2 border">{emp.email}</td>
+                  <td className="p-2 border">{emp.jobrole}</td>
+                  <td className="p-2 border">{emp.department}</td>
+                  <td className="p-2 border">₹{emp.salary}</td>
+                  <td className="p-2 border">{emp.status}</td>
+                  <td className="p-2 border">
+                    {emp.joinDate ? new Date(emp.joinDate).toLocaleDateString() : "-"}
+                  </td>
+                  <td className="p-2 border">{emp.notes || "-"}</td>
+                  <td className="p-2 border flex flex-wrap gap-1">
+                    <button
+                      onClick={() => navigate(`/employee/${emp._id}`)}
+                      className="bg-green-500 text-black px-2 py-1 rounded text-xs sm:text-sm"
+                    >
+                      View
+                    </button>
+                    <button
+                      onClick={() => handleDelete(emp._id)}
+                      className="bg-red-500 text-black px-2 py-1 rounded text-xs sm:text-sm"
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))
+            ) : (
               <tr>
-                <td colSpan="11" className="text-center py-4 text-gray-500 italic">No employees found.</td>
+                <td colSpan="11" className="text-center py-4 text-gray-500 italic">
+                  No employees found.
+                </td>
               </tr>
             )}
           </tbody>
