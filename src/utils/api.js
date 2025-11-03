@@ -18,12 +18,14 @@ export const updateEmployee = (id, data) => api.put(`/employees/${id}`, data);
 export const deleteEmployee = (id) => api.delete(`/employees/${id}`);
 
 // Salary APIs
+// client/utils/api.js
 export const addSalary = (data) => api.post("/salary", data);
-export const getSalariesByEmployee = (employeeId) => api.get(`/salary/${employeeId}`);
+export const getSalariesByEmployee = (employeeId) => api.get(`/salary/employee/${employeeId}`);
 export const updateSalary = (id, data) => api.put(`/salary/${id}`, data);
 export const deleteSalary = (id) => api.delete(`/salary/${id}`);
-export const markSalaryPaid = (id) => api.put(`/salary/pay/${id}`);
-export const getSalaryById = (id) => api.get(`/salary/single/${id}`);
+export const markSalaryPaid = (id) => api.patch(`/salary/${id}/pay`);
+export const getSalaryById = (id) => api.get(`/salary/${id}`);
+
 
 // Profile APIs
 export const getProfile = () => api.get("/auth/profile");
