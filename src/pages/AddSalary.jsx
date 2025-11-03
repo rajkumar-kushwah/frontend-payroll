@@ -71,6 +71,19 @@ export default function AddSalary() {
   useEffect(() => { fetchEmployees(); }, []);
   useEffect(() => { fetchSalaryHistory(); }, [selectedEmployee]);
 
+  useEffect(() => {
+  if (selectedEmployee && employees.length) {
+    const emp = employees.find(e => e._id === selectedEmployee);
+    if (emp) {
+      setSalaryData(prev => ({
+        ...prev,
+        basic: emp.salary || 0, //  Auto-fill employee basic salary
+      }));
+    }
+  }
+}, [selectedEmployee, employees]);
+
+
   // ✅ Handle input change & salary calculation
   const handleChange = (e) => {
     const { name, value } = e.target;
