@@ -10,7 +10,7 @@ import Dashboard from './pages/Dashboard';
 import ProtectedRoute from './routes/ProtectedRoute';
 import { UserProvider } from './context/UserContext';
 import Profile from './profile/Profile';
-import Employees from "./pages/Employees";
+import Employees from "./employees/Employees";
 import Candidates from "./pages/Candidates";
 // import Messages from "./pages/Messages";
 // import Jobs from "./pages/Jobs";
@@ -18,11 +18,12 @@ import Candidates from "./pages/Candidates";
 // import Leaves from "./pages/Leaves";
 // import Payrolls from "./pages/Payrolls";
 import Settings from "./components/settings/SettingsPage";
-import EmployeeDetail from "./pages/EmployeeDetail";
-import AddEmployee from "./pages/AddEmployee";
+import EmployeeDetail from "./employees/EmployeeDetail";
+import AddEmployee from "./employees/AddEmployee";
 import PublicRoute from "./routes/PublicRoute";
 import AddSalary from "./pages/AddSalary";
 import NotFound from "./notfound/NotFound";
+import EditEmployee from "./employees/EditEmployee";
 
 function App() {
   return (
@@ -46,6 +47,7 @@ function App() {
         <Route path="/employee/add" element={<ProtectedRoute> <AddEmployee /></ProtectedRoute>} />
         <Route path="/employee/:employeeId/add-salary/:salaryId?" element={<ProtectedRoute><AddSalary /></ProtectedRoute>} />
         <Route path="/employee/:id" element={<ProtectedRoute><EmployeeDetail /></ProtectedRoute>} />
+        <Route path="/employee/:id/edit" element={<ProtectedRoute><EditEmployee /></ProtectedRoute>} />
         <Route path="/candidates" element={<ProtectedRoute><Candidates /></ProtectedRoute>} />
         {/* <Route path="/messages" element={<ProtectedRoute><Messages/></ProtectedRoute>} /> */}
         {/* <Route path="/jobs" element={<ProtectedRoute><Jobs/></ProtectedRoute>} /> */}

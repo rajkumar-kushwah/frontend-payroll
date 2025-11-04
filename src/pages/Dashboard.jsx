@@ -203,6 +203,10 @@ export default function Dashboard() {
                           View
                         </button>
                         <button
+                        onClick={ () =>{
+                       navigate(`/employee/${emp._id}/edit`);
+                        }}
+                     
                           className="block w-full text-left px-4 py-2 hover:bg-gray-100"
                         >
                           Update

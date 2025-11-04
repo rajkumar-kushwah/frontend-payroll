@@ -36,11 +36,11 @@ export default function EmployeeAdd() {
 
     try {
       await api.post("/employees", form);
-      alert("✅ Employee added successfully!");
+      alert(" Employee added successfully!");
       navigate("/dashboard");
     } catch (err) {
       console.error(err);
-      alert("❌ Error adding employee");
+      alert(" Error adding employee");
     }
   };
 

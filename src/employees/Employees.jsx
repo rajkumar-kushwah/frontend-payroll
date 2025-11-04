@@ -1,0 +1,323 @@
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import Layout from "../components/Layout";
+import { getEmployees, addEmployee, deleteEmployee, updateEmployee, getEmployeeById } from "../utils/api";
+import { MoreVertical } from "lucide-react";
+
+export default function Employees() {
+  const [employees, setEmployees] = useState([]);
+  const [showForm, setShowForm] = useState(false);
+  const [nemployee, setNewEmployee] = useState(null);
+  const [newEmp, setNewEmp] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    jobrole: "employee",
+    department: "",
+    joinDate: "",
+    salary: "",
+    status: "active",
+    notes: ""
+  });
+  const [search, setSearch] = useState("");
+  const [selectedEmployees, setSelectedEmployees] = useState([]);
+  const [selectAll, setSelectAll] = useState(false);
+  const [activeMenu, setActiveMenu] = useState(null);
+  const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
+
+  const navigate = useNavigate();
+  const { id } = useParams();
+
+  const fetchEmployees = async () => {
+    try {
+      const res = await getEmployees();
+      setEmployees(res.data);
+    } catch (err) {
+      console.error("Fetch Employees Error:", err);
+      alert("Failed to fetch employees");
+    }
+  };
+
+  useEffect(() => {
+    fetchEmployees();
+  }, []);
+
+  const handleAdd = async () => {
+    if (!newEmp.name || !newEmp.email || !newEmp.department) {
+      return alert("Please fill required fields: Name, Email, Department");
+    }
+
+    try {
+      const payload = {
+        name: newEmp.name,
+        email: newEmp.email,
+        phone: newEmp.phone,
+        jobRole: newEmp.jobrole,
+        department: newEmp.department,
+        salary: Number(newEmp.salary) || 0,
+        status: newEmp.status || "active",
+        joinDate: newEmp.joinDate || new Date().toISOString(),
+        notes: newEmp.notes || ""
+      };
+
+      await addEmployee(payload);
+      alert("Employee added successfully!");
+      setNewEmp({
+        name: "",
+        email: "",
+        phone: "",
+        jobrole: "employee",
+        department: "",
+        joinDate: "",
+        salary: "",
+        status: "active",
+        notes: ""
+      });
+      setShowForm(false);
+      fetchEmployees();
+    } catch (err) {
+      console.error("Add Employee Error:", err);
+      alert(err.response?.data?.message || "Failed to add employee");
+    }
+  };
+
+  const handleDelete = async (id) => {
+    if (!window.confirm("Are you sure you want to delete this employee?")) return;
+    try {
+      await deleteEmployee(id);
+      alert("Employee deleted successfully");
+      fetchEmployees();
+    } catch (err) {
+      console.error("Delete Employee Error:", err);
+      alert(err.response?.data?.message || "Delete failed");
+    }
+  };
+
+  const handleEdit = (emp) => {
+    navigate(`/employee/${emp._id}/edit`);
+  };
+
+  const toggleSelect = (id) => {
+    setSelectedEmployees(prev =>
+      prev.includes(id) ? prev.filter(eid => eid !== id) : [...prev, id]
+    );
+  };
+
+  const toggleSelectAll = () => {
+    if (selectAll) {
+      setSelectedEmployees([]);
+      setSelectAll(false);
+    } else {
+      setSelectedEmployees(filteredEmployees.map(emp => emp._id));
+      setSelectAll(true);
+    }
+  };
+
+  const handleAddSalary = () => {
+    if (selectedEmployees.length !== 1) {
+      return alert("Select exactly one employee to add salary");
+    }
+    navigate(`/employee/${selectedEmployees[0]}/add-salary`);
+  };
+
+  const filteredEmployees = employees.filter(emp =>
+    emp.name.toLowerCase().includes(search.toLowerCase()) ||
+    emp.email.toLowerCase().includes(search.toLowerCase()) ||
+    emp.department.toLowerCase().includes(search.toLowerCase()) ||
+    emp.phone?.includes(search)
+  );
+
+  const openMenu = (e, id) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    setMenuPosition({
+      x: rect.left + window.scrollX - 100,
+      y: rect.bottom + window.scrollY + 5
+    });
+    setActiveMenu(id);
+  };
+
+
+  return (
+    <Layout>
+      <h2 className="text-2xl font-bold mb-4">Employees</h2>
+
+      {/* Search + Actions */}
+      <div className="flex flex-col sm:flex-row gap-2 mb-4">
+        <input
+          type="text"
+          placeholder="Search by name, email, department, or phone..."
+          value={search}
+          onChange={e => setSearch(e.target.value)}
+          className="border p-2 rounded w-full sm:w-1/3"
+        />
+        <div className="flex gap-2">
+          <button
+            onClick={handleAddSalary}
+            className="bg-green-500 text-black px-3 py-2 rounded text-sm sm:text-base w-full sm:w-auto"
+          >
+            + Add Salary
+          </button>
+          <button
+            onClick={() => setShowForm(prev => !prev)}
+            className="bg-blue-500 text-white px-3 py-2 rounded text-sm sm:text-base w-full sm:w-auto"
+          >
+            {showForm ? "Close Form" : "+ Add Employee"}
+          </button>
+        </div>
+      </div>
+
+      {/* Add Employee Form */}
+      {showForm && (
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6 bg-white p-4 rounded shadow">
+          {[{ label: "Full Name", field: "name", type: "text" },
+          { label: "Email Address", field: "email", type: "email" },
+          { label: "Phone Number", field: "phone", type: "text" },
+          { label: "Job Role", field: "jobrole", type: "text" },
+          { label: "Department", field: "department", type: "text" },
+          { label: "Salary (₹)", field: "salary", type: "number" },
+          { label: "Status", field: "status", type: "text" },
+          { label: "Notes", field: "notes", type: "text" }]
+            .map(({ label, field, type }) => (
+              <div key={field} className="flex flex-col">
+                <label className="text-sm font-semibold mb-1">{label}</label>
+                <input
+                  type={type}
+                  placeholder={label}
+                  value={newEmp[field]}
+                  onChange={e => setNewEmp({ ...newEmp, [field]: e.target.value })}
+                  className="border p-2 rounded"
+                />
+              </div>
+            ))}
+          <div className="flex flex-col">
+            <label className="text-sm font-semibold mb-1">Join Date</label>
+            <input
+              type="date"
+              value={newEmp.joinDate}
+              onChange={e => setNewEmp({ ...newEmp, joinDate: e.target.value })}
+              className="border p-2 rounded"
+            />
+          </div>
+          <button
+            onClick={handleAdd}
+            className="bg-green-700 text-white px-4 py-2 rounded md:col-span-2 hover:bg-green-800"
+          >
+            Submit
+          </button>
+        </div>
+      )}
+
+      {/* Employee Table */}
+      <div className="overflow-x-auto bg-white rounded shadow relative">
+        <table className="w-full text-sm">
+          <thead>
+            <tr className="bg-gray-100">
+              <th className="p-2 border">
+                <input type="checkbox" checked={selectAll} onChange={toggleSelectAll} />
+              </th>
+              <th className="p-2 border">#</th>
+              <th className="p-2 border">Name</th>
+              <th className="p-2 border">Email</th>
+              <th className="p-2 border">Phone</th>
+              <th className="p-2 border">Job Role</th>
+              <th className="p-2 border">Department</th>
+              <th className="p-2 border">Salary</th>
+              <th className="p-2 border">Status</th>
+              <th className="p-2 border">Join Date</th>
+              <th className="p-2 border">Notes</th>
+              <th className="p-2 border text-center">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredEmployees.length ? (
+              filteredEmployees.map((emp, index) => (
+                <tr key={emp._id} className="hover:bg-gray-50">
+                  <td className="p-2 border">
+                    <input
+                      type="checkbox"
+                      checked={selectedEmployees.includes(emp._id)}
+                      onChange={() => toggleSelect(emp._id)}
+                    />
+                  </td>
+                  <td className="p-2 border">{index + 1}</td>
+                  <td className="p-2 border">{emp.name}</td>
+                  <td className="p-2 border">{emp.email}</td>
+                  <td className="p-2 border">{emp.phone || "-"}</td>
+                  <td className="p-2 border">{emp.jobRole}</td>
+                  <td className="p-2 border">{emp.department}</td>
+                  <td className="p-2 border">₹{emp.salary}</td>
+                  <td className="p-2 border">{emp.status}</td>
+                  <td className="p-2 border">
+                    {emp.joinDate ? new Date(emp.joinDate).toLocaleDateString() : "-"}
+                  </td>
+                  <td className="p-2 border">{emp.notes || "-"}</td>
+                  <td className="p-2 border text-center">
+                    <button
+                      onClick={(e) =>
+                        activeMenu === emp._id
+                          ? setActiveMenu(null)
+                          : openMenu(e, emp._id)
+                      }
+                      className="p-1 rounded hover:bg-gray-200"
+                    >
+                      <MoreVertical size={18} />
+                    </button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="12" className="text-center py-4 text-gray-500 italic">
+                  No employees found.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+
+      {/*  Popup (Always on top, outside table) */}
+      {activeMenu && (
+        <div
+          style={{
+            position: "absolute",
+            top: menuPosition.y,
+            left: menuPosition.x,
+            zIndex: 9999,
+          }}
+          className="w-36 bg-white border rounded shadow-lg"
+        >
+          <button
+            onClick={() => {
+              navigate(`/employee/${activeMenu}`);
+              setActiveMenu(null);
+            }}
+            className="block w-full text-left px-3 py-2 hover:bg-gray-100"
+          >
+            View
+          </button>
+
+          <button
+            onClick={() => {
+              navigate(`/employee/${activeMenu}/edit`);
+              setActiveMenu(null);
+            }}
+            className="block w-full text-left px-3 py-2 hover:bg-gray-100"
+          >
+            Edit
+          </button>
+
+          <button
+            onClick={() => {
+              handleDelete(activeMenu);
+              setActiveMenu(null);
+            }}
+            className="block w-full text-left px-3 py-2 text-red-600 hover:bg-red-50"
+          >
+            Delete
+          </button>
+        </div>
+      )}
+    </Layout>
+  );
+}
