@@ -91,7 +91,7 @@ export default function EmployeeDetailPage() {
       {/* Employee Info */}
       <div className="bg-white p-5 rounded shadow space-y-2 mb-6">
         <p><strong>Email:</strong> {employee.email}</p>
-        <p><strong>Job Role:</strong> {employee.jobrole}</p>
+        <p><strong>Job Role:</strong> {employee.jobRole}</p>
         <p><strong>Department:</strong> {employee.department}</p>
         <p><strong>Salary:</strong> ₹{employee.salary}</p>
         <p><strong>Status:</strong> {employee.status}</p>

@@ -175,8 +175,9 @@ export default function Profile() {
           </select>
 
           {/* DOB */}
-          <label htmlFor="">dateofBirth</label>
+          <label htmlFor="dob">dateofBirth</label>
           <input
+           id="dob"
             type="date"
             className="w-full border px-3 py-2 rounded"
             value={form.dateofBirth}

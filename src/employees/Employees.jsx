@@ -153,13 +153,13 @@ export default function Employees() {
         <div className="flex gap-2">
           <button
             onClick={handleAddSalary}
-            className="bg-green-500 text-black px-3 py-2 rounded text-sm sm:text-base w-full sm:w-auto"
+            className="bg-green-500 text-black px-3 py-2 rounded text-sm sm:text-base w-full hover:bg-green-600 sm:w-auto"
           >
             + Add Salary
           </button>
           <button
             onClick={() => setShowForm(prev => !prev)}
-            className="bg-blue-500 text-white px-3 py-2 rounded text-sm sm:text-base w-full sm:w-auto"
+            className="bg-gray-700 text-white px-3 py-2 rounded text-sm sm:text-base w-full hover:bg-gray-800 sm:w-auto"
           >
             {showForm ? "Close Form" : "+ Add Employee"}
           </button>
