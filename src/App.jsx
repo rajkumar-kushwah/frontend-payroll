@@ -11,7 +11,7 @@ import ProtectedRoute from './routes/ProtectedRoute';
 import { UserProvider } from './context/UserContext';
 import Profile from './profile/Profile';
 import Employees from "./employees/Employees";
-import Candidates from "./candidates/Candidates";
+import Candidates from "./candiates/Candidates";
 // import Messages from "./pages/Messages";
 // import Jobs from "./pages/Jobs";
 // import Resumes from "./pages/Resumes";
