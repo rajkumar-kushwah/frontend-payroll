@@ -6,7 +6,7 @@ import Login from './pages/Login';
 import ForgotPassword from './pages/ForgotPassword';
 import VerifyOtp from './pages/VerifyOtp';
 import ResetPassword from './pages/ResetPassword';
-import Dashboard from './pages/Dashboard';
+import Dashboard from './dashboards/Dashboard';
 import ProtectedRoute from './routes/ProtectedRoute';
 import { UserProvider } from './context/UserContext';
 import Profile from './profile/Profile';

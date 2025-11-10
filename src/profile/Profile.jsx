@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { useUser } from "../context/UserContext";
 import { getProfile, updateProfile } from "../utils/api";
 import { useNavigate } from "react-router-dom";
+import { Pencil } from "lucide-react";
 
 export default function Profile() {
   const { user, setUser } = useUser();
@@ -11,6 +12,7 @@ export default function Profile() {
     name: "",
     email: "",
     phone: "",
+    companyName: "",
     bio: "",
     gender: "other",
     dateofBirth: "",
@@ -32,6 +34,7 @@ export default function Profile() {
           name: u.name || "",
           email: u.email || "",
           phone: u.phone || "",
+          companyName: u.companyName || "",
           bio: u.bio || "",
           gender: u.gender || "other",
           dateofBirth: u.dateofBirth ? u.dateofBirth.split("T")[0] : "",
@@ -59,6 +62,7 @@ export default function Profile() {
         name: user.name || "",
         email: user.email || "",
         phone: user.phone || "",
+        companyName: user.companyName || "",
         bio: user.bio || "",
         gender: user.gender || "other",
         dateofBirth: user.dateofBirth ? user.dateofBirth.split("T")[0] : "",
@@ -86,6 +90,7 @@ export default function Profile() {
       formData.append("name", form.name);
       formData.append("email", form.email);
       formData.append("phone", form.phone);
+      formData.append("companyName", form.companyName);
       formData.append("bio", form.bio);
       formData.append("gender", form.gender);
       formData.append("dateofBirth", form.dateofBirth);
@@ -110,7 +115,7 @@ export default function Profile() {
       setForm({ ...form, roleUpdated: updatedUser.roleUpdated });
       setEdit(false);
       setAvatarFile(null);
-
+      alert("Profile updated successfully!");
       navigate("/dashboard");
     } catch (err) {
       console.error("Update failed:", err);
@@ -128,6 +133,41 @@ export default function Profile() {
 
       {edit ? (
         <form onSubmit={handleUpdate} className="space-y-4">
+
+            {/* Avatar */}
+            
+{/* Avatar upload + preview */}
+<div className="relative w-32 h-32 mx-auto">
+  {/* Image preview */}
+  <img
+    src={
+      avatarFile
+        ? URL.createObjectURL(avatarFile)
+        : user.avatar || "https://via.placeholder.com/150"
+    }
+    alt="Profile"
+    className="w-32 h-32 rounded-full object-cover border border-gray-300"
+  />
+
+  {/* Hidden file input */}
+  <input
+    id="avatarInput"
+    type="file"
+    accept="image/*"
+    onChange={(e) => setAvatarFile(e.target.files[0])}
+    className="hidden"
+  />
+
+  {/* Edit (pen) icon */}
+  <label
+    htmlFor="avatarInput"
+    className="absolute bottom-1 right-1 bg-white p-2 rounded-full shadow cursor-pointer hover:bg-gray-100"
+  >
+    <Pencil size={16} className="text-gray-600" />
+  </label>
+</div>
+
+       
           {/* Name */}
           <input
             className="w-full border px-3 py-2 rounded"
@@ -154,6 +194,14 @@ export default function Profile() {
             onChange={(e) => setForm({ ...form, phone: e.target.value })}
             placeholder="Phone"
           />
+
+          {/* Company Name */}
+            <input
+              className="w-full border px-3 py-2 rounded"
+              value={form.companyName}
+              onChange={(e) => setForm({ ...form, companyName: e.target.value })}
+              placeholder="Company Name"
+            />
 
           {/* Bio */}
           <input
@@ -217,12 +265,7 @@ export default function Profile() {
             </select>
           )} */}
 
-          {/* Avatar */}
-          <input
-            type="file"
-            accept="image/*"
-            onChange={(e) => setAvatarFile(e.target.files[0])}
-          />
+        
 
           <div className="flex justify-between">
             <button
@@ -264,6 +307,9 @@ export default function Profile() {
           <p>
             <b>Phone:</b> {user.phone || "—"}
           </p>
+           <p>
+              <b>Company:</b> {user?.companyName || "—"}
+            </p>
           <p>
             <b>Bio:</b> {user.bio || "—"}
           </p>

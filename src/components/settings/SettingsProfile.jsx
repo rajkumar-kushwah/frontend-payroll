@@ -11,7 +11,7 @@ export default function ProfileSettings() {
     lastName: "",
     email: "",
     phone: "",
-    company: "",
+    companyName: "",
     website: "",
     address: {
       street: "",
@@ -38,7 +38,7 @@ export default function ProfileSettings() {
           lastName: lastName || "",
           email: u.email || "",
           phone: u.phone || "",
-          company: u.company || "Nabu",
+          companyName: u.companyName || "",
           website: u.website || "",
           address: {
             street: u.address?.Stream || "",
@@ -64,7 +64,7 @@ export default function ProfileSettings() {
         name: `${form.firstName} ${form.lastName}`,
         email: form.email,
         phone: form.phone,
-        company: form.company,
+        companyName: form.companyName,
         website: form.website,
         address: {
           Stream: form.address.street,
@@ -134,8 +134,8 @@ export default function ProfileSettings() {
       <input
         className="w-full border px-3 py-2 rounded"
         placeholder="Company / Organization*"
-        value={form.company}
-        onChange={(e) => setForm({ ...form, company: e.target.value })}
+        value={form.companyName}
+        onChange={(e) => setForm({ ...form, companyName: e.target.value })}
         required
       />
 
