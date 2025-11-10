@@ -8,7 +8,7 @@ import Payroll from "../images/Payroll.png";
 
 const Register = () => {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({ name: "", email: "", password: "", phone: "" });
+  const [formData, setFormData] = useState({ name: "", email: "", password: "", phone: "", companyName: "", role: "user" });
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -82,6 +82,29 @@ const Register = () => {
             <div className="flex items-center border border-green-400 rounded-md px-3">
               <FaPhone className="text-green-600 mr-2" />
               <input type="tel" name="phone" placeholder="Mobile Number" value={formData.phone} onChange={handleChange} required className="w-full px-2 py-3 focus:outline-none" />
+            </div>
+
+            {/* Company Name */}
+            <div className="flex items-center border border-green-400 rounded-md px-3">
+              <FaUser className="text-green-600 mr-2" />
+              <input type="text" name="companyName" placeholder="Company Name" value={formData.companyName} onChange={handleChange} required className="w-full px-2 py-3 focus:outline-none" />
+            </div>
+
+            {/* ROLE (Dropdown) */}
+            <div className="flex items-center border border-green-400 rounded-md px-3">
+              <FaUser className="text-green-600 mr-2" />
+              <select
+                name="role"
+                value={formData.role}
+                onChange={handleChange}
+                required
+                className="w-full px-2 py-3 bg-transparent focus:outline-none"
+              >
+                <option value="user">User</option>
+                <option value="admin">Admin</option>
+                <option value="hr">HR</option>
+                <option value="ceo">CEO</option>
+              </select>
             </div>
 
             {/* Password */}

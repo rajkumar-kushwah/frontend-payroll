@@ -117,9 +117,9 @@ export default function Profile() {
     }
   };
 
-  if (!user) return <p className="text-center mt-10">Loading...</p>;
+  // if (!user) return <p className="text-center mt-10">Loading...</p>;
 
-  const canEditRole = !form.roleUpdated;
+  // const canEditRole = !form.roleUpdated;
 
   return (
     <div className=" flex items-center dashboard-bg min-h-screen relative  ">
@@ -201,7 +201,8 @@ export default function Profile() {
           ))}
 
           {/* Role */}
-          {canEditRole && (
+
+          {/* {canEditRole && (
             <select
               className="w-full border px-3 py-2 rounded"
               value={form.role}
@@ -214,7 +215,7 @@ export default function Profile() {
               <option value="manager">Manager</option>
               <option value="admin">Admin</option>
             </select>
-          )}
+          )} */}
 
           {/* Avatar */}
           <input
