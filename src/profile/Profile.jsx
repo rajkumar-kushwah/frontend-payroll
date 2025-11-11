@@ -15,7 +15,7 @@ export default function Profile() {
     companyName: "",
     bio: "",
     gender: "other",
-    dateofBirth: "",
+    dateOfBirth: "",
     address: { Stream: "", city: "", state: "", country: "", pinCode: "" },
     role: "user",
     roleUpdated: false,
@@ -37,7 +37,7 @@ export default function Profile() {
           companyName: u.companyName || "",
           bio: u.bio || "",
           gender: u.gender || "other",
-          dateofBirth: u.dateofBirth ? u.dateofBirth.split("T")[0] : "",
+          dateOfBirth: u.dateOfBirth ? u.dateOfBirth.split("T")[0] : "",
           address: {
             Stream: u.address?.Stream || "",
             city: u.address?.city || "",
@@ -65,7 +65,7 @@ export default function Profile() {
         companyName: user.companyName || "",
         bio: user.bio || "",
         gender: user.gender || "other",
-        dateofBirth: user.dateofBirth ? user.dateofBirth.split("T")[0] : "",
+        dateOfBirth: user.dateOfBirth ? user.dateOfBirth.split("T")[0] : "",
         address: {
           Stream: user.address?.Stream || "",
           city: user.address?.city || "",
@@ -93,7 +93,7 @@ export default function Profile() {
       formData.append("companyName", form.companyName);
       formData.append("bio", form.bio);
       formData.append("gender", form.gender);
-      formData.append("dateofBirth", form.dateofBirth);
+      formData.append("dateOfBirth", form.dateOfBirth);
       formData.append("address", JSON.stringify(form.address));
 
       // Append role only if roleUpdated is false
@@ -223,13 +223,13 @@ export default function Profile() {
           </select>
 
           {/* DOB */}
-          <label htmlFor="dob">dateofBirth</label>
+          <label htmlFor="dob">dateOfBirth</label>
           <input
            id="dob"
             type="date"
             className="w-full border px-3 py-2 rounded"
-            value={form.dateofBirth}
-            onChange={(e) => setForm({ ...form, dateofBirth: e.target.value })}
+            value={form.dateOfBirth}
+            onChange={(e) => setForm({ ...form, dateOfBirth: e.target.value })}
           />
 
           {/* Address */}
@@ -317,7 +317,7 @@ export default function Profile() {
             <b>Gender:</b> {user.gender || "—"}
           </p>
           <p>
-            <b>Date of Birth:</b> {user.dateofBirth?.split("T")[0] || "—"}
+            <b>Date of Birth:</b> {user.dateOfBirth?.split("T")[0] || "—"}
           </p>
           <p>
             <b>Role:</b> {user.role || "user"}
