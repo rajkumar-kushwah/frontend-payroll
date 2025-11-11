@@ -122,7 +122,7 @@ export default function Profile() {
     }
   };
 
-  // if (!user) return <p className="text-center mt-10">Loading...</p>;
+  if (!user) return <p className="text-center mt-10">Loading...</p>;
 
   // const canEditRole = !form.roleUpdated;
 
