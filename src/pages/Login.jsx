@@ -1,26 +1,43 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaEnvelope, FaLock } from "react-icons/fa";
+import ReCAPTCHA from "react-google-recaptcha";
+import { toast } from "react-toastify";
 import Payroll from "../images/Payroll.png";
 import api from "../utils/api";
 import { useUser } from "../context/UserContext";
 
 const Login = () => {
-  const [formData, setFormData] = useState({ email: "", password: "" });
+  const [formData, setFormData] = useState({ email: "", password: "", captchaToken: "" });
   const { setUser } = useUser();
   const navigate = useNavigate();
+  const [captchaToken, setCaptchaToken] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!captchaToken) {
+      toast.error("Please complete the reCAPTCHA.")
+      return;
+    }
+
     try {
-      const res = await api.post("/auth/login", formData);
+      setLoading(true);
+      // backend ko captcha token ke sath send karne ke liye
+      const res = await api.post("/auth/login", {
+        ...formData,
+        captchaToken,
+      });
+
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("user", JSON.stringify(res.data.user));
       setUser(res.data.user);
 
+      toast.success("Login successful!");
       // Agar profile complete nahi hai → profile page
       if (!res.data.user.profileComplete) {
         navigate("/profile");
@@ -28,7 +45,10 @@ const Login = () => {
         navigate("/dashboard");
       }
     } catch (err) {
-      alert(err.response?.data?.message || "Login failed!");
+      console.error("Login error:", err);
+      toast.error(err.response?.data?.message || "Login failed!");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -76,7 +96,7 @@ const Login = () => {
                 className="w-full px-2 py-3 focus:outline-none"
               />
             </div>
-            
+
             <div className="flex justify-end mt-2">
               <Link
                 to="/forgot-password"
@@ -86,6 +106,14 @@ const Login = () => {
               </Link>
             </div>
 
+            {/* Google reCAPTCHA */}
+            <div className="flex justify-center mb-4">
+              <ReCAPTCHA
+                sitekey="6LdM3wgsAAAAAFO8PiOnKKfZHMbdvUcO16ijYTl3"
+                onChange={(token) => setCaptchaToken(token)}
+                onExpired={() => setCaptchaToken(null)}
+              />
+            </div>
 
 
             <button

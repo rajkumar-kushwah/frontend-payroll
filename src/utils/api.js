@@ -9,7 +9,6 @@ const api = axios.create({
 
 
 
-
 // Employee APIs
 export const getEmployees = () => api.get("/employees");
 export const getEmployeeById = (id) => api.get(`/employees/${id}`);
