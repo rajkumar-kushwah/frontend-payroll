@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaEnvelope, FaLock } from "react-icons/fa";
 import ReCAPTCHA from "react-google-recaptcha";
-import { toast } from "react-toastify";
+import {ToastContainer, toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 import Payroll from "../images/Payroll.png";
 import api from "../utils/api";
 import { useUser } from "../context/UserContext";
@@ -21,7 +22,15 @@ const Login = () => {
     e.preventDefault();
 
     if (!captchaToken) {
-      toast.error("Please complete the reCAPTCHA.")
+      // toast.error("Please complete the reCAPTCHA.")
+       toast.error(res.data.message || "please complete the reCAPTCHA!", {
+              position: "top-right",
+              autoClose: 3000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+            });
       return;
     }
 
@@ -37,7 +46,16 @@ const Login = () => {
       localStorage.setItem("user", JSON.stringify(res.data.user));
       setUser(res.data.user);
 
-      toast.success("Login successful!");
+      // toast.success("Login successful!");
+      toast.success(res.data.message || "Login successful!", {
+              position: "top-right",
+              autoClose: 3000,
+              hideProgressBar: false,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+            });
+      
       // Agar profile complete nahi hai → profile page
       if (!res.data.user.profileComplete) {
         navigate("/profile");
@@ -46,7 +64,12 @@ const Login = () => {
       }
     } catch (err) {
       console.error("Login error:", err);
-      toast.error(err.response?.data?.message || "Login failed!");
+      // toast.error(err.response?.data?.message || "Login failed!");
+      toast.error(err.response?.data?.message || "Login failed!", {
+              position: "top-right",
+              autoClose: 3000,
+              hideProgressBar: false,
+            });
     } finally {
       setLoading(false);
     }
@@ -54,6 +77,7 @@ const Login = () => {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
+      <ToastContainer /> 
       <div className="flex bg-white rounded-lg shadow-lg overflow-hidden max-w-4xl w-full">
         {/* Left side */}
         <div className="hidden md:flex md:w-1/2 bg-green-50 items-center justify-center flex-col p-6 text-center">
@@ -121,6 +145,11 @@ const Login = () => {
               className="w-full bg-green-600 text-white py-3 rounded-md hover:bg-green-700 transition-colors duration-200"
             >
               Login
+              {loading && (
+                <span className="ml-2">
+                  <FaSpinner className="animate-spin" />
+                </span>
+              )}
             </button>
           </form>
 
