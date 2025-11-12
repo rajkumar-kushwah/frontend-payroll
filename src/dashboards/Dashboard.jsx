@@ -73,12 +73,12 @@ export default function Dashboard() {
     };
   }, []);
 
-  if (loading)
-    return (
-      <Layout>
-        <div className="p-6">Loading dashboard...</div>
-      </Layout>
-    );
+  // if (loading)
+  //   return (
+  //     <Layout>
+  //       <div className="p-6">Loading dashboard...</div>
+  //     </Layout>
+  //   );
 
   return (
     <Layout >
@@ -91,20 +91,20 @@ export default function Dashboard() {
       )}
     <div className="grid grid-cols-1 md:grid-cols-2 gap-2  ">
       {/* Clock and Calendar */}
-      <div className="p-4 justify-center items-center ">
+      {/* <div className="p-4 justify-center items-center ">
         <Clock />
         <DashboardCalendar />
-      </div>
+      </div> */}
        
       {/* Stats Cards */}
       <div className="border-none shadow-sm rounded-xl bg-gray-100 mb-12 ml-1 mr-1 p-6 w-full ">
       <div className=" flex-wrap gap-2 grid grid-cols-1 md:grid-cols-2 mx-auto mb-5 mt-10 overflow-x-auto min-w-full  ">
         <div className="bg-gray-50 p-6 rounded-sm shadow text-center grid hover:bg-gray-100 transition-transform duration-300 md:hover:-translate-y-2  ">
-          <div className="flex items-center justify-center ">
-            <UserCog className="text-green-300 w-6 h-6"  />
+          <div className="flex items-center justify-center  ">
+            <UserCog className="text-lime-300 w-6 h-6"  />
             <div className="text-sm text-gray-600 font-medium">Total Employees</div>
           </div>
-          <div className="text-3xl font-bold text-green-300 mt-2">
+          <div className="text-3xl font-bold text-lime-300 mt-2">
             {stats.employees}
           </div>
         </div>
@@ -157,7 +157,7 @@ export default function Dashboard() {
       </div>
 
       {/* Latest 4 Employees Table */}
-      <div className="p-1 bg-white rounded shadow overflow-x-auto ">
+      <div className="p-1 overflow-x-auto ">
         <table className="min-w-full text-sm text-left  ">
           <thead className="bg-gray-100 border-b">
             <tr>

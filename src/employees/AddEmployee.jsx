@@ -34,7 +34,11 @@ export default function EmployeeAdd() {
       return alert("Please fill Name, Email, and Salary");
     }
 
+
+
     try {
+      
+    //  Step 1: Add employee
       await api.post("/employees", form);
       alert(" Employee added successfully!");
       navigate("/dashboard");

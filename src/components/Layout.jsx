@@ -30,7 +30,7 @@ export default function Layout({ children }) {
       {/* Main Content */}
       <div
         className={`flex-1 flex flex-col transition-all duration-300 w-full ${
-          isOpen ? "md:ml-64" : "md:ml-0"
+          isOpen ? "md:ml-45" : "md:ml-0"
         }`}
       >
         <Header toggle={() => setIsOpen((v) => !v)} />

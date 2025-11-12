@@ -11,12 +11,6 @@ import ProtectedRoute from './routes/ProtectedRoute';
 import { UserProvider } from './context/UserContext';
 import Profile from './profile/Profile';
 import Employees from "./employees/Employees";
-import Candidates from "./pages/Candidates";
-// import Messages from "./pages/Messages";
-// import Jobs from "./pages/Jobs";
-// import Resumes from "./pages/Resumes";
-// import Leaves from "./pages/Leaves";
-// import Payrolls from "./pages/Payrolls";
 import Settings from "./components/settings/SettingsPage";
 import EmployeeDetail from "./employees/EmployeeDetail";
 import AddEmployee from "./employees/AddEmployee";
@@ -48,12 +42,6 @@ function App() {
         <Route path="/employee/:employeeId/add-salary/:salaryId?" element={<ProtectedRoute><AddSalary /></ProtectedRoute>} />
         <Route path="/employee/:id" element={<ProtectedRoute><EmployeeDetail /></ProtectedRoute>} />
         <Route path="/employee/:id/edit" element={<ProtectedRoute><EditEmployee /></ProtectedRoute>} />
-        <Route path="/candidates" element={<ProtectedRoute><Candidates /></ProtectedRoute>} />
-        {/* <Route path="/messages" element={<ProtectedRoute><Messages/></ProtectedRoute>} /> */}
-        {/* <Route path="/jobs" element={<ProtectedRoute><Jobs/></ProtectedRoute>} /> */}
-        {/* <Route path="/resumes" element={<ProtectedRoute><Resumes/></ProtectedRoute>} /> */}
-        {/* <Route path="/leaves" element={<ProtectedRoute><Leaves/></ProtectedRoute>} /> */}
-        {/* <Route path="/payrolls" element={<ProtectedRoute><Payrolls/></ProtectedRoute>} /> */}
         <Route path="/settings" element={<ProtectedRoute><Settings/></ProtectedRoute>} />
         {/* protected route end */}
       </Routes>

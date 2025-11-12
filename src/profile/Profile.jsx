@@ -139,7 +139,7 @@ export default function Profile() {
             {/* Avatar */}
             
 {/* Avatar upload + preview */}
-<div className="relative w-32 h-32 mx-auto">
+<div className="relative w-22 h-22 mx-auto">
   {/* Image preview */}
   <img
     src={
@@ -148,7 +148,7 @@ export default function Profile() {
         : user.avatar || "https://via.placeholder.com/150"
     }
     alt="Profile"
-    className="w-32 h-32 rounded-full object-cover border border-gray-300"
+    className="w-22 h-22 rounded-full object-cover border border-lime-300"
   />
 
   {/* Hidden file input */}
@@ -293,7 +293,7 @@ export default function Profile() {
               <img
                 src={user.avatar}
                 alt="avatar"
-                className="w-16 h-16 rounded-full"
+                className="w-16 h-16 rounded-full border border-lime-300 object-cover"
               />
             ) : (
               <div className="w-16 h-16 bg-gray-200 rounded-full flex items-center justify-center">

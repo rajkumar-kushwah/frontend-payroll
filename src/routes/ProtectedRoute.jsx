@@ -7,8 +7,8 @@ const ProtectedRoute = ({ children }) => {
 
   if (!token) return <Navigate to="/login" replace />;
   
-  if (!user) return <p className="text-center mt-10">Loading user...</p>;
-  if (loading) return <p className="text-center mt-10">Loading...</p>;
+  // if (!user) return <p className="text-center mt-10">Loading user...</p>;
+  // if (loading) return <p className="text-center mt-10">Loading...</p>;
 
   // agar user naya ya profile incomplete → profile page
 const isProfileComplete = user?.name && user?.email;

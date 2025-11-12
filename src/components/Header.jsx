@@ -15,8 +15,6 @@ export default function Header({ toggle , isMobile, isOpen  }) {
 
 
   // 🔹 Refs for dropdowns
-  const msgRef = useRef(null);
-  const notifRef = useRef(null);
   const userRef = useRef(null);
 
   // 🔹 Close dropdown on outside click
@@ -34,51 +32,9 @@ export default function Header({ toggle , isMobile, isOpen  }) {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const messageOptions = [
-    { key: "hr", label: "Message from HR" },
-    { key: "leave", label: "Leave Request Reply" },
-    { key: "payslip", label: "Payslip Issue" },
-  ];
+ 
 
-  const notificationOptions = [
-    { key: "holiday", label: "Holiday Announcement" },
-    { key: "policy", label: "Policy Update" },
-    { key: "reminder", label: "Meeting Reminder" },
-  ];
-
-  const [unreadMessages, setUnreadMessages] = useState({});
-  const [unreadNotifications, setUnreadNotifications] = useState({});
-  const userId = user?._id || "";
-
-  // 🔹 Fetch messages & notifications
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        if (!userId) return;
-
-        const res1 = await api.get(`/messages/${userId}`);
-        const msgs = res1.data || [];
-        const unreadObj = {};
-        msgs.forEach((m) => {
-          if (!m.isRead) unreadObj[m.type] = true;
-        });
-        setUnreadMessages(unreadObj);
-
-        const res2 = await api.get(`/notifications/${userId}`);
-        const notifs = res2.data || [];
-        const notifObj = {};
-        notifs.forEach((n) => {
-          if (!n.isRead) notifObj[n.type] = true;
-        });
-        setUnreadNotifications(notifObj);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-    fetchData();
-  }, [userId]);
-
-  // 🔹 Live Search effect with debounce
+  //  Live Search effect with debounce
   useEffect(() => {
     if (!query.trim()) {
       setResults([]);
@@ -101,23 +57,22 @@ export default function Header({ toggle , isMobile, isOpen  }) {
     return () => clearTimeout(debounce);
   }, [query]);
 
-  const msgCount = Object.keys(unreadMessages).length;
-  const notifCount = Object.keys(unreadNotifications).length;
+  
 
   return (
-    <header className="bg-lime-300 w-full px-4  py-3 flex items-center justify-between shadow box-border">
+    <header className="bg-lime-300 w-full px-4  py-2 flex items-center justify-between shadow box-border">
       {/* Left Side */}
       <div className="flex items-center gap-2 sm:gap-3">
         <button onClick={() => {
           toggle(); 
         setIsMenuOpen(!isMenuOpen);
         }}
-       className="text-2xl text-black cursor-pointer ">{isOpen ? "×" : "☰"}
+       className="text-xl text-black cursor-pointer ">{isOpen ? "×" : "☰"}
        
        </button>
 
         {/* Search Box */}
-        <div className="relative flex items-center gap-2 w-full bg-white border border-black rounded-xl py-1 px-2 text-black">
+        <div className="relative flex items-center gap-2 w-full bg-white  border-black rounded-2xl py-1 px-2 text-black">
           <i className="fa fa-search text-gray-500 px-2" aria-hidden="true"></i>
           <input
             type="text"
@@ -165,7 +120,7 @@ export default function Header({ toggle , isMobile, isOpen  }) {
       {/* Right Side (Messages, Notifications, User Dropdown) */}
       <div className="flex items-center gap-2 ml-4 sm:gap-4 relative">
         {/* Messages */}
-        <div className="relative" ref={msgRef}>
+        {/* <div className="relative" ref={msgRef}>
           <button
             onClick={() => setDropdown(prev => prev === "messages" ? null : "messages")}
             className="relative flex items-center gap-1 ml-1 cursor-pointer"
@@ -193,10 +148,10 @@ export default function Header({ toggle , isMobile, isOpen  }) {
               ))}
             </ul>
           )}
-        </div>
+        </div> */}
 
         {/* Notifications */}
-        <div className="relative" ref={notifRef}>
+        {/* <div className="relative" ref={notifRef}>
           <button
             onClick={() => setDropdown(prev => prev === "notifications" ? null : "notifications")}
             className="relative flex items-center gap-1 cursor-pointer"
@@ -224,7 +179,7 @@ export default function Header({ toggle , isMobile, isOpen  }) {
               ))}
             </ul>
           )}
-        </div>
+        </div> */}
 
         {/* User Dropdown */}
         <div className="relative" ref={userRef}>
