@@ -105,14 +105,14 @@ export default function Header({ toggle , isMobile, isOpen  }) {
   const notifCount = Object.keys(unreadNotifications).length;
 
   return (
-    <header className="bg-green-500 w-full px-4  py-3 flex items-center justify-between shadow box-border">
+    <header className="bg-lime-300 w-full px-4  py-3 flex items-center justify-between shadow box-border">
       {/* Left Side */}
       <div className="flex items-center gap-2 sm:gap-3">
         <button onClick={() => {
           toggle(); 
         setIsMenuOpen(!isMenuOpen);
         }}
-       className="text-2xl text-white cursor-pointer ">{isOpen ? "×" : "☰"}
+       className="text-2xl text-black cursor-pointer ">{isOpen ? "×" : "☰"}
        
        </button>
 

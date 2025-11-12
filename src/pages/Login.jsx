@@ -15,95 +15,80 @@ const Login = () => {
   const [captchaToken, setCaptchaToken] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  // Input change handler
   const handleChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
-  // Form submit handler
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     if (!captchaToken) {
-      toast.error("Please complete the reCAPTCHA!", {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-      });
+      toast.error("Please complete the reCAPTCHA!");
       return;
     }
 
     try {
       setLoading(true);
+      const res = await api.post("/auth/login", { ...formData, captchaToken });
 
-      const res = await api.post("/auth/login", {
-        ...formData,
-        captchaToken,
-      });
-
-      // Save token & user to localStorage and context
       localStorage.setItem("token", res.data.token);
       localStorage.setItem("user", JSON.stringify(res.data.user));
       setUser(res.data.user);
 
-      // Success toast
-      toast.success(res.data.message || "Login successful!", {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-      });
-
-      // Redirect based on profile completion
+      toast.success(res.data.message || "Login successful!");
       if (!res.data.user.profileComplete) navigate("/profile");
       else navigate("/dashboard");
     } catch (err) {
-      console.error("Login error:", err);
-
-      const message =
-        err.response?.data?.message || // backend error
-        err.message ||                 // network error
-        "Login failed!";               // fallback
-
-      toast.error(message || "Login failed!", {
-        position: "top-right",
-        autoClose: 3000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-      });
+      toast.error(
+        err.response?.data?.message || "Login failed! Please try again."
+      );
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
+    <div className="relative min-h-screen flex items-center justify-center bg-lime-200 overflow-hidden">
       <ToastContainer />
-      <div className="flex bg-white rounded-lg shadow-lg overflow-hidden max-w-4xl w-full">
-        {/* Left side */}
-        <div className="hidden md:flex md:w-1/2 bg-green-50 items-center justify-center flex-col p-6 text-center">
-          <img src={Payroll} alt="Payroll" className="max-h-80 object-contain mb-6" />
-          <h2 className="text-2xl font-bold text-green-700 mb-2">Smart Payroll</h2>
-          <p className="text-gray-600 text-sm">
+
+      {/* Background SVG wave */}
+      <svg
+        className="absolute bottom-0 left-0 w-full z-0"
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 1440 320"
+      >
+        <path
+          fill="#000000" // lime-500 color
+          fillOpacity="1"
+          d="M0,0L40,42.7C80,85,160,171,240,197.3C320,224,400,192,480,154.7C560,117,640,75,720,74.7C800,75,880,117,960,154.7C1040,192,1120,224,1200,213.3C1280,203,1360,149,1400,122.7L1440,96L1440,320L0,320Z"
+        ></path>
+      </svg>
+
+      {/* Main box */}
+      <div className="relative z-10 bg-white rounded-2xl shadow-xl flex flex-col md:flex-row overflow-hidden w-[90%] max-w-3xl">
+        {/* Left section */}
+        <div className="hidden md:flex md:w-1/2 bg-lime-100 items-center justify-center flex-col p-6 text-center">
+          <img
+            src={Payroll}
+            alt="Payroll"
+            className="max-h-64 object-contain mb-4"
+          />
+          <h2 className="text-2xl font-bold text-lime-500 mb-2">
+            Smart Payroll
+          </h2>
+          <p className="text-gray-600 text-sm px-4">
             Manage employees, track salaries, and automate payroll seamlessly.
           </p>
         </div>
 
-        {/* Right side */}
-        <div className="w-full md:w-1/2 p-8">
-          <h2 className="text-3xl font-bold mb-8 text-green-700 text-center">
+        {/* Right section */}
+        <div className="w-full md:w-1/2 p-6 md:p-8 flex flex-col justify-center">
+          <h2 className="text-3xl font-bold mb-6 text-lime-300 text-center drop-shadow-[0_2px_0_rgba(1,1,1,1)]">
             Login
           </h2>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="flex items-center border border-green-400 rounded-md px-3">
-              <FaEnvelope className="text-green-600 mr-2" />
+          <form onSubmit={handleSubmit} className="space-y-5">
+            <div className="flex items-center border border-lime-400 rounded-md px-3 py-2">
+              <FaEnvelope className="text-lime-400 mr-2" />
               <input
                 type="email"
                 name="email"
@@ -111,12 +96,12 @@ const Login = () => {
                 value={formData.email}
                 onChange={handleChange}
                 required
-                className="w-full px-2 py-3 focus:outline-none"
+                className="w-full focus:outline-none"
               />
             </div>
 
-            <div className="flex items-center border border-green-400 rounded-md px-3">
-              <FaLock className="text-green-600 mr-2" />
+            <div className="flex items-center border border-lime-400 rounded-md px-3 py-2">
+              <FaLock className="text-lime-400 mr-2" />
               <input
                 type="password"
                 name="password"
@@ -124,21 +109,20 @@ const Login = () => {
                 value={formData.password}
                 onChange={handleChange}
                 required
-                className="w-full px-2 py-3 focus:outline-none"
+                className="w-full focus:outline-none"
               />
             </div>
 
-            <div className="flex justify-end mt-2">
+            <div className="text-right text-sm">
               <Link
                 to="/forgot-password"
-                className="text-green-700 font-medium hover:underline text-sm"
+                className="text-gray-500 hover:text-lime-500 underline"
               >
                 Forgot Password?
               </Link>
             </div>
 
-            {/* Google reCAPTCHA */}
-            <div className="flex justify-center mb-4">
+            <div className="flex justify-center">
               <ReCAPTCHA
                 sitekey="6LdM3wgsAAAAAFO8PiOnKKfZHMbdvUcO16ijYTl3"
                 onChange={(token) => setCaptchaToken(token)}
@@ -149,8 +133,8 @@ const Login = () => {
             <button
               type="submit"
               disabled={loading}
-              className={`w-full bg-green-600 text-white py-3 rounded-md transition-colors duration-200 ${
-                loading ? "opacity-60 cursor-not-allowed" : "hover:bg-green-700"
+              className={`w-full bg-lime-300 text-black font-semibold py-3 rounded-md transition-all duration-200 ${
+                loading ? "opacity-60 cursor-not-allowed" : "hover:bg-lime-400"
               }`}
             >
               {loading ? "Logging in..." : "Login"}
@@ -161,7 +145,7 @@ const Login = () => {
             Don’t have an account?{" "}
             <Link
               to="/register"
-              className="text-green-700 font-semibold hover:underline"
+              className="text-lime-500 font-semibold hover:underline"
             >
               Register
             </Link>

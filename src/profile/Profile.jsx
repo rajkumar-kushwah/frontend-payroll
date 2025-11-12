@@ -4,6 +4,7 @@ import { useUser } from "../context/UserContext";
 import { getProfile, updateProfile } from "../utils/api";
 import { useNavigate } from "react-router-dom";
 import { Pencil } from "lucide-react";
+import Layout from "../components/Layout";
 
 export default function Profile() {
   const { user, setUser } = useUser();
@@ -127,6 +128,7 @@ export default function Profile() {
   // const canEditRole = !form.roleUpdated;
 
   return (
+    <Layout>
     <div className=" flex items-center dashboard-bg min-h-screen relative  ">
     <div className="max-w-md mx-auto mt-10 p-15 bg-white  shadow-md rounded-xl">
       <h2 className="text-2xl font-bold mb-4 text-center">My Profile</h2>
@@ -353,5 +355,6 @@ export default function Profile() {
       )}
     </div>
     </div>
+    </Layout>
   );
 }
