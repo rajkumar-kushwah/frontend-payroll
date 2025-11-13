@@ -11,7 +11,7 @@ import ProtectedRoute from './routes/ProtectedRoute';
 import { UserProvider } from './context/UserContext';
 import Profile from './profile/Profile';
 import Employees from "./employees/Employees";
-import Settings from "./components/settings/SettingsPage";
+import Settings from "./settings/SettingsPage";
 import EmployeeDetail from "./employees/EmployeeDetail";
 import AddEmployee from "./employees/AddEmployee";
 import PublicRoute from "./routes/PublicRoute";

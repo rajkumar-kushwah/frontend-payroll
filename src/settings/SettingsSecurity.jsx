@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react"; // 👁️ npm i lucide-react
-import api from "../../utils/api";
+import api from "../utils/api";
 
 export default function SecuritySettings() {
   const [oldPassword, setOldPassword] = useState("");

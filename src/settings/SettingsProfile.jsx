@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { useUser } from "../../context/UserContext";
-import { getProfile, updateProfile } from "../../utils/api";
+import { useUser } from "../context/UserContext";
+import { getProfile, updateProfile } from "../utils/api";
 import { useNavigate } from "react-router-dom";
 
 export default function ProfileSettings() {

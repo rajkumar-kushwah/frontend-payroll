@@ -8,6 +8,7 @@ import {
   deleteSalary,
   deleteEmployee,
 } from "../utils/api";
+import { Eye, Pencil, Trash2 } from "lucide-react";
 
 export default function EmployeeDetailPage() {
   const { id } = useParams();
@@ -89,7 +90,7 @@ export default function EmployeeDetailPage() {
       <h2 className="text-2xl font-bold mb-4">{employee.name}</h2>
 
       {/* Employee Info */}
-      <div className="bg-white p-5 rounded shadow space-y-2 mb-6">
+      <div className="bg-gray-100 p-5 rounded shadow space-y-2 mb-6">
         <p><strong>Email:</strong> {employee.email}</p>
         <p><strong>Job Role:</strong> {employee.jobRole}</p>
         <p><strong>Department:</strong> {employee.department}</p>
@@ -103,10 +104,10 @@ export default function EmployeeDetailPage() {
 
       {/* Action Buttons */}
       <div className="flex gap-2 mb-6">
-        <button onClick={handleDeleteEmployee} className="bg-red-500 text-white px-4 py-2 rounded">
+        <button onClick={handleDeleteEmployee} className="bg-red-500 text-xs text-white px-4 py-2 rounded">
           Delete Employee
         </button>
-        <button onClick={() => navigate("/employees")} className="bg-gray-500 text-white px-4 py-2 rounded">
+        <button onClick={() => navigate("/employees")} className="bg-gray-500 text-xs text-white px-4 py-2 rounded">
           Back
         </button>
       </div>
@@ -123,7 +124,7 @@ export default function EmployeeDetailPage() {
       </div>
 
       {/* Salary Table */}
-      <div className="bg-white p-4 rounded shadow overflow-x-auto">
+      <div className=" p-4 rounded shadow overflow-x-auto">
         <h3 className="font-bold mb-2">Salary History</h3>
         <table className="w-full text-sm min-w-max border">
           <thead>
@@ -150,19 +151,21 @@ export default function EmployeeDetailPage() {
                   <td className="p-2 border">{sal.leaves}</td>
                   <td className="p-2 border font-bold">₹{sal.netSalary}</td>
                   <td className="p-2 border flex gap-1">
-                    <button
+                    <Pencil
+                    size={30}
                       onClick={() => navigate(`/employee/${id}/add-salary/${sal._id}`)}
-                      className="bg-blue-500 text-white px-2 py-1 rounded"
+                      className=" text-blue-500 px-2 py-1 rounded"
                     >
-                      Edit
-                    </button>
+                      
+                    </Pencil>
 
-                    <button
+                    <Trash2
+                    size={30}
                       onClick={() => handleDeleteSalary(sal._id)}
-                      className="bg-red-500 text-white px-2 py-1 rounded"
+                      className=" text-red-500 px-2 py-1 rounded"
                     >
                       Delete
-                    </button>
+                    </Trash2>
                   </td>
                 </tr>
               ))

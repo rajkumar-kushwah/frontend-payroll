@@ -26,13 +26,13 @@ export default function Sidebar({ isOpen, toggle }) {
   return (
     <aside
       aria-hidden={!isOpen}
-      className={`fixed top-0 left-0 h-full w-45 bg-white shadow-lg z-50 transform transition-transform duration-300
+      className={`fixed top-0 left-0 h-full w-45 bg-gray-100 shadow-lg z-50 transform transition-transform duration-300
         ${isOpen ? "translate-x-0" : "-translate-x-full"}`}
     >
-      <div className="h-full flex flex-col overflow-y-auto">
+      <div className="h-full flex flex-col bg-gray-100 overflow-y-auto">
         {/* 🔹 Logo Section */}
         <div className="flex justify-between items-center px-4 py-3 border-b">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 ">
             <div className="w-10 h-10 bg-lime-300 rounded-xl flex items-center justify-center">
               <img
                 src={logo}

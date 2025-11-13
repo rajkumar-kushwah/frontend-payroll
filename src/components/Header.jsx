@@ -194,7 +194,7 @@ export default function Header({ toggle , isMobile, isOpen  }) {
                 {user?.name?.charAt(0).toUpperCase() || "U"}
               </div>
             )}
-            <span className="hidden md:inline">{user?.name || "User"}</span>
+            <span className="hidden text-sm md:inline">{user?.name || "User"}</span>
             <i className={`fa fa-caret-down text-sm text-gray-500 transition-transform duration-300  ${dropdown === "user" ? "rotate-180" : "rotate-0"}`}></i>
           </div>
 
@@ -211,15 +211,15 @@ export default function Header({ toggle , isMobile, isOpen  }) {
                     {user?.name?.charAt(0).toUpperCase() || "U"}
                   </div>
                 )}
-                <div className="flex flex-col text-sm">
+                <div className="flex flex-col text-xs">
                   My Profile
-                  <span className="text-sm">{user?.email || "email"}</span>
+                  <span className="text-xs">{user?.email || "email"}</span>
                 </div>
               </li>
-              <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2" onClick={() => navigate("/settings")}>
+              <li className="px-4 py-2 text-sm hover:bg-gray-100 cursor-pointer flex items-center gap-2" onClick={() => navigate("/settings")}>
                 <i className="fa fa-cog" aria-hidden="true"></i> Settings
               </li>
-              <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2" onClick={() => { localStorage.removeItem("token"); navigate("/login"); }}>
+              <li className="px-4 py-2 text-sm hover:bg-gray-100 cursor-pointer flex items-center gap-2" onClick={() => { localStorage.removeItem("token"); navigate("/login"); }}>
                 <i className="fa fa-sign-out" aria-hidden="true"></i> Logout
               </li>
             </ul>

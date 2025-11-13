@@ -3,7 +3,7 @@ import { useState } from "react";
 import Profile from "./SettingsProfile";
 import Security from "./SettingsSecurity";
 import DeleteAccount from "./DeleteAccount";
-import Layout from "../Layout";
+import Layout from "../components/Layout";
 
 export default function SettingsPage() {
   const [activeTab, setActiveTab] = useState("profile");
