@@ -86,11 +86,11 @@ export default function Dashboard() {
 
   return (
     <Layout>
-      <Users className="text-black drop-shadow-[0_2px_0_rgba(16,185,129,1)]" />
+      <Users className="text-black w-5 h-5 drop-shadow-[0_2px_0_rgba(16,185,129,1)]" />
 
       {user?.name && (
-        <h1 className="text-2xl font-bold mb-4 text-black">
-          <span className="ai-text-gradient">Welcome, </span>
+        <h1 className="text-xl font-bold mb-4 text-black">
+          <span className="ai-text-gradient ">Welcome, </span>
           {user.name}
         </h1>
       )}

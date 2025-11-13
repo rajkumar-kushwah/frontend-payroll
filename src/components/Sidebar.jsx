@@ -76,10 +76,10 @@ export default function Sidebar({ isOpen, toggle }) {
               ?
             </div>
           )}
-          <h1 className="text-sm font-semibold mt-2 z-10 relative">
+          <h1 className="text-xs font-semibold mt-2 z-10 relative">
             {user?.name || "User"}
           </h1>
-          <p className="text-sm text-gray-500 z-10 relative">
+          <p className="text-xs text-gray-500 z-10 relative">
             {user?.role
               ? user.role.charAt(0).toUpperCase() + user.role.slice(1)
               : "No role"}
@@ -94,7 +94,7 @@ export default function Sidebar({ isOpen, toggle }) {
               "/dashboard"
             )}`}
           >
-            <LayoutDashboard className="w-5 h-5" />
+            <LayoutDashboard className="w-4 h-4" />
             <span>Dashboard</span>
           </a>
 
@@ -104,7 +104,7 @@ export default function Sidebar({ isOpen, toggle }) {
               "/profile"
             )}`}
           >
-            <User className="w-5 h-5" />
+            <User className="w-4 h-4" />
             <span>Profile</span>
             <div className="flex justify-around items-center ml-auto">
               <i className="fa fa-angle-right" aria-hidden="true"></i>
@@ -127,8 +127,8 @@ export default function Sidebar({ isOpen, toggle }) {
               "/leaves"
             )}`}
           >
-            <Calendar className="w-5 h-5" />
-            <span>Leaves</span>
+            <Calendar className="w-4 h-4" />
+            <span className="text-sm">Leaves</span>
           </a>
 
           <a
@@ -137,11 +137,11 @@ export default function Sidebar({ isOpen, toggle }) {
               "/payrolls"
             )}`}
           >
-            <Wallet className="w-5 h-5" />
-            <span>Payrolls</span>
+            <Wallet className="w-4 h-4" />
+            <span className="text-sm">Payrolls</span>
           </a>
 
-          <div className="pt-3 text-gray-500 text-sm">Account Setting</div>
+          <div className="pt-3 text-gray-500 text-xs">Account Setting</div>
 
           <a
             href="/settings"
@@ -149,8 +149,8 @@ export default function Sidebar({ isOpen, toggle }) {
               "/settings"
             )}`}
           >
-            <Settings className="w-5 h-5" />
-            <span>Settings</span>
+            <Settings className="w-4 h-4" />
+            <span className="text-sm">Settings</span>
             <div className="flex justify-around items-center ml-auto">
               <i className="fa fa-angle-right" aria-hidden="true"></i>
             </div>

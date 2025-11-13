@@ -67,7 +67,7 @@ export default function Header({ toggle , isMobile, isOpen  }) {
           toggle(); 
         setIsMenuOpen(!isMenuOpen);
         }}
-       className="text-xl text-black cursor-pointer ">{isOpen ? "×" : "☰"}
+       className="text-sm text-black cursor-pointer ">{isOpen ? "×" : "☰"}
        
        </button>
 
@@ -79,7 +79,7 @@ export default function Header({ toggle , isMobile, isOpen  }) {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search employee..."
-            className={`transition-all duration-300 outline-none 
+            className={`transition-all text-xs duration-300 outline-none 
       ${query ? "w-30 md:w-40" : "w-20 md:w-40"} 
       px-2 `}
           />
@@ -188,13 +188,13 @@ export default function Header({ toggle , isMobile, isOpen  }) {
             onClick={() => setDropdown(prev => prev === "user" ? null : "user")}
           >
             {user?.avatar ? (
-              <img src={user.avatar} alt="avatar" className="w-8 h-8 rounded-full border-1  border-black" />
+              <img src={user.avatar} alt="avatar" className="w-7 h-7 rounded-full border-1  border-black" />
             ) : (
-              <div className="w-8 h-8 rounded-full  bg-gray-400 flex items-center justify-center text-white font-bold">
+              <div className="w-7 h-7 rounded-full  bg-gray-400 flex items-center justify-center text-white font-bold">
                 {user?.name?.charAt(0).toUpperCase() || "U"}
               </div>
             )}
-            <span className="hidden text-sm md:inline">{user?.name || "User"}</span>
+            <span className="hidden text-xs md:inline">{user?.name || "User"}</span>
             <i className={`fa fa-caret-down text-sm text-gray-500 transition-transform duration-300  ${dropdown === "user" ? "rotate-180" : "rotate-0"}`}></i>
           </div>
 
@@ -205,9 +205,9 @@ export default function Header({ toggle , isMobile, isOpen  }) {
                 onClick={() => navigate("/profile")}
               >
                 {user?.avatar ? (
-                  <img src={user.avatar} alt="avatar" className="w-8 h-8 rounded-full border-2 border-green-600" />
+                  <img src={user.avatar} alt="avatar" className="w-7 h-7 rounded-full border-2 border-green-600" />
                 ) : (
-                  <div className="w-8 h-8 rounded-full bg-gray-400 flex items-center justify-center text-white font-bold">
+                  <div className="w-7 h-7 rounded-full bg-gray-400 flex items-center justify-center text-white font-bold">
                     {user?.name?.charAt(0).toUpperCase() || "U"}
                   </div>
                 )}
