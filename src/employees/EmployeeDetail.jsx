@@ -88,7 +88,9 @@ export default function EmployeeDetailPage() {
   return (
     <Layout>
       <h2 className="text-2xl font-bold mb-4">{employee.name}</h2>
-
+      <div className="text-xs transform">
+      <p><strong className="text-sm font-mono">Employee ID :</strong> {employee.employeeCode}</p>
+</div>
       {/* Employee Info */}
       <div className="bg-gray-100 p-5 rounded shadow space-y-2 mb-6">
         <p><strong>Email:</strong> {employee.email}</p>

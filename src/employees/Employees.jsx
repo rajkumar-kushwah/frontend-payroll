@@ -33,6 +33,7 @@ export default function Employees() {
   const fetchEmployees = async () => {
     try {
       const res = await getEmployees();
+      
       setEmployees(res.data);
     } catch (err) {
       console.error("Fetch Employees Error:", err);
@@ -40,9 +41,22 @@ export default function Employees() {
     }
   };
 
-  useEffect(() => {
-    fetchEmployees();
-  }, []);
+ useEffect(() => {
+  const fetchEmployees = async () => {
+    const res = await getEmployees();
+
+    const sorted = res.data.sort((a, b) => {
+      const numA = parseInt(a.employeeCode.replace("EMP-", ""));
+      const numB = parseInt(b.employeeCode.replace("EMP-", ""));
+      return numA - numB;  // EMP-001 → EMP-002 → EMP-003
+    });
+
+    setEmployees(sorted);
+  };
+
+  fetchEmployees();
+}, []);
+
 
   const handleAdd = async () => {
     if (!newEmp.name || !newEmp.email || !newEmp.department) {
@@ -60,6 +74,7 @@ export default function Employees() {
         status: newEmp.status || "active",
         joinDate: newEmp.joinDate || new Date().toISOString(),
         notes: newEmp.notes || "",
+        createdBy: localStorage.getItem("userId"), 
       };
 
       await addEmployee(payload);
@@ -120,6 +135,7 @@ export default function Employees() {
 
   const filteredEmployees = employees.filter(
     (emp) =>
+      emp.employeeCode.toLowerCase().includes(search.toLowerCase()) ||
       emp.name.toLowerCase().includes(search.toLowerCase()) ||
       emp.email.toLowerCase().includes(search.toLowerCase()) ||
       emp.department.toLowerCase().includes(search.toLowerCase()) ||
@@ -214,7 +230,7 @@ export default function Employees() {
                 />
               </th>
               {[
-                "#",
+                "Emp Id",
                 "Name",
                 "Email",
                 "Phone",
@@ -243,7 +259,7 @@ export default function Employees() {
                       onChange={() => toggleSelect(emp._id)}
                     />
                   </td>
-                  <td className="p-2">{index + 1}</td>
+                  <td className="p-2">{emp.employeeCode}</td>
                   <td className="p-2">{emp.name}</td>
                   <td className="p-2">{emp.email}</td>
                   <td className="p-2">{emp.phone || "-"}</td>
