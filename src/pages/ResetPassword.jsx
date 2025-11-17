@@ -31,7 +31,7 @@ const handleSubmit = async (e) => {
   const resetToken = localStorage.getItem("resetToken");
 
   try {
-    const res = await api.post("/reset-password", {
+    const res = await api.post("/auth/reset-password", {
       email,
       newPassword,
       resetToken,

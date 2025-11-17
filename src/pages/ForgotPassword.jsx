@@ -12,7 +12,7 @@ const ForgotPassword = () => {
     e.preventDefault();
     try {
     
-      const res = await api.post('/send-otp', { email });
+      const res = await api.post('/auth/send-otp', { email });
 
       setMessage(res.data.message);
 

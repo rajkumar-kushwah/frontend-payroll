@@ -44,7 +44,7 @@ const VerifyOtp = () => {
 
     setLoading(true);
     try {
-      const res = await api.post("/verify-otp", { email, otp: enteredOtp });
+      const res = await api.post("/auth/verify-otp", { email, otp: enteredOtp });
 
       setMessage(res.data.message);
 
