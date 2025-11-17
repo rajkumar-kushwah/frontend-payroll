@@ -15,7 +15,6 @@ const Register = () => {
     password: "",
     phone: "",
     companyName: "",
-    role: "user",
   });
   const [loading, setLoading] = useState(false);
 
@@ -145,21 +144,7 @@ const Register = () => {
               />
             </div>
 
-            {/* Role */}
-            <div className="flex items-center border border-lime-400 rounded-md px-3 py-2">
-              <FaUser className="text-lime-500 mr-2" />
-              <select
-                name="role"
-                value={formData.role}
-                onChange={handleChange}
-                className="w-full bg-transparent focus:outline-none text-sm"
-              >
-                <option value="user">User</option>
-                <option value="admin">Admin</option>
-                <option value="hr">HR</option>
-                <option value="ceo">CEO</option>
-              </select>
-            </div>
+
 
             {/* Password */}
             <div className="flex items-center border border-lime-400 rounded-md px-3 py-2">
