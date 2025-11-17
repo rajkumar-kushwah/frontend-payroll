@@ -182,7 +182,7 @@ export default function Employees() {
             { label: "Department", field: "department", type: "text" },
             { label: "Salary (₹)", field: "salary", type: "number" },
             { label: "Status", field: "status", type: "text" },
-            { label: "Notes", field: "notes", type: "text" },
+            { label: "Note", field: "note", type: "text" },
           ].map(({ label, field, type }) => (
             <div key={field} className="flex flex-col">
               <label className="text-xs font-semibold mb-1">{label}</label>
@@ -230,7 +230,7 @@ export default function Employees() {
                 />
               </th>
               {[
-                "Emp Id",
+                "Emp ID",
                 "Name",
                 "Email",
                 "Phone",
@@ -239,8 +239,8 @@ export default function Employees() {
                 "Salary",
                 "Status",
                 "Join Date",
-                "Notes",
-                "Actions",
+                "Note",
+                "Action",
               ].map((h) => (
                 <th key={h} className="p-2 text-left font-semibold">
                   {h}

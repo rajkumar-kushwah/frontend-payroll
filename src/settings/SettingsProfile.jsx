@@ -90,7 +90,26 @@ export default function ProfileSettings() {
       {/* Personal Info */}
       <h3 className="font-semibold text-lg ">Personal Information</h3>
 
-      <label>Email address*</label>
+
+
+      <label>First Name *</label>
+      <input
+        className="w-full border px-3 py-2 rounded"
+        placeholder="First name*"
+        value={form.firstName}
+        onChange={(e) => setForm({ ...form, firstName: e.target.value })}
+        required
+      />
+
+      <label>Last Name *</label>
+      <input
+        className="w-full border px-3 py-2 rounded"
+        placeholder="Last name*"
+        value={form.lastName}
+        onChange={(e) => setForm({ ...form, lastName: e.target.value })}
+        required
+      />
+      <label>Email Address*</label>
       <input
         className="w-full border px-3 py-2 rounded"
         placeholder="Email address*"
@@ -100,25 +119,7 @@ export default function ProfileSettings() {
         required
       />
 
-      <label>First name*</label>
-      <input
-        className="w-full border px-3 py-2 rounded"
-        placeholder="First name*"
-        value={form.firstName}
-        onChange={(e) => setForm({ ...form, firstName: e.target.value })}
-        required
-      />
-
-      <label>Last name*</label>
-      <input
-        className="w-full border px-3 py-2 rounded"
-        placeholder="Last name*"
-        value={form.lastName}
-        onChange={(e) => setForm({ ...form, lastName: e.target.value })}
-        required
-      />
-
-      <label>Phone number*</label>
+      <label>Phone*</label>
       <input
         className="w-full border px-3 py-2 rounded"
         placeholder="Phone number*"
@@ -139,10 +140,10 @@ export default function ProfileSettings() {
         required
       />
 
-      <label>Website (optional)</label>
+      <label>Website (Optional)</label>
       <input
         className="w-full border px-3 py-2 rounded"
-        placeholder="Website (optional)"
+        placeholder="Website (Optional)"
         value={form.website}
         onChange={(e) => setForm({ ...form, website: e.target.value })}
       />
@@ -153,10 +154,10 @@ export default function ProfileSettings() {
       {/* Address */}
       <h3 className="font-semibold text-lg mt-4">Address</h3>
 
-      <label>Street address*</label>
+      <label>Street Address*</label>
       <input
         className="w-full border px-3 py-2 rounded"
-        placeholder="Street address*"
+        placeholder="Street Address*"
         value={form.address.street}
         onChange={(e) =>
           setForm({ ...form, address: { ...form.address, street: e.target.value } })
@@ -164,10 +165,12 @@ export default function ProfileSettings() {
         required
       />
 
-      <label>ZIP code*</label>
+  
+
+      <label>Pin Code*</label>
       <input
         className="w-full border px-3 py-2 rounded"
-        placeholder="ZIP code*"
+        placeholder="PIN code*"
         value={form.address.zip}
         onChange={(e) =>
           setForm({ ...form, address: { ...form.address, zip: e.target.value } })
@@ -212,7 +215,7 @@ export default function ProfileSettings() {
         type="submit"
         className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 mt-4"
       >
-        Update My Profile
+        Update Profile
       </button>
     </form>
   );

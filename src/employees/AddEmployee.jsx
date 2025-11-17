@@ -82,7 +82,7 @@ export default function EmployeeAdd() {
 
         {/* Phone */}
         <div>
-          <label className="block font-semibold mb-1">Phone</label>
+          <label className="block font-semibold mb-1">Phone *</label>
           <input
             type="text"
             name="phone"

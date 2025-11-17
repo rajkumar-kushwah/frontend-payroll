@@ -138,7 +138,7 @@ export default function Sidebar({ isOpen, toggle }) {
             )}`}
           >
             <Wallet className="w-4 h-4" />
-            <span className="text-sm">Payrolls</span>
+            <span className="text-sm">Payroll</span>
           </a>
 
           <div className="pt-3 text-gray-500 text-xs">Account Setting</div>

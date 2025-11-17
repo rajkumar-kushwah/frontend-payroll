@@ -44,7 +44,7 @@ export default function DeleteAccount() {
           checked={confirm}
           onChange={(e) => setConfirm(e.target.checked)}
         />
-        <span>I understand the consequences</span>
+        <span>I agree to permanently delete this user.</span>
       </label>
       <button
         className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
