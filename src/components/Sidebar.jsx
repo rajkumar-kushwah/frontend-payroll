@@ -1,7 +1,6 @@
-// src/components/Sidebar.jsx
 import React from "react";
 import { useUser } from "../context/UserContext";
-import { useLocation } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import logo from "../images/nabulogo.png";
 import market from "../images/market.jpg";
 import {
@@ -15,9 +14,8 @@ import {
 
 export default function Sidebar({ isOpen, toggle }) {
   const { user } = useUser();
-  const location = useLocation(); // 👈 current page path
+  const location = useLocation();
 
-  // Helper function to check if link is active
   const isActive = (path) =>
     location.pathname === path
       ? "bg-lime-300 text-gray-900 font-medium shadow-sm"
@@ -30,7 +28,7 @@ export default function Sidebar({ isOpen, toggle }) {
         ${isOpen ? "translate-x-0" : "-translate-x-full"}`}
     >
       <div className="h-full flex flex-col bg-gray-100 overflow-y-auto">
-        {/* 🔹 Logo Section */}
+        {/* Logo Section */}
         <div className="flex justify-between items-center px-4 py-3 border-b">
           <div className="flex items-center gap-2 ">
             <div className="w-10 h-10 bg-lime-300 rounded-xl flex items-center justify-center">
@@ -50,15 +48,8 @@ export default function Sidebar({ isOpen, toggle }) {
           </button>
         </div>
 
-        {/*  Profile Section */}
+        {/* Profile Section */}
         <div className="relative p-6 border-b flex flex-col items-center text-black">
-          <div className="absolute top-0 left-0 w-full h-18 bg-lime-50 opacity-80 pointer-events-none z-0">
-            <img
-              src={market}
-              alt="bg"
-              className="relative left-0 w-full h-15 bg-lime-50 opacity-80 pointer-events-none z-0"
-            />
-          </div>
           {user ? (
             user.avatar ? (
               <img
@@ -88,73 +79,86 @@ export default function Sidebar({ isOpen, toggle }) {
 
         {/* Navigation Links */}
         <nav className="flex-1 p-4 space-y-2">
-          <a
-            href="/dashboard"
+          <NavLink
+            to="/dashboard"
             className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition ${isActive(
               "/dashboard"
             )}`}
           >
             <LayoutDashboard className="w-4 h-4" />
             <span>Dashboard</span>
-          </a>
+          </NavLink>
 
-          <a
-            href="/profile"
+          <NavLink
+            to="/profile"
             className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition ${isActive(
               "/profile"
             )}`}
           >
             <User className="w-4 h-4" />
             <span>Profile</span>
-            <div className="flex justify-around items-center ml-auto">
-              <i className="fa fa-angle-right" aria-hidden="true"></i>
-            </div>
-          </a>
+          </NavLink>
 
-          <a
-            href="/employees"
+          <NavLink
+            to="/employees"
             className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition ${isActive(
               "/employees"
             )}`}
           >
             <UserCog className="w-5 h-5" />
             <span>Employees</span>
-          </a>
+          </NavLink>
 
-          <a
-            href="/leaves"
+          <NavLink
+            to="/leaves"
             className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition ${isActive(
               "/leaves"
             )}`}
           >
             <Calendar className="w-4 h-4" />
             <span className="text-sm">Leaves</span>
-          </a>
+          </NavLink>
 
-          <a
-            href="/payrolls"
+          <NavLink
+            to="/payrolls"
             className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition ${isActive(
               "/payrolls"
             )}`}
           >
             <Wallet className="w-4 h-4" />
             <span className="text-sm">Payroll</span>
-          </a>
+          </NavLink>
+
+         
 
           <div className="pt-3 text-gray-500 text-xs">Account Setting</div>
 
-          <a
-            href="/settings"
+          <NavLink
+            to="/settings"
             className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition ${isActive(
               "/settings"
             )}`}
           >
             <Settings className="w-4 h-4" />
             <span className="text-sm">Settings</span>
-            <div className="flex justify-around items-center ml-auto">
-              <i className="fa fa-angle-right" aria-hidden="true"></i>
+          </NavLink>
+
+
+           {/* Admin Section - Owner Only */}
+          {user && user.role?.toLowerCase() === "owner" && (
+            <div className="mt-2">
+              <div className="pt-0 text-gray-500 text-xs">Admin Section</div>
+              <NavLink
+                to="/admin"
+                className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition ${isActive(
+                  "/admin"
+                )}`}
+              >
+                <UserCog className="w-4 h-4" />
+                <span className="text-sm">Admin</span>
+              </NavLink>
             </div>
-          </a>
+          )}
         </nav>
       </div>
     </aside>

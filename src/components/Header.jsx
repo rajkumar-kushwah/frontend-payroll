@@ -82,6 +82,7 @@ useEffect(() => {
         >
           {isOpen ? "×" : "☰"}
         </button>
+        
 
         <div className="relative flex items-center gap-2 w-full bg-white border-black rounded-2xl py-1 px-2 text-black">
           <i className="fa fa-search text-gray-500 px-2" aria-hidden="true"></i>

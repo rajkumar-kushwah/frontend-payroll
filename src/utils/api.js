@@ -2,6 +2,7 @@
 import axios from 'axios';
 
 
+
 const api = axios.create({
   baseURL: "https://project-payroll.onrender.com/api", 
     headers: { "Content-Type": "application/json" },
@@ -24,6 +25,13 @@ export const updateSalary = (id, data) => api.put(`/salary/${id}`, data);
 export const deleteSalary = (id) => api.delete(`/salary/${id}`);
 export const markSalaryPaid = (id) => api.patch(`/salary/${id}/pay`);
 export const getSalaryById = (id) => api.get(`/salary/${id}`);
+
+
+// promote user  to admin
+export const addUser = (user) => api.post("/company/add-user", user);
+export const promoteUser = (userId) => api.post(`/admin/${userId}`);
+export const demoteUser = (adminId) => api.delete(`/admin/${adminId}`);
+export const getAdminDashboardData = () => api.get("/admin-dashboard");
 
 
 // Profile APIs
