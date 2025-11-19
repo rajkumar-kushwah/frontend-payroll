@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getAdminDashboardData, promoteUser, demoteUser } from "../utils/api";
+import { getAdminDashboardData, promoteUser, demoteUser, deleteUser } from "../utils/api";
 import { useNavigate } from "react-router-dom";
 import Layout from "../components/Layout";
 
@@ -48,8 +48,22 @@ export default function AdminManagement() {
     }
   };
 
-  // if (loading) return <p className="text-sm">Loading...</p>;
-  // if (error) return <p className="text-red-500 text-sm">{error}</p>;
+  // ---------------- DELETE USER ----------------
+  const handleDelete = async (userId) => {
+    const confirmDelete = window.confirm("Are you sure you want to delete this user?");
+    if (!confirmDelete) return;
+
+    try {
+      await deleteUser(userId);
+      fetchUsers();
+      alert("User deleted successfully");
+    } catch (err) {
+      alert(err.response?.data?.message || "Failed to delete user");
+    }
+  };
+
+  if (loading) return <p className="text-sm">Loading...</p>;
+  if (error) return <p className="text-red-500 text-sm">{error}</p>;
 
   return (
     <Layout>
@@ -95,6 +109,15 @@ export default function AdminManagement() {
                       className="px-2 py-1 bg-red-500 text-white rounded text-xs"
                     >
                       Demote
+                    </button>
+                  )}
+                  {/* Delete Button for all non-owner users */}
+                  {u.role !== "owner" && (
+                    <button
+                      onClick={() => handleDelete(u._id)}
+                      className="px-2 py-1 bg-gray-500 text-white rounded text-xs"
+                    >
+                      Delete
                     </button>
                   )}
                 </td>
