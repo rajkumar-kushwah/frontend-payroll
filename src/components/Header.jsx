@@ -148,13 +148,12 @@ useEffect(() => {
           {dropdown === "user" && (
             <ul className="absolute right-0 mt-2 w-75 bg-white text-gray-700 rounded shadow-lg z-50">
               <li className="px-4 py-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2" onClick={() => navigate("/profile")}>
-                  <div className="flex flex-col text-sm">
-    <span className="font-medium">{user?.name || "User"}</span>
-    
-  </div>
-                {user?.avatar && (
+                {user?.avatar ? (
                   <img src={user.avatar} alt="avatar" className="w-7 h-7 rounded-full border-2 border-green-600" />
-               
+                ) : (
+                  <div className="w-7 h-7 rounded-full bg-gray-400 flex items-center justify-center text-white font-bold">
+                    {user?.name?.charAt(0).toUpperCase() || "U"}
+                  </div>
                 )}
                 <div className="flex flex-col text-xs">
                   My Profile
