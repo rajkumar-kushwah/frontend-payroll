@@ -1,62 +1,67 @@
-import React from "react";
+import React, { useState } from "react";
+import { addUser } from "../utils/api";
+import { useNavigate } from "react-router-dom";
+import Layout from "../components/Layout";
 
-export default function UserList({ users, onPromote, onDemote, onDelete }) {
+export default function AddUser() {
+  const navigate = useNavigate();
+  const [newUser, setNewUser] = useState({ name: "", email: "", password: "", role: "user" });
 
+  const handleAddUser = async (e) => {
+    e.preventDefault();
+    try {
+      await addUser(newUser);
+      alert("User added successfully");
+      navigate("/admin"); // Redirect back to AdminManagement
+    } catch (err) {
+      alert(err.response?.data?.message || "Failed to add user");
+    }
+  };
 
-    
   return (
-    <div className="p-4 border rounded">
-      <h2 className="font-semibold mb-2">Existing Users</h2>
-      <table className="w-full border">
-        <thead>
-          <tr className="bg-gray-200">
-            <th className="p-2">Name</th>
-            <th className="p-2">Email</th>
-            <th className="p-2">Role</th>
-            <th className="p-2">Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {users.length === 0 && (
-            <tr>
-              <td colSpan={4} className="text-center p-3">
-                No users found
-              </td>
-            </tr>
-          )}
-          {users.map((u) => (
-            <tr key={u._id} className="border-t">
-              <td className="p-2">{u.name}</td>
-              <td className="p-2">{u.email}</td>
-              <td className="p-2">{u.role}</td>
-              <td className="p-2 flex gap-2">
-                {u.role !== "admin" && u.role !== "owner" && (
-                  <button
-                    onClick={() => onPromote(u._id)}
-                    className="px-2 py-1 bg-blue-500 text-white rounded"
-                  >
-                    Promote
-                  </button>
-                )}
-                {u.role === "admin" && (
-                  <button
-                    onClick={() => onDemote(u._id)}
-                    className="px-2 py-1 bg-red-500 text-white rounded"
-                  >
-                    Demote
-                  </button>
-                )}
-                <button
-                  onClick={() => onDelete(u._id)}
-                  className="px-2 py-1 bg-gray-700 text-white rounded"
-                >
-                  Delete
-                </button>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+    <Layout>
+      <div className="p-4 max-w-md mx-auto">
+        <h1 className="text-lg font-bold mb-2">Add New User</h1>
+        <form onSubmit={handleAddUser} className="flex flex-col gap-2 border p-3 rounded">
+          <input
+            type="text"
+            placeholder="Name"
+            required
+            value={newUser.name}
+            onChange={(e) => setNewUser({ ...newUser, name: e.target.value })}
+            className="border p-2 rounded text-sm"
+          />
+          <input
+            type="email"
+            placeholder="Email"
+            required
+            value={newUser.email}
+            onChange={(e) => setNewUser({ ...newUser, email: e.target.value })}
+            className="border p-2 rounded text-sm"
+          />
+          <input
+            type="password"
+            placeholder="Password"
+            required
+            value={newUser.password}
+            onChange={(e) => setNewUser({ ...newUser, password: e.target.value })}
+            className="border p-2 rounded text-sm"
+          />
+          <select
+            value={newUser.role}
+            onChange={(e) => setNewUser({ ...newUser, role: e.target.value })}
+            className="border p-2 rounded text-sm"
+          >
+            <option value="ceo">CEO</option>
+            <option value="hr">HR</option>
+            <option value="manager">Manager</option>
+            <option value="user">Employee</option>
+          </select>
+          <button type="submit" className="bg-green-500 text-white px-3 py-1.5 rounded text-sm">
+            Add User
+          </button>
+        </form>
+      </div>
+    </Layout>
   );
 }

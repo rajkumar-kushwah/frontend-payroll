@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from "react";
+import { getAdminDashboardData, promoteUser, demoteUser } from "../utils/api";
+import { useNavigate } from "react-router-dom";
 import Layout from "../components/Layout";
-import AddUserForm from "./AddUserForm";
-import UserList from "./UserList";
-import { getAdminDashboardData, addUser, promoteUser, demoteUser, deleteUser } from "../utils/api";
 
 export default function AdminManagement() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  const [showAddForm, setShowAddForm] = useState(false);
+  const navigate = useNavigate();
 
+  // ---------------- FETCH USERS ----------------
   const fetchUsers = async () => {
     try {
       setLoading(true);
@@ -22,55 +22,92 @@ export default function AdminManagement() {
     }
   };
 
-  useEffect(() => { fetchUsers(); }, []);
+  useEffect(() => {
+    fetchUsers();
+  }, []);
 
-  const handleAddUser = async (newUser) => {
+  // ---------------- PROMOTE USER ----------------
+  const handlePromote = async (userId) => {
     try {
-      await addUser(newUser);
+      await promoteUser(userId);
       fetchUsers();
-      setShowAddForm(false);
-      alert("User added successfully");
+      alert("User promoted to admin");
     } catch (err) {
-      alert(err.response?.data?.message || "Failed to add user");
+      alert(err.response?.data?.message || "Failed to promote user");
     }
   };
 
-//  admin delete
+  // ---------------- DEMOTE ADMIN ----------------
+  const handleDemote = async (adminId) => {
+    try {
+      await demoteUser(adminId);
+      fetchUsers();
+      alert("Admin demoted successfully");
+    } catch (err) {
+      alert(err.response?.data?.message || "Failed to demote admin");
+    }
+  };
 
-
-
-
-  const handlePromote = async (id) => { await promoteUser(id); fetchUsers(); alert("User promoted"); };
-  const handleDemote = async (id) => { await demoteUser(id); fetchUsers(); alert("Admin demoted"); };
-const handleDelete = async (id) => {
-  try {
-    const res = await deleteUser(id); // api.js me define
-    fetchUsers(); // refresh list
-    alert(res.message || "User deleted successfully");
-  } catch (err) {
-    console.error(err);
-    alert(err.response?.data?.message || "Failed to delete user");
-  }
-};
-
-
-  if (loading) return <p>Loading...</p>;
-  if (error) return <p className="text-red-500">{error}</p>;
+  // if (loading) return <p className="text-sm">Loading...</p>;
+  // if (error) return <p className="text-red-500 text-sm">{error}</p>;
 
   return (
     <Layout>
-      <div className="p-6">
-        <h1 className="text-2xl font-bold mb-4">Owner Dashboard - Admin Management</h1>
+      <div className="p-4">
+        <h1 className="text-lg font-bold mb-2">Owner Dashboard - Admin Management</h1>
 
+        {/* -------- Add New User Button -------- */}
         <button
-          onClick={() => setShowAddForm(!showAddForm)}
-          className="mb-4 px-4 py-2 bg-green-500 text-white rounded"
+          onClick={() => navigate("/admin/add-user")}
+          className="mb-4 px-3 py-1.5 bg-green-500 text-white text-sm rounded"
         >
-          {showAddForm ? "Cancel" : "Add New User"}
+          + Add New User
         </button>
 
-        {showAddForm && <AddUserForm onAdd={handleAddUser} />}
-        <UserList users={users} onPromote={handlePromote} onDemote={handleDemote} onDelete={handleDelete} />
+        {/* -------- Users Table -------- */}
+        <table className="w-full text-sm border">
+          <thead>
+            <tr className="bg-gray-200">
+              <th className="p-2">Name</th>
+              <th className="p-2">Email</th>
+              <th className="p-2">Role</th>
+              <th className="p-2">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {users.length > 0 ? users.map(u => (
+              <tr key={u._id} className="border-t">
+                <td className="p-2">{u.name}</td>
+                <td className="p-2">{u.email}</td>
+                <td className="p-2">{u.role}</td>
+                <td className="p-2 flex gap-2">
+                  {u.role !== "admin" && u.role !== "owner" && (
+                    <button
+                      onClick={() => handlePromote(u._id)}
+                      className="px-2 py-1 bg-blue-500 text-white rounded text-xs"
+                    >
+                      Promote
+                    </button>
+                  )}
+                  {u.role === "admin" && (
+                    <button
+                      onClick={() => handleDemote(u._id)}
+                      className="px-2 py-1 bg-red-500 text-white rounded text-xs"
+                    >
+                      Demote
+                    </button>
+                  )}
+                </td>
+              </tr>
+            )) : (
+              <tr>
+                <td colSpan={4} className="text-center p-2 text-gray-500 italic text-xs">
+                  No users found
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
       </div>
     </Layout>
   );

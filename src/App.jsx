@@ -19,6 +19,7 @@ import AddSalary from "./pages/AddSalary";
 import NotFound from "./notfound/NotFound";
 import EditEmployee from "./employees/EditEmployee";
 import AdminList from './admin/AdminManament';
+import AddUser from './admin/UserList';
 
 function App() {
   return (
@@ -45,6 +46,7 @@ function App() {
         <Route path="/employee/:id/edit" element={<ProtectedRoute><EditEmployee /></ProtectedRoute>} />
         <Route path="/settings" element={<ProtectedRoute allowedRoles={["owner"]}><Settings/></ProtectedRoute>} />
         <Route path="/admin" element={<ProtectedRoute><AdminList /></ProtectedRoute>} />
+        <Route path='/admin/add-user' element={<ProtectedRoute><AddUser /></ProtectedRoute>} />
         {/* protected route end */}
       </Routes>
     </Router>

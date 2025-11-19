@@ -2,9 +2,10 @@ import React, { useEffect, useState } from "react";
 import Layout from "../components/Layout";
 import api, { getEmployees } from "../utils/api";
 import { useNavigate } from "react-router-dom";
+import { FaUsers } from "react-icons/fa";
 import {
   Users,
-  UserCog,
+
   IndianRupee,
   FileClock,
   CalendarCheck,
@@ -118,64 +119,46 @@ export default function Dashboard() {
         </h1>
       )}
 
+      
       {/* Stats Section */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-        <div className="border-none shadow-sm rounded-xl bg-gray-100 mb-12 ml-1 mr-1 p-6 w-full">
-          <div className="flex-wrap gap-2 grid grid-cols-1 md:grid-cols-2 mx-auto mb-5 mt-10 overflow-x-auto min-w-full">
-            {/* Card 1 */}
-            <div className="bg-gray-50 p-6 rounded-sm shadow text-center grid hover:bg-gray-100 transition-transform duration-300 md:hover:-translate-y-2">
-              <div className="flex items-center justify-center">
-                <UserCog className="text-lime-300 w-6 h-6" />
-                <div className="text-xs text-gray-600 font-medium ml-2">
-                  Total Employees
-                </div>
-              </div>
-              <div className="text-xl font-bold text-lime-300 mt-2">
-                {stats.employees}
-              </div>
-            </div>
+<div className="grid grid-cols-3 sm:grid-cols-8 gap-2 mb-4">
+  {/* Card 1: Total Employees */}
+  <div className="bg-gray-50 p-3 rounded shadow text-center hover:bg-gray-100 transition-transform duration-200 md:hover:-translate-y-1">
+    <div className="flex items-center justify-center gap-1">
+      <FaUsers className="text-black w-5 h-5" />  
+      <span className="text-xs text-gray-600 font-medium">Employees</span>
+    </div>
+    <div className="text-sm font-bold text-lime-300 mt-1">{stats.employees}</div>
+  </div>
 
-            {/* Card 2 */}
-            <div className="bg-gray-50 p-6 rounded-sm shadow text-center grid hover:bg-gray-100 transition-transform duration-300 md:hover:-translate-y-2">
-              <div className="flex items-center justify-center">
-                <IndianRupee className="text-blue-400 w-6 h-6" />
-                <div className="text-xs text-gray-600 font-medium ml-2">
-                  Total Salary
-                </div>
-              </div>
-              <div className="text-xl font-bold text-blue-400 mt-2">
-                ₹{stats.totalSalary}
-              </div>
-            </div>
+  {/* Card 2: Total Salary */}
+  <div className="bg-gray-50 p-3 rounded shadow text-center hover:bg-gray-100 transition-transform duration-200 md:hover:-translate-y-1">
+    <div className="flex items-center justify-center gap-1">
+      <IndianRupee className="text-blue-400 w-5 h-5" />
+      <span className="text-xs text-gray-600 font-medium">Salary</span>
+    </div>
+    <div className="text-sm font-bold text-blue-400 mt-1">₹{stats.totalSalary}</div>
+  </div>
 
-            {/* Card 3 */}
-            <div className="bg-gray-50 p-6 rounded-sm shadow text-center grid hover:bg-gray-100 transition-transform duration-300 md:hover:-translate-y-2">
-              <div className="flex items-center justify-center">
-                <CalendarCheck className="text-yellow-400 w-6 h-6" />
-                <div className="text-xs text-gray-600 font-medium ml-2">
-                  Leaves
-                </div>
-              </div>
-              <div className="text-xl font-bold text-yellow-400 mt-2">
-                {stats.leaves}
-              </div>
-            </div>
+  {/* Card 3: Leaves */}
+  <div className="bg-gray-50 p-3 rounded shadow text-center hover:bg-gray-100 transition-transform duration-200 md:hover:-translate-y-1">
+    <div className="flex items-center justify-center gap-1">
+      <CalendarCheck className="text-yellow-400 w-5 h-5" />
+      <span className="text-xs text-gray-600 font-medium">Leaves</span>
+    </div>
+    <div className="text-sm font-bold text-yellow-400 mt-1">{stats.leaves}</div>
+  </div>
 
-            {/* Card 4 */}
-            <div className="bg-gray-50 p-4 rounded-sm shadow text-center grid hover:bg-gray-100 transition-transform duration-300 md:hover:-translate-y-2">
-              <div className="flex items-center justify-center">
-                <FileClock className="text-red-400 w-4 h-4" />
-                <div className="text-xs text-gray-600 font-medium ml-2">
-                  Pending Reports
-                </div>
-              </div>
-              <div className="text-xl font-bold text-red-400 mt-2">
-                {stats.reports}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+  {/* Card 4: Pending Reports */}
+  <div className="bg-gray-50 p-3 rounded shadow text-center hover:bg-gray-100 transition-transform duration-200 md:hover:-translate-y-1">
+    <div className="flex items-center justify-center gap-1">
+      <FileClock className="text-red-400 w-5 h-5" />
+      <span className="text-xs text-gray-600 font-medium">Reports</span>
+    </div>
+    <div className="text-sm font-bold text-red-400 mt-1">{stats.reports}</div>
+  </div>
+</div>
+
 
       {/* Buttons */}
       <div className="flex justify-end mb-4 gap-3">

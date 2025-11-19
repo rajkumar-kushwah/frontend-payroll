@@ -131,19 +131,33 @@ useEffect(() => {
       <div className="flex items-center gap-2 ml-4 sm:gap-4 relative">
         <div className="relative" ref={userRef}>
           <div
-            className="flex items-center gap-1 cursor-pointer"
-            onClick={() => setDropdown(prev => (prev === "user" ? null : "user"))}
-          >
-            {user?.avatar ? (
-              <img src={user.avatar} alt="avatar" className="w-7 h-7 rounded-full border-1 border-black" />
-            ) : (
-              <div className="w-7 h-7 rounded-full bg-gray-400 flex items-center justify-center text-white font-bold">
-                {user?.name?.charAt(0).toUpperCase() || "U"}
-              </div>
-            )}
-            <span className="hidden text-xs md:inline">{user?.name || "User"}</span>
-            <i className={`fa fa-caret-down text-sm text-gray-500 transition-transform duration-300 ${dropdown === "user" ? "rotate-180" : "rotate-0"}`}></i>
-          </div>
+  className="flex items-center gap-1 cursor-pointer"
+  onClick={() => setDropdown(prev => (prev === "user" ? null : "user"))}
+>
+  {/* Name first */}
+  <span className="hidden text-xs md:inline">{user?.name || "User"}</span>
+
+  {/* Avatar */}
+  {user?.avatar ? (
+    <img
+      src={user.avatar}
+      alt="avatar"
+      className="w-7 h-7 rounded-full border-1 border-black"
+    />
+  ) : (
+    <div className="w-7 h-7 rounded-full bg-gray-400 flex items-center justify-center text-white font-bold">
+      {user?.name?.charAt(0).toUpperCase() || "U"}
+    </div>
+  )}
+
+  {/* Dropdown caret */}
+  <i
+    className={`fa fa-caret-down text-sm text-gray-500 transition-transform duration-300 ${
+      dropdown === "user" ? "rotate-180" : "rotate-0"
+    }`}
+  ></i>
+</div>
+
 
           {dropdown === "user" && (
             <ul className="absolute right-0 mt-2 w-75 bg-white text-gray-700 rounded shadow-lg z-50">
