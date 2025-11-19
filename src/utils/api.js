@@ -32,6 +32,8 @@ export const addUser = (user) => api.post("/company/add-user", user);
 export const promoteUser = (userId) => api.post(`/admin/${userId}`);
 export const demoteUser = (adminId) => api.delete(`/admin/${adminId}`);
 export const getAdminDashboardData = () => api.get("/admin-dashboard");
+export const deleteUser = (userId) => api.delete(`/company/user/${userId}`);
+
 
 
 // Profile APIs
