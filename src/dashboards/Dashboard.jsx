@@ -1,72 +1,88 @@
+// src/dashboards/Dashboard.jsx
 import React, { useEffect, useState } from "react";
 import Layout from "../components/Layout";
-import api, { getEmployees } from "../utils/api";
+import api from "../utils/api";
 import { useNavigate } from "react-router-dom";
-import { FaUsers } from "react-icons/fa";
-import {
-  Users,
-
-  IndianRupee,
-  FileClock,
-  CalendarCheck,
-  Eye,
-  Pencil,
-  Trash2,
-  Home,
-} from "lucide-react";
+import { FaUsers, FaRupeeSign, FaFileInvoiceDollar, FaClipboardList } from "react-icons/fa";
+import { Pie, Bar } from "react-chartjs-2";
+import Chart from "chart.js/auto";
 import { useUser } from "../context/UserContext";
 
 export default function Dashboard() {
   const { user } = useUser();
+  const navigate = useNavigate();
+  const [employees, setEmployees] = useState([]);
+  const [loading, setLoading] = useState(true);
+
   const [stats, setStats] = useState({
     employees: 0,
     totalSalary: 0,
-    leaves: 0,
     reports: 0,
+    tasksComplete: 0,
+    paymentsPaid: 0,
   });
 
-  const [employees, setEmployees] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
+  // ----------------------------- Charts -----------------------------
+  const [statusChart, setStatusChart] = useState({
+    labels: ["Active", "Inactive", "Pending"],
+    datasets: [{ data: [0, 0, 0], backgroundColor: ["#34D399", "#F87171", "#FBBF24"] }],
+  });
 
-  // ----------------------------
-  // MAIN FETCH FUNCTION
-  // ----------------------------
-  const fetchData = async () => {
+  const [taskChart, setTaskChart] = useState({
+    labels: ["Complete", "Incomplete"],
+    datasets: [{ data: [0, 0], backgroundColor: ["#34D399", "#F87171"] }],
+  });
+
+  const [salaryChart, setSalaryChart] = useState({
+    labels: [],
+    datasets: [{ label: "Salary", data: [], backgroundColor: "#3B82F6" }],
+  });
+
+  const [reportChart, setReportChart] = useState({
+    labels: [],
+    datasets: [{ label: "Reports", data: [], backgroundColor: "#FBBF24" }],
+  });
+
+  const [slipChart, setSlipChart] = useState({
+    labels: ["Issued", "Pending"],
+    datasets: [{ data: [0, 0], backgroundColor: ["#3B82F6", "#F87171"] }],
+  });
+
+  // ----------------------------- Fetch Data -----------------------------
+  const fetchEmployees = async () => {
     try {
-      const [eRes, pRes] = await Promise.allSettled([
-        api.get("/employees"),
-        api.get("/payrolls"),
-      ]);
+      const res = await api.get("/employees");
+      const data = res.data.employees || res.data || [];
+      setEmployees(data);
 
-      const allEmployees =
-        eRes.status === "fulfilled" ? eRes.value.data : [];
+      // Stats
+      const totalSalary = data.reduce((acc, emp) => acc + (emp.salary || 0), 0);
+      const reports = data.reduce((acc, emp) => acc + (emp.reports?.length || 0), 0);
+      const tasksComplete = data.filter((e) => e.tasksCompleted).length;
+      const paymentsPaid = data.filter((e) => e.paymentStatus === "paid").length;
 
-      const payrolls =
-        pRes.status === "fulfilled" ? pRes.value.data.length : 0;
+      setStats({ employees: data.length, totalSalary, reports, tasksComplete, paymentsPaid });
 
-      // -------- SORT EMPLOYEES BY EMP-XXX --------
-      const sortedEmployees = allEmployees.sort((a, b) => {
-        const numA = parseInt(a.employeeCode.replace("EMP-", ""));
-        const numB = parseInt(b.employeeCode.replace("EMP-", ""));
-        return numA - numB;
-      });
+      // Status Chart
+      const active = data.filter((e) => e.status === "active").length;
+      const inactive = data.filter((e) => e.status === "inactive").length;
+      const pending = data.filter((e) => e.status === "pending").length;
+      setStatusChart({ ...statusChart, datasets: [{ ...statusChart.datasets[0], data: [active, inactive, pending] }] });
 
-      setEmployees(sortedEmployees);
+      // Task Chart
+      setTaskChart({ ...taskChart, datasets: [{ ...taskChart.datasets[0], data: [tasksComplete, data.length - tasksComplete] }] });
 
-      // -------- CALCULATE TOTAL SALARY --------
-      const totalSalary = allEmployees.reduce(
-        (acc, emp) => acc + (emp.salary || 0),
-        0
-      );
+      // Salary Chart
+      setSalaryChart({ labels: data.map((e) => e.name), datasets: [{ ...salaryChart.datasets[0], data: data.map((e) => e.salary || 0) }] });
 
-      // -------- DASHBOARD STATS --------
-      setStats({
-        employees: allEmployees.length,
-        totalSalary,
-        leaves: 0,
-        reports: payrolls,
-      });
+      // Report Chart
+      setReportChart({ labels: data.map((e) => e.name), datasets: [{ ...reportChart.datasets[0], data: data.map((e) => e.reports?.length || 0) }] });
+
+      // Slip Chart
+      const issued = data.filter((e) => e.paySlipIssued).length;
+      const pendingSlip = data.length - issued;
+      setSlipChart({ ...slipChart, datasets: [{ ...slipChart.datasets[0], data: [issued, pendingSlip] }] });
+
     } catch (err) {
       console.error(err);
     } finally {
@@ -74,202 +90,113 @@ export default function Dashboard() {
     }
   };
 
-  // ----------------------------
-  // INITIAL FETCH
-  // ----------------------------
-  useEffect(() => {
-    fetchData();
+  useEffect(() => { fetchEmployees(); }, []);
 
-    window.addEventListener("employeeAdded", fetchData);
-    window.addEventListener("salaryAdded", fetchData);
-
-    return () => {
-      window.removeEventListener("employeeAdded", fetchData);
-      window.removeEventListener("salaryAdded", fetchData);
-    };
-  }, []);
-
-  // ----------------------------
-  // DELETE HANDLER
-  // ----------------------------
   const handleDelete = async (id) => {
-    const confirmDelete = window.confirm(
-      "Are you sure you want to delete this employee?"
-    );
-    if (!confirmDelete) return;
-
-    try {
-      await api.delete(`/employees/${id}`);
-      alert("Employee deleted successfully");
-      fetchData();
-    } catch (err) {
-      alert("Failed to delete employee");
-      console.error(err);
-    }
+    if (!window.confirm("Delete this employee?")) return;
+    await api.delete(`/employees/${id}`);
+    fetchEmployees();
   };
 
   return (
     <Layout>
-      <Users className="text-black w-5 h-5 drop-shadow-[0_2px_0_rgba(16,185,129,1)]" />
+      <h1 className="text-sm font-semibold mb-2">Welcome, {user?.name || "User"}</h1>
 
-      {user?.name && (
-        <h1 className="text-xl font-bold mb-4 text-black">
-          <span className="ai-text-gradient">Welcome, </span>
-          {user.name}
-        </h1>
-      )}
-
-      
-      {/* Stats Section */}
-<div className="grid grid-cols-3 sm:grid-cols-8 gap-2 mb-4">
-  {/* Card 1: Total Employees */}
-  <div className="bg-gray-50 p-3 rounded shadow text-center hover:bg-gray-100 transition-transform duration-200 md:hover:-translate-y-1">
-    <div className="flex items-center justify-center gap-1">
-      <FaUsers className="text-black w-5 h-5" />  
-      <span className="text-xs text-gray-600 font-medium">Employees</span>
-    </div>
-    <div className="text-sm font-bold text-lime-300 mt-1">{stats.employees}</div>
-  </div>
-
-  {/* Card 2: Total Salary */}
-  <div className="bg-gray-50 p-3 rounded shadow text-center hover:bg-gray-100 transition-transform duration-200 md:hover:-translate-y-1">
-    <div className="flex items-center justify-center gap-1">
-      <IndianRupee className="text-blue-400 w-5 h-5" />
-      <span className="text-xs text-gray-600 font-medium">Salary</span>
-    </div>
-    <div className="text-sm font-bold text-blue-400 mt-1">₹{stats.totalSalary}</div>
-  </div>
-
-  {/* Card 3: Leaves */}
-  <div className="bg-gray-50 p-3 rounded shadow text-center hover:bg-gray-100 transition-transform duration-200 md:hover:-translate-y-1">
-    <div className="flex items-center justify-center gap-1">
-      <CalendarCheck className="text-yellow-400 w-5 h-5" />
-      <span className="text-xs text-gray-600 font-medium">Leaves</span>
-    </div>
-    <div className="text-sm font-bold text-yellow-400 mt-1">{stats.leaves}</div>
-  </div>
-
-  {/* Card 4: Pending Reports */}
-  <div className="bg-gray-50 p-3 rounded shadow text-center hover:bg-gray-100 transition-transform duration-200 md:hover:-translate-y-1">
-    <div className="flex items-center justify-center gap-1">
-      <FileClock className="text-red-400 w-5 h-5" />
-      <span className="text-xs text-gray-600 font-medium">Reports</span>
-    </div>
-    <div className="text-sm font-bold text-red-400 mt-1">{stats.reports}</div>
-  </div>
-</div>
-
-
-      {/* Buttons */}
-      <div className="flex justify-end mb-4 gap-3">
-        <button
-          className="bg-lime-400 text-white px-2 py-1.5 font-light text-xs sm:px-3 sm:py-2 sm:text-xs rounded hover:bg-lime-500 transition"
-          onClick={() => navigate("/employee/add")}
-        >
-          + Add employee
-        </button>
-        <button
-          className="bg-gray-500 text-white px-2 py-1.5 font-light text-xs sm:px-3 sm:py-2 sm:text-xs rounded hover:bg-gray-600 transition"
-          onClick={() => navigate("/employees")}
-        >
-          View All
-        </button>
+      {/* Top Buttons */}
+      <div className="flex justify-end gap-1 mb-2">
+        <button onClick={() => navigate("/employee/add")} className="bg-blue-600 p-1 rounded text-white text-[9px]">+ Create</button>
+        <button onClick={() => navigate("/employee/filter")} className="p-1 rounded border text-[9px]">Filter</button>
+        <button onClick={() => navigate("/employees")} className="bg-white p-1 rounded text-blue-600 text-[9px]">All</button>
       </div>
 
-      {/* Table Header */}
-      <div className="flex font-light text-gray-700 gap-1 ">
-        <Home className="w-4 h-4" />
-        <span className="text-xs p-0.5">Users</span>
+      {/* Small Cards */}
+      <div className="grid grid-cols-5 gap-1 mb-2 text-center text-[9px]">
+        <div className="bg-green-50 p-1 rounded shadow-sm">
+          <FaUsers className="w-3 h-3 mx-auto text-green-600" />
+          <div className="font-bold text-green-600">{stats.employees}</div>
+          <div>Employees</div>
+        </div>
+        <div className="bg-blue-50 p-1 rounded shadow-sm">
+          <FaRupeeSign className="w-3 h-3 mx-auto text-blue-600" />
+          <div className="font-bold text-blue-600">₹{stats.totalSalary}</div>
+          <div>Salary</div>
+        </div>
+        <div className="bg-yellow-50 p-1 rounded shadow-sm">
+          <FaClipboardList className="w-3 h-3 mx-auto text-yellow-600" />
+          <div className="font-bold text-yellow-600">{stats.tasksComplete}</div>
+          <div>Tasks</div>
+        </div>
+        <div className="bg-red-50 p-1 rounded shadow-sm">
+          <FaFileInvoiceDollar className="w-3 h-3 mx-auto text-red-600" />
+          <div className="font-bold text-red-600">{stats.paymentsPaid}</div>
+          <div>Paid</div>
+        </div>
+        <div className="bg-purple-50 p-1 rounded shadow-sm">
+          <div className="text-purple-600 font-bold">{stats.reports}</div>
+          <div>Reports</div>
+        </div>
       </div>
 
-      {/* Employee Table */}
-      <div className="p-1 overflow-x-auto overflow-y-auto max-h-[400px]">
-        <table className="min-w-full text-sm text-left border-separate border-spacing-y-1">
-          <thead className="bg-gray-100 sticky top-0 z-10">
-            <tr className="text-gray-700 text-xs">
-              <th className="px-4 py-2">Emp ID</th>
-              <th className="px-4 py-2">Name</th>
-              <th className="px-4 py-2">Email</th>
-              <th className="px-4 py-2">Phone</th>
-              <th className="px-4 py-2">Job Role</th>
-              <th className="px-4 py-2">Department</th>
-              <th className="px-4 py-2">Salary</th>
-              <th className="px-4 py-2">Status</th>
-              <th className="px-4 py-2">Join Date</th>
-              <th className="px-4 py-2 text-right">Actions</th>
+      {/* Compact Charts */}
+      <div className="grid grid-cols-3 gap-2 mb-2 text-[8px]">
+        <div className="bg-white p-1 rounded shadow-sm">
+          <h3 className="text-center mb-1">Employee Status</h3>
+          <Pie data={statusChart} height={80} />
+        </div>
+        <div className="bg-white p-1 rounded shadow-sm">
+          <h3 className="text-center mb-1">Tasks</h3>
+          <Pie data={taskChart} height={80} />
+        </div>
+        <div className="bg-white p-1 rounded shadow-sm">
+          <h3 className="text-center mb-1">Pay Slips</h3>
+          <Pie data={slipChart} height={80} />
+        </div>
+      </div>
+
+      <div className="grid grid-cols-2 gap-2 mb-2 text-[8px]">
+        <div className="bg-white p-1 rounded shadow-sm">
+          <h3 className="text-center mb-1">Salary Per Employee</h3>
+          <Bar data={salaryChart} height={80} />
+        </div>
+        <div className="bg-white p-1 rounded shadow-sm">
+          <h3 className="text-center mb-1">Reports Per Employee</h3>
+          <Bar data={reportChart} height={80} />
+        </div>
+      </div>
+
+      {/* Employee Table (Compact) */}
+      <div className="overflow-x-auto max-h-[250px] text-[8px]">
+        <table className="min-w-full border-separate border-spacing-y-1">
+          <thead className="bg-gray-100 sticky top-0">
+            <tr>
+              <th className="px-1 py-0.5">Code</th>
+              <th className="px-1 py-0.5">Name</th>
+              <th className="px-1 py-0.5">Dept</th>
+              <th className="px-1 py-0.5">Salary</th>
+              <th className="px-1 py-0.5">Tasks</th>
+              <th className="px-1 py-0.5">Payment</th>
+              <th className="px-1 py-0.5">Reports</th>
+              <th className="px-1 py-0.5 text-right">Act</th>
             </tr>
           </thead>
-
           <tbody>
-            {employees.length > 0 ? (
-              employees.map((emp) => (
-                <tr
-                  key={emp._id}
-                  className="bg-gray-100 text-xs hover:bg-gray-200 transition rounded"
-                >
-                  <td className="px-4 py-2">{emp.employeeCode}</td>
-                  <td
-                    className="px-4 py-2 font-bold max-w-[140px] truncate"
-                    title={emp.name}
-                  >
-                    {emp.name}
-                  </td>
-                  <td
-                    className="px-4 py-2 max-w-[180px] truncate"
-                    title={emp.email}
-                  >
-                    {emp.email}
-                  </td>
-                  <td
-                    className="px-4 py-2 max-w-[120px] truncate"
-                    title={emp.phone}
-                  >
-                    {emp.phone}
-                  </td>
-                  <td
-                    className="px-4 py-2 max-w-[150px] truncate"
-                    title={emp.jobRole}
-                  >
-                    {emp.jobRole}
-                  </td>
-                  <td
-                    className="px-4 py-2 max-w-[150px] truncate"
-                    title={emp.department}
-                  >
-                    {emp.department}
-                  </td>
-
-                  <td className="px-4 py-2">₹{emp.salary}</td>
-                  <td className="px-4 py-2">{emp.status}</td>
-                  <td className="px-4 py-2">
-                    {new Date(emp.joinDate).toLocaleDateString()}
-                  </td>
-
-                  <td className="px-4 py-2 text-right flex justify-end gap-3">
-                    <Eye
-                      className="w-3 h-3 text-blue-500 cursor-pointer hover:text-blue-700"
-                      onClick={() => navigate(`/employee/${emp._id}`)}
-                    />
-                    <Pencil
-                      className="w-3 h-3 text-black cursor-pointer hover:text-green-700"
-                      onClick={() => navigate(`/employee/${emp._id}/edit`)}
-                    />
-                    <Trash2
-                      className="w-3 h-3 text-red-500 cursor-pointer hover:text-red-700"
-                      onClick={() => handleDelete(emp._id)}
-                    />
-                  </td>
-                </tr>
-              ))
-            ) : (
-              <tr>
-                <td
-                  colSpan="10"
-                  className="text-center py-4 text-gray-500 italic bg-white shadow-sm rounded"
-                >
-                  No employees found.
+            {employees.length > 0 ? employees.map(emp => (
+              <tr key={emp._id} className="bg-gray-100 hover:bg-gray-200">
+                <td className="px-1 py-0.5">{emp.employeeCode}</td>
+                <td className="px-1 py-0.5">{emp.name}</td>
+                <td className="px-1 py-0.5">{emp.department || "-"}</td>
+                <td className="px-1 py-0.5">₹{emp.salary || 0}</td>
+                <td className="px-1 py-0.5 text-center">{emp.tasksCompleted ? "C" : "I"}</td>
+                <td className="px-1 py-0.5 text-center">{emp.paymentStatus === "paid" ? "Paid" : "Pending"}</td>
+                <td className="px-1 py-0.5 text-center">{emp.reports?.length || 0}</td>
+                <td className="px-1 py-0.5 text-right flex justify-end gap-1">
+                  <button className="text-blue-500 text-[7px]" onClick={() => navigate(`/employee/${emp._id}`)}>V</button>
+                  <button className="text-black text-[7px]" onClick={() => navigate(`/employee/${emp._id}/edit`)}>E</button>
+                  <button className="text-red-500 text-[7px]" onClick={() => handleDelete(emp._id)}>D</button>
                 </td>
               </tr>
+            )) : (
+              <tr><td colSpan="8" className="text-center py-1">No employees found.</td></tr>
             )}
           </tbody>
         </table>

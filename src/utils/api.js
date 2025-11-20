@@ -18,9 +18,14 @@ export const updateEmployee = (id, data) => api.put(`/employees/${id}`, data);
 export const deleteEmployee = (id) => api.delete(`/employees/${id}`);
 
 // Salary APIs
-// client/utils/api.js
 export const addSalary = (data) => api.post("/salary", data);
-export const getSalariesByEmployee = (employeeId) => api.get(`/salary/employee/${employeeId}`);
+export const getSalariesByEmployee = (employeeId, month = "") => {
+  const params = {};
+  if (month) params.month = month;          // optional filter
+  params.employeeId = employeeId;           // always filter by employee
+  return api.get("/salary/filter", { params });
+};
+// client/utils/api.js
 export const updateSalary = (id, data) => api.put(`/salary/${id}`, data);
 export const deleteSalary = (id) => api.delete(`/salary/${id}`);
 export const markSalaryPaid = (id) => api.patch(`/salary/${id}/pay`);
@@ -34,7 +39,12 @@ export const demoteUser = (adminId) => api.delete(`/admin/${adminId}`);
 export const getAdminDashboardData = () => api.get("/admin-dashboard");
 export const deleteUser = (userId) => api.delete(`/company/user/${userId}`);
 
-
+export const filterEmployees = async (filters) => {
+  const response = await api.get(`/employees/filter`, {
+    params: {...filters },
+  });
+  return response.data;
+};
 
 // Profile APIs
 export const getProfile = () => api.get("/auth/profile");

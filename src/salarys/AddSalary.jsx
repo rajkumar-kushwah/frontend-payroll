@@ -25,11 +25,11 @@ export default function AddSalary() {
     leaves: 0,
     totalWorkingDays: 30,
     netSalary: 0,
-    status: "unpaid", // ✅ match backend
+    status: "unpaid", //  match backend
   });
   const [salaryHistory, setSalaryHistory] = useState([]);
 
-  // ✅ Fetch employees
+  //  Fetch employees
   const fetchEmployees = async () => {
     try {
       const res = await getEmployees();
@@ -40,7 +40,7 @@ export default function AddSalary() {
     }
   };
 
-  // ✅ Fetch salary history
+  //  Fetch salary history
   const fetchSalaryHistory = async () => {
     if (!selectedEmployee) return;
     try {
@@ -52,7 +52,7 @@ export default function AddSalary() {
     }
   };
 
-  // ✅ Fetch single salary for edit
+  //  Fetch single salary for edit
   useEffect(() => {
     if (salaryId) {
       const fetchSalary = async () => {

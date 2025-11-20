@@ -15,7 +15,7 @@ import Settings from "./settings/SettingsPage";
 import EmployeeDetail from "./employees/EmployeeDetail";
 import AddEmployee from "./employees/AddEmployee";
 import PublicRoute from "./routes/PublicRoute";
-import AddSalary from "./pages/AddSalary";
+import AddSalary from "./salarys/AddSalary";
 import NotFound from "./notfound/NotFound";
 import EditEmployee from "./employees/EditEmployee";
 import AdminList from './admin/AdminManament';
@@ -47,6 +47,7 @@ function App() {
         <Route path="/settings" element={<ProtectedRoute allowedRoles={["owner"]}><Settings/></ProtectedRoute>} />
         <Route path="/admin" element={<ProtectedRoute><AdminList /></ProtectedRoute>} />
         <Route path='/admin/add-user' element={<ProtectedRoute><AddUser /></ProtectedRoute>} />
+        
         {/* protected route end */}
       </Routes>
     </Router>
