@@ -5,11 +5,11 @@ import Layout from "../components/Layout";
 import { useUser } from "../context/UserContext";
 
 export default function AdminManagement() {
+  const { user } = useUser();
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const navigate = useNavigate();
-  const { user } = useUser();
 
   // ---------------- FETCH USERS ----------------
   const fetchUsers = async () => {
@@ -25,21 +25,16 @@ export default function AdminManagement() {
   };
 
   useEffect(() => {
-    if (!["owner", "admin"].includes(user?.role)) return;
-
-    fetchUsers();
-
-    window.addEventListener("employeeAdded", fetchUsers);
-    return () => {
-      window.removeEventListener("employeeAdded", fetchUsers);
-    };
+    if (user?.role === "owner" || user?.role === "admin") {
+      fetchUsers();
+    }
   }, [user]);
 
   // ---------------- PROMOTE USER ----------------
   const handlePromote = async (userId) => {
     try {
       await promoteUser(userId);
-      window.dispatchEvent(new Event("employeeAdded"));
+      fetchUsers();
       alert("User promoted to admin");
     } catch (err) {
       alert(err.response?.data?.message || "Failed to promote user");
@@ -50,7 +45,7 @@ export default function AdminManagement() {
   const handleDemote = async (adminId) => {
     try {
       await demoteUser(adminId);
-      window.dispatchEvent(new Event("employeeAdded"));
+      fetchUsers();
       alert("Admin demoted successfully");
     } catch (err) {
       alert(err.response?.data?.message || "Failed to demote admin");
@@ -64,24 +59,20 @@ export default function AdminManagement() {
 
     try {
       await deleteUser(userId);
-      window.dispatchEvent(new Event("employeeAdded"));
+      fetchUsers();
       alert("User deleted successfully");
     } catch (err) {
       alert(err.response?.data?.message || "Failed to delete user");
     }
   };
 
-  if (!["owner", "admin"].includes(user?.role)) {
-    return <p className="text-red-500 text-center mt-10">Access Denied</p>;
-  }
-
-  if (loading) return <p className="text-sm text-center mt-4">Loading...</p>;
-  if (error) return <p className="text-red-500 text-sm text-center mt-4">{error}</p>;
+  if (loading) return <p className="text-sm">Loading...</p>;
+  if (error) return <p className="text-red-500 text-sm">{error}</p>;
 
   return (
     <Layout>
       <div className="p-4">
-        <h1 className="text-lg font-bold mb-2">Owner Dashboard - Admin Management</h1>
+        <h1 className="text-lg font-bold mb-2">Owner/Admin Dashboard</h1>
 
         <button
           onClick={() => navigate("/admin/add-user")}
