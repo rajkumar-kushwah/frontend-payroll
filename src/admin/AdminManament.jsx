@@ -2,12 +2,14 @@ import React, { useEffect, useState } from "react";
 import { getAdminDashboardData, promoteUser, demoteUser, deleteUser } from "../utils/api";
 import { useNavigate } from "react-router-dom";
 import Layout from "../components/Layout";
+import { useUser } from "../context/UserContext";
 
 export default function AdminManagement() {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const { user } = useUser();
 
   // ---------------- FETCH USERS ----------------
   const fetchUsers = async () => {
@@ -23,14 +25,21 @@ export default function AdminManagement() {
   };
 
   useEffect(() => {
+    if (!["owner", "admin"].includes(user?.role)) return;
+
     fetchUsers();
-  }, []);
+
+    window.addEventListener("employeeAdded", fetchUsers);
+    return () => {
+      window.removeEventListener("employeeAdded", fetchUsers);
+    };
+  }, [user]);
 
   // ---------------- PROMOTE USER ----------------
   const handlePromote = async (userId) => {
     try {
       await promoteUser(userId);
-      fetchUsers();
+      window.dispatchEvent(new Event("employeeAdded"));
       alert("User promoted to admin");
     } catch (err) {
       alert(err.response?.data?.message || "Failed to promote user");
@@ -41,7 +50,7 @@ export default function AdminManagement() {
   const handleDemote = async (adminId) => {
     try {
       await demoteUser(adminId);
-      fetchUsers();
+      window.dispatchEvent(new Event("employeeAdded"));
       alert("Admin demoted successfully");
     } catch (err) {
       alert(err.response?.data?.message || "Failed to demote admin");
@@ -55,22 +64,25 @@ export default function AdminManagement() {
 
     try {
       await deleteUser(userId);
-      fetchUsers();
+      window.dispatchEvent(new Event("employeeAdded"));
       alert("User deleted successfully");
     } catch (err) {
       alert(err.response?.data?.message || "Failed to delete user");
     }
   };
 
-  if (loading) return <p className="text-sm">Loading...</p>;
-  if (error) return <p className="text-red-500 text-sm">{error}</p>;
+  if (!["owner", "admin"].includes(user?.role)) {
+    return <p className="text-red-500 text-center mt-10">Access Denied</p>;
+  }
+
+  if (loading) return <p className="text-sm text-center mt-4">Loading...</p>;
+  if (error) return <p className="text-red-500 text-sm text-center mt-4">{error}</p>;
 
   return (
     <Layout>
       <div className="p-4">
         <h1 className="text-lg font-bold mb-2">Owner Dashboard - Admin Management</h1>
 
-        {/* -------- Add New User Button -------- */}
         <button
           onClick={() => navigate("/admin/add-user")}
           className="mb-4 px-3 py-1.5 bg-green-500 text-white text-sm rounded"
@@ -78,7 +90,6 @@ export default function AdminManagement() {
           + Add New User
         </button>
 
-        {/* -------- Users Table -------- */}
         <table className="w-full text-sm border">
           <thead>
             <tr className="bg-gray-200">
@@ -111,7 +122,6 @@ export default function AdminManagement() {
                       Demote
                     </button>
                   )}
-                  {/* Delete Button for all non-owner users */}
                   {u.role !== "owner" && (
                     <button
                       onClick={() => handleDelete(u._id)}

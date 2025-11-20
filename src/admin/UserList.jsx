@@ -11,8 +11,9 @@ export default function AddUser() {
     e.preventDefault();
     try {
       await addUser(newUser);
+      window.dispatchEvent(new Event("employeeAdded")); // auto-refresh AdminManagement
       alert("User added successfully");
-      navigate("/admin"); // Redirect back to AdminManagement
+      navigate("/admin");
     } catch (err) {
       alert(err.response?.data?.message || "Failed to add user");
     }
@@ -52,10 +53,11 @@ export default function AddUser() {
             onChange={(e) => setNewUser({ ...newUser, role: e.target.value })}
             className="border p-2 rounded text-sm"
           >
+            <option value="user">Employee</option>
+            <option value="admin">Admin</option>
             <option value="ceo">CEO</option>
             <option value="hr">HR</option>
             <option value="manager">Manager</option>
-            <option value="user">Employee</option>
           </select>
           <button type="submit" className="bg-green-500 text-white px-3 py-1.5 rounded text-sm">
             Add User
