@@ -117,7 +117,7 @@ export default function Employees() {
           <FaFilter className="cursor-pointer" />
           <button className="flex items-center gap-1 bg-green-500 text-white px-2 py-1 rounded text-xs"
             onClick={() => setShowForm(prev => !prev)}>
-            <FaPlus className="sm:hidden" /> <span className="hidden sm:inline">Create</span>
+            <FaPlus className="sm:hidden" /> <span className="hidden sm:inline text-sm">Create</span>
           </button>
         </div>
       </div>
