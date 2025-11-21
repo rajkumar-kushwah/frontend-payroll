@@ -22,9 +22,10 @@ export default function Employees() {
   const fetchEmployees = async () => {
     setLoading(true);
     try {
-      const res = await getEmployees();
-      const empArray = res.employees || []; // <--- correct
+      const res = await getEmployees();  // axios GET /api/employees
+      const empArray = res.data.employees || []; // <-- fix: use res.data.employees
 
+      // Sort by employeeCode number
       const sorted = empArray.sort((a, b) => {
         const numA = parseInt(a.employeeCode?.replace("EMP-", "")) || 0;
         const numB = parseInt(b.employeeCode?.replace("EMP-", "")) || 0;
