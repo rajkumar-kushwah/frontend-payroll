@@ -11,7 +11,12 @@ const api = axios.create({
 
 
 // Employee APIs
-export const getEmployees = () => api.get("/employees");
+// Employee APIs
+export const getEmployees = async () => {
+  const res = await api.get("/employees");
+  return res.data; // backend response = { success, employees: [...] }
+};
+
 export const getEmployeeById = (id) => api.get(`/employees/${id}`);
 export const addEmployee = (data) => api.post("/employees", data);
 export const updateEmployee = (id, data) => api.put(`/employees/${id}`, data);
@@ -61,6 +66,7 @@ export const getAttendance = async (filters) => {
 };
 
 
+
 // 4) Filter Attendance
 export const filterAttendance = async (filters) => {
   const res = await api.get("/attendance/filter", { params: filters });
@@ -69,8 +75,9 @@ export const filterAttendance = async (filters) => {
 
 
 // 5) Add Attendance manually
+// client/utils/api.js
 export const addAttendance = async (data) => {
-  const res = await api.post("/attendance", data);
+  const res = await api.post("/attendance/add", data); // 
   return res.data;
 };
 

@@ -19,28 +19,29 @@ export default function Employees() {
   });
 
   // ---------------- FETCH EMPLOYEES ----------------
-  const fetchEmployees = async () => {
-    setLoading(true);
-    try {
-      const res = await getEmployees();  // axios GET /api/employees
-      const empArray = res.data.employees || []; // <-- fix: use res.data.employees
+ const fetchEmployees = async () => {
+  setLoading(true);
+  try {
+    const res = await getEmployees();  // res = { success: true, employees: [...] }
+    const empArray = res.employees || []; // <-- fix: remove extra .data
 
-      // Sort by employeeCode number
-      const sorted = empArray.sort((a, b) => {
-        const numA = parseInt(a.employeeCode?.replace("EMP-", "")) || 0;
-        const numB = parseInt(b.employeeCode?.replace("EMP-", "")) || 0;
-        return numA - numB;
-      });
+    // Sort by employeeCode number
+    const sorted = empArray.sort((a, b) => {
+      const numA = parseInt(a.employeeCode?.replace("EMP-", "")) || 0;
+      const numB = parseInt(b.employeeCode?.replace("EMP-", "")) || 0;
+      return numA - numB;
+    });
 
-      setEmployees(sorted);
-    } catch (err) {
-      console.error("Failed to fetch employees", err);
-      setEmployees([]);
-      alert("Failed to fetch employees");
-    } finally {
-      setLoading(false);
-    }
-  };
+    setEmployees(sorted);
+  } catch (err) {
+    console.error("Failed to fetch employees", err);
+    setEmployees([]);
+    alert("Failed to fetch employees");
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   useEffect(() => { fetchEmployees(); }, []);
 
