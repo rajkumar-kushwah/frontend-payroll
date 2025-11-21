@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import Layout from "../components/Layout";
 import api from "../utils/api";
 import { useNavigate } from "react-router-dom";
-import { FaUsers, FaRupeeSign, FaFileInvoiceDollar, FaClipboardList } from "react-icons/fa";
+import { FaUsers, FaClipboardList, FaFileInvoiceDollar } from "react-icons/fa";
 import { Pie, Bar } from "react-chartjs-2";
 import Chart from "chart.js/auto";
 import { useUser } from "../context/UserContext";
@@ -16,7 +16,6 @@ export default function Dashboard() {
 
   const [stats, setStats] = useState({
     employees: 0,
-    totalSalary: 0,
     reports: 0,
     tasksComplete: 0,
     paymentsPaid: 0,
@@ -31,11 +30,6 @@ export default function Dashboard() {
   const [taskChart, setTaskChart] = useState({
     labels: ["Complete", "Incomplete"],
     datasets: [{ data: [0, 0], backgroundColor: ["#34D399", "#F87171"] }],
-  });
-
-  const [salaryChart, setSalaryChart] = useState({
-    labels: [],
-    datasets: [{ label: "Salary", data: [], backgroundColor: "#3B82F6" }],
   });
 
   const [reportChart, setReportChart] = useState({
@@ -56,12 +50,11 @@ export default function Dashboard() {
       setEmployees(data);
 
       // Stats
-      const totalSalary = data.reduce((acc, emp) => acc + (emp.salary || 0), 0);
       const reports = data.reduce((acc, emp) => acc + (emp.reports?.length || 0), 0);
       const tasksComplete = data.filter((e) => e.tasksCompleted).length;
       const paymentsPaid = data.filter((e) => e.paymentStatus === "paid").length;
 
-      setStats({ employees: data.length, totalSalary, reports, tasksComplete, paymentsPaid });
+      setStats({ employees: data.length, reports, tasksComplete, paymentsPaid });
 
       // Status Chart
       const active = data.filter((e) => e.status === "active").length;
@@ -71,9 +64,6 @@ export default function Dashboard() {
 
       // Task Chart
       setTaskChart({ ...taskChart, datasets: [{ ...taskChart.datasets[0], data: [tasksComplete, data.length - tasksComplete] }] });
-
-      // Salary Chart
-      setSalaryChart({ labels: data.map((e) => e.name), datasets: [{ ...salaryChart.datasets[0], data: data.map((e) => e.salary || 0) }] });
 
       // Report Chart
       setReportChart({ labels: data.map((e) => e.name), datasets: [{ ...reportChart.datasets[0], data: data.map((e) => e.reports?.length || 0) }] });
@@ -110,16 +100,11 @@ export default function Dashboard() {
       </div>
 
       {/* Small Cards */}
-      <div className="grid grid-cols-5 gap-1 mb-2 text-center text-[9px]">
+      <div className="grid grid-cols-4 gap-1 mb-2 text-center text-[9px]">
         <div className="bg-green-50 p-1 rounded shadow-sm">
           <FaUsers className="w-3 h-3 mx-auto text-green-600" />
           <div className="font-bold text-green-600">{stats.employees}</div>
           <div>Employees</div>
-        </div>
-        <div className="bg-blue-50 p-1 rounded shadow-sm">
-          <FaRupeeSign className="w-3 h-3 mx-auto text-blue-600" />
-          <div className="font-bold text-blue-600">₹{stats.totalSalary}</div>
-          <div>Salary</div>
         </div>
         <div className="bg-yellow-50 p-1 rounded shadow-sm">
           <FaClipboardList className="w-3 h-3 mx-auto text-yellow-600" />
@@ -138,33 +123,26 @@ export default function Dashboard() {
       </div>
 
       {/* Compact Charts */}
-      <div className="grid grid-cols-3 gap-2 mb-2 text-[8px]">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-2 text-[8px]">
         <div className="bg-white p-1 rounded shadow-sm">
           <h3 className="text-center mb-1">Employee Status</h3>
-          <Pie data={statusChart} height={80} />
+          <Pie data={statusChart} height={60} />
         </div>
         <div className="bg-white p-1 rounded shadow-sm">
           <h3 className="text-center mb-1">Tasks</h3>
-          <Pie data={taskChart} height={80} />
+          <Pie data={taskChart} height={60} />
         </div>
         <div className="bg-white p-1 rounded shadow-sm">
           <h3 className="text-center mb-1">Pay Slips</h3>
-          <Pie data={slipChart} height={80} />
+          <Pie data={slipChart} height={60} />
+        </div>
+        <div className="bg-white p-1 rounded shadow-sm">
+          <h3 className="text-center mb-1">Reports</h3>
+          <Bar data={reportChart} height={60} />
         </div>
       </div>
 
-      <div className="grid grid-cols-2 gap-2 mb-2 text-[8px]">
-        <div className="bg-white p-1 rounded shadow-sm">
-          <h3 className="text-center mb-1">Salary Per Employee</h3>
-          <Bar data={salaryChart} height={80} />
-        </div>
-        <div className="bg-white p-1 rounded shadow-sm">
-          <h3 className="text-center mb-1">Reports Per Employee</h3>
-          <Bar data={reportChart} height={80} />
-        </div>
-      </div>
-
-      {/* Employee Table (Compact) */}
+      {/* Employee Table */}
       <div className="overflow-x-auto max-h-[250px] text-[8px]">
         <table className="min-w-full border-separate border-spacing-y-1">
           <thead className="bg-gray-100 sticky top-0">
@@ -172,7 +150,6 @@ export default function Dashboard() {
               <th className="px-1 py-0.5">Code</th>
               <th className="px-1 py-0.5">Name</th>
               <th className="px-1 py-0.5">Dept</th>
-              <th className="px-1 py-0.5">Salary</th>
               <th className="px-1 py-0.5">Tasks</th>
               <th className="px-1 py-0.5">Payment</th>
               <th className="px-1 py-0.5">Reports</th>
@@ -185,7 +162,6 @@ export default function Dashboard() {
                 <td className="px-1 py-0.5">{emp.employeeCode}</td>
                 <td className="px-1 py-0.5">{emp.name}</td>
                 <td className="px-1 py-0.5">{emp.department || "-"}</td>
-                <td className="px-1 py-0.5">₹{emp.salary || 0}</td>
                 <td className="px-1 py-0.5 text-center">{emp.tasksCompleted ? "C" : "I"}</td>
                 <td className="px-1 py-0.5 text-center">{emp.paymentStatus === "paid" ? "Paid" : "Pending"}</td>
                 <td className="px-1 py-0.5 text-center">{emp.reports?.length || 0}</td>
@@ -196,7 +172,7 @@ export default function Dashboard() {
                 </td>
               </tr>
             )) : (
-              <tr><td colSpan="8" className="text-center py-1">No employees found.</td></tr>
+              <tr><td colSpan="7" className="text-center py-1">No employees found.</td></tr>
             )}
           </tbody>
         </table>

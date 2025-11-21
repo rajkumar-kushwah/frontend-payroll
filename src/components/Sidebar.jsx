@@ -2,7 +2,7 @@ import React from "react";
 import { useUser } from "../context/UserContext";
 import { NavLink, useLocation } from "react-router-dom";
 import logo from "../images/nabulogo.png";
-import market from "../images/market.jpg";
+
 import {
   LayoutDashboard,
   User,
@@ -10,6 +10,7 @@ import {
   Calendar,
   Wallet,
   Settings,
+  ClipboardList, 
 } from "lucide-react";
 
 export default function Sidebar({ isOpen, toggle }) {
@@ -110,6 +111,19 @@ export default function Sidebar({ isOpen, toggle }) {
           </NavLink>
 
           <NavLink
+            to="/attendance"
+            className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition ${isActive(
+              "/attendance"
+            )}`}
+          >
+            < ClipboardList className="w-4 h-4" />
+            <span>Attedance</span>
+          </NavLink>
+
+
+
+
+          <NavLink
             to="/leaves"
             className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition ${isActive(
               "/leaves"
@@ -129,7 +143,7 @@ export default function Sidebar({ isOpen, toggle }) {
             <span className="text-sm">Payroll</span>
           </NavLink>
 
-         
+
 
           <div className="pt-3 text-gray-500 text-xs">Account Setting</div>
 
@@ -144,7 +158,7 @@ export default function Sidebar({ isOpen, toggle }) {
           </NavLink>
 
 
-           {/* Admin Section - Owner Only */}
+          {/* Admin Section - Owner Only */}
           {user && user.role?.toLowerCase() === "owner" && (
             <div className="mt-2">
               <div className="pt-0 text-gray-500 text-xs">Admin Section</div>

@@ -39,6 +39,56 @@ export const demoteUser = (adminId) => api.delete(`/admin/${adminId}`);
 export const getAdminDashboardData = () => api.get("/admin-dashboard");
 export const deleteUser = (userId) => api.delete(`/company/user/${userId}`);
 
+
+// 1) Auto Check In
+export const checkIn = async (employeeId) => {
+  const res = await api.post("/attendance/checkin", { employeeId });
+  return res.data;
+};
+
+
+// 2) Auto Check Out
+export const checkOut = async (employeeId) => {
+  const res = await api.post("/attendance/checkout", { employeeId });
+  return res.data;
+};
+
+
+// 3) Get All Attendance
+export const getAttendance = async (filters) => {
+  const res = await api.get("/attendance", { params: filters });
+  return res.data; // backend me count + data, ya data[] structure
+};
+
+
+// 4) Filter Attendance
+export const filterAttendance = async (filters) => {
+  const res = await api.get("/attendance/filter", { params: filters });
+  return res.data; // same note as above
+};
+
+
+// 5) Add Attendance manually
+export const addAttendance = async (data) => {
+  const res = await api.post("/attendance", data);
+  return res.data;
+};
+
+
+// 6) Update Attendance
+export const updateAttendance = async (id, data) => {
+  const res = await api.put(`/attendance/${id}`, data);
+  return res.data;
+};
+
+
+// 7) Delete Attendance
+export const deleteAttendance = async (id) => {
+  const res = await api.delete(`/attendance/${id}`);
+  return res.data;
+};
+
+
 export const filterEmployees = async (filters) => {
   const response = await api.get(`/employees/filter`, {
     params: {...filters },

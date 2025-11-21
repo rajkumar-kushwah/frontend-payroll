@@ -11,7 +11,6 @@ export default function EmployeeAdd() {
     jobRole: "",
     department: "",
     joinDate: "",
-    salary: "",
     status: "active",
     notes: "",
   });
@@ -22,13 +21,13 @@ export default function EmployeeAdd() {
     const { name, value } = e.target;
     setForm({
       ...form,
-      [name]: name === "salary" ? Number(value) : value,
+      [name]: value,
     });
   };
 
   const handleSubmit = async () => {
-    if (!form.name || !form.email || !form.salary) {
-      return alert("Please fill Name, Email, and Salary");
+    if (!form.name || !form.email) {
+      return alert("Please fill Name and Email");
     }
 
     try {
@@ -119,19 +118,6 @@ export default function EmployeeAdd() {
             type="date"
             name="joinDate"
             value={form.joinDate}
-            onChange={handleChange}
-            className="border p-1.5 w-full rounded text-sm focus:outline-none focus:ring-1 focus:ring-blue-400"
-          />
-        </div>
-
-        {/* Salary */}
-        <div>
-          <label className="block text-sm font-medium mb-1">Salary (₹) *</label>
-          <input
-            type="number"
-            name="salary"
-            placeholder="Enter salary"
-            value={form.salary}
             onChange={handleChange}
             className="border p-1.5 w-full rounded text-sm focus:outline-none focus:ring-1 focus:ring-blue-400"
           />

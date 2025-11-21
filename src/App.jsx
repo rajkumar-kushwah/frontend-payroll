@@ -20,7 +20,7 @@ import NotFound from "./notfound/NotFound";
 import EditEmployee from "./employees/EditEmployee";
 import AdminList from './admin/AdminManament';
 import AddUser from './admin/UserList';
-
+import Attendance from './attendances/Attendance';
 function App() {
   return (
      <UserProvider>
@@ -47,6 +47,7 @@ function App() {
         <Route path="/settings" element={<ProtectedRoute allowedRoles={["owner"]}><Settings/></ProtectedRoute>} />
         <Route path="/admin" element={<ProtectedRoute><AdminList /></ProtectedRoute>} />
         <Route path='/admin/add-user' element={<ProtectedRoute><AddUser /></ProtectedRoute>} />
+        <Route path="/attendance" element={<ProtectedRoute><Attendance /></ProtectedRoute>} />
         
         {/* protected route end */}
       </Routes>
