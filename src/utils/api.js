@@ -38,62 +38,91 @@ export const getSalaryById = (id) => api.get(`/salary/${id}`);
 
 
 // promote user  to admin
+// export const addUser = (user) => api.post("/company/add-user", user);
+// export const promoteUser = (userId) => api.post(`/admin/${userId}`);
+// export const demoteUser = (adminId) => api.delete(`/admin/${adminId}`);
+// export const getAdminDashboardData = () => api.get("/admin-dashboard");
+// export const deleteUser = (userId) => api.delete(`/company/user/${userId}`);
+// // Reactivate user
+// export const reactivateUser = (userId) => api.post(`/user/reactivate/${userId}`);
+
+// ADD user
 export const addUser = (user) => api.post("/company/add-user", user);
-export const promoteUser = (userId) => api.post(`/admin/${userId}`);
-export const demoteUser = (adminId) => api.delete(`/admin/${adminId}`);
+
+// FETCH all users
 export const getAdminDashboardData = () => api.get("/admin-dashboard");
-export const deleteUser = (userId) => api.delete(`/company/user/${userId}`);
+
+// TOGGLE (Promote ↔ Demote + Active ↔ Inactive)
+export const toggleUser = (userId) =>
+  api.put(`/company/user/toggle/${userId}`);
+
+// DELETE user
+export const deleteUser = (userId) =>
+  api.delete(`/company/user/${userId}`);
 
 
+// ======================
+// 1) Check-In (Admin/Owner can provide employeeId)
+// ======================
 // 1) Auto Check In
 export const checkIn = async (employeeId) => {
-  const res = await api.post("/attendance/checkin", { employeeId });
+  const res = await api.post("/attendance/check-in", { employeeId }); // send string, not object
   return res.data;
 };
 
 
+// ======================
+// 2) Check-Out (Admin/Owner can provide employeeId)
+// ======================
 // 2) Auto Check Out
 export const checkOut = async (employeeId) => {
-  const res = await api.post("/attendance/checkout", { employeeId });
+  const res = await api.post("/attendance/check-out", { employeeId }); // send string
   return res.data;
 };
-
-
-// 3) Get All Attendance
-export const getAttendance = async (filters) => {
+// ======================
+// 3) Get All Attendance (Admin/Owner only)
+// filters = { employeeId, status, startDate, endDate, page, limit }
+// ======================
+export const getAttendance = async (filters = {}) => {
   const res = await api.get("/attendance", { params: filters });
-  return res.data; // backend me count + data, ya data[] structure
+  return res.data; // { success, count, data }
 };
 
-
-
-// 4) Filter Attendance
-export const filterAttendance = async (filters) => {
+// ======================
+// 4) Filter Attendance (Advanced search)
+// filters = { employeeName, employeeCode, department, role, status, startDate, endDate, page, limit }
+// ======================
+export const filterAttendance = async (filters = {}) => {
   const res = await api.get("/attendance/filter", { params: filters });
-  return res.data; // same note as above
+  return res.data; // { success, count, records }
 };
 
-
-// 5) Add Attendance manually
-// client/utils/api.js
+// ======================
+// 5) Add Attendance manually (Admin/Owner)
+// data = { employeeId, date, status, checkIn, checkOut, remarks }
+// ======================
 export const addAttendance = async (data) => {
-  const res = await api.post("/attendance/add", data); // 
+  const res = await api.post("/attendance/add", data);
   return res.data;
 };
 
-
-// 6) Update Attendance
+// ======================
+// 6) Update Attendance (Admin/Owner)
+// data = { date, status, checkIn, checkOut, remarks }
+// ======================
 export const updateAttendance = async (id, data) => {
   const res = await api.put(`/attendance/${id}`, data);
   return res.data;
 };
 
-
-// 7) Delete Attendance
+// ======================
+// 7) Delete Attendance (Admin/Owner)
+// ======================
 export const deleteAttendance = async (id) => {
   const res = await api.delete(`/attendance/${id}`);
   return res.data;
 };
+
 
 
 export const filterEmployees = async (filters) => {
