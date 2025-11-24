@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Layout from "../components/Layout";
 import api from "../utils/api";
+import { Pencil } from "lucide-react";
 
 export default function EmployeeAdd() {
   const [form, setForm] = useState({
@@ -14,6 +15,7 @@ export default function EmployeeAdd() {
     status: "active",
     notes: "",
   });
+  const [avatarFile, setAvatarFile] = useState(null);
 
   const navigate = useNavigate();
 
@@ -31,7 +33,16 @@ export default function EmployeeAdd() {
     }
 
     try {
-      await api.post("/employees", form);
+      const formData = new FormData();
+      for (const key in form) {
+        formData.append(key, form[key]);
+      }
+      if (avatarFile) formData.append("avatar", avatarFile);
+
+      await api.post("/employees/profile", formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
+
       alert("Employee added successfully!");
       navigate("/dashboard");
     } catch (err) {
@@ -45,6 +56,34 @@ export default function EmployeeAdd() {
       <h2 className="text-xl font-semibold mb-4 text-center">Add New Employee</h2>
 
       <div className="bg-white rounded-lg shadow p-4 max-w-xl mx-auto space-y-3">
+
+        {/* Avatar */}
+        <div className="flex justify-center mb-3">
+          <div className="relative w-24 h-24">
+            <img
+              src={
+                avatarFile
+                  ? URL.createObjectURL(avatarFile)
+                  : "https://via.placeholder.com/150"
+              }
+              alt="Avatar"
+              className="w-24 h-24 rounded-full border object-cover"
+            />
+            <input
+              id="avatarInput"
+              type="file"
+              accept="image/*"
+              onChange={(e) => setAvatarFile(e.target.files[0])}
+              className="hidden"
+            />
+            <label
+              htmlFor="avatarInput"
+              className="absolute bottom-0 right-0 bg-white p-1 rounded-full shadow cursor-pointer hover:bg-gray-100"
+            >
+              <Pencil size={14} className="text-gray-600" />
+            </label>
+          </div>
+        </div>
 
         {/* Name */}
         <div>

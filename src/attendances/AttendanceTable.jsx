@@ -1,16 +1,12 @@
+// src/pages/attendance/AttendanceTable.jsx
 import { useEffect, useState } from "react";
 import Layout from "../components/Layout";
-import AttendanceForm from "./AttendanceForm";
-import AttendanceFilter from "./AttendanceFilter";
-import AttendanceActions from "./AttendanceActions";
-import { getAttendance, deleteAttendance, checkIn, checkOut } from "../utils/api";
-import { FaTrash, FaPlus, FaCheck, FaTimes } from "react-icons/fa";
+import { getAttendance, checkIn, checkOut } from "../utils/api";
+import { FaCheck, FaTimes } from "react-icons/fa";
 
-export default function AttendanceMain() {
+export default function AttendanceTable() {
   const [attendanceList, setAttendanceList] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selectedRecords, setSelectedRecords] = useState([]);
-  const [showForm, setShowForm] = useState(false);
 
   const fetchAttendance = async () => {
     setLoading(true);
@@ -19,22 +15,14 @@ export default function AttendanceMain() {
       const list = Array.isArray(res.data) ? res.data : res.data?.records || [];
       setAttendanceList(list);
     } catch (err) {
-      setAttendanceList([]);
       console.error(err);
+      setAttendanceList([]);
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => { fetchAttendance(); }, []);
-
-  const handleDeleteSelected = async () => {
-    if (!selectedRecords.length) return alert("Select records to delete");
-    if (!confirm("Are you sure?")) return;
-    for (let id of selectedRecords) await deleteAttendance(id);
-    setSelectedRecords([]);
-    fetchAttendance();
-  };
 
   const handleCheckIn = async (employeeId) => {
     try {
@@ -63,7 +51,7 @@ export default function AttendanceMain() {
   const calculateHours = (inTime, outTime) => {
     if (!inTime || !outTime) return { total: "-", overtime: "-" };
     const diffMs = new Date(outTime) - new Date(inTime);
-    const totalHours = diffMs / (1000*60*60);
+    const totalHours = diffMs / (1000 * 60 * 60); // decimal hours
     const h = Math.floor(totalHours);
     const m = Math.round((totalHours - h) * 60);
     const overtime = totalHours > 8 ? totalHours - 8 : 0;
@@ -75,41 +63,18 @@ export default function AttendanceMain() {
   return (
     <Layout>
       <div className="p-2 text-xs">
-
-        {/* Top Actions */}
-        <div className="flex flex-wrap gap-2 mb-2 items-center">
-          <AttendanceFilter onFilter={setAttendanceList} />
-          <button onClick={() => setShowForm(!showForm)} className="bg-green-500 text-white p-1 rounded flex items-center gap-1">
-            <FaPlus /> Add Attendance
-          </button>
-          <button onClick={handleDeleteSelected} className="bg-red-600 text-white p-1 rounded flex items-center gap-1">
-            <FaTrash /> Delete Selected
-          </button>
-        </div>
-
-        {/* Attendance Form (toggle) */}
-        {showForm && <AttendanceForm onAdd={() => { fetchAttendance(); setShowForm(false); }} />}
-
-        {/* Attendance Table */}
-        <div className="overflow-x-auto bg-white rounded shadow text-xs max-h-[60vh] mt-2">
-          <table className="w-full border-collapse">
+        <div className="overflow-x-auto bg-white rounded shadow max-h-[60vh]">
+          <table className="w-full border-collapse text-xs">
             <thead className="bg-gray-100 sticky top-0">
               <tr>
-                <th className="p-1">
-                  <input 
-                    type="checkbox" 
-                    checked={selectedRecords.length === attendanceList.length && attendanceList.length>0} 
-                    onChange={e => e.target.checked ? setSelectedRecords(attendanceList.map(a=>a._id)) : setSelectedRecords([])}
-                  />
-                </th>
-                {["Avatar","Employee","Code","Date","Status","In","Out","Total Hours","Overtime","Remarks","Actions"].map(h => 
+                {["Avatar/Name","Code","Date","Status","In Time","Out Time","Total Hours","Overtime","Remarks","Actions"].map(h => (
                   <th key={h} className="p-1">{h}</th>
-                )}
+                ))}
               </tr>
             </thead>
             <tbody>
               {loading ? (
-                <tr><td colSpan="11" className="text-center p-2">Loading...</td></tr>
+                <tr><td colSpan="10" className="text-center p-2">Loading...</td></tr>
               ) : attendanceList.length ? (
                 attendanceList.map(att => {
                   const { total, overtime } = calculateHours(att.checkIn, att.checkOut);
@@ -117,14 +82,12 @@ export default function AttendanceMain() {
 
                   return (
                     <tr key={att._id} className="hover:bg-gray-50">
-                      <td className="p-1">
-                        <input type="checkbox" checked={selectedRecords.includes(att._id)} onChange={e => {
-                          if(e.target.checked) setSelectedRecords([...selectedRecords, att._id]);
-                          else setSelectedRecords(selectedRecords.filter(id=>id!==att._id));
-                        }}/>
-                      </td>
                       <td className="p-1 flex items-center gap-2">
-                        <img src={att.employeeId?.avatar || "/default-avatar.png"} alt="Avatar" className="w-6 h-6 rounded-full"/>
+                        <img 
+                          src={att.employeeId?.avatar || "/default-avatar.png"} 
+                          alt={att.employeeId?.name || "Avatar"} 
+                          className="w-6 h-6 rounded-full"
+                        />
                         {att.employeeId?.name || "-"}
                       </td>
                       <td className="p-1">{att.employeeId?.employeeCode || "-"}</td>
@@ -136,29 +99,26 @@ export default function AttendanceMain() {
                       <td className="p-1">{overtime}</td>
                       <td className="p-1">{att.remarks || "-"}</td>
                       <td className="p-1 flex gap-1">
-                        {/* Auto In/Out buttons like Manual */}
                         {!att.checkIn && (
-                          <button onClick={()=>handleCheckIn(att.employeeId?._id)} className="bg-green-500 text-white p-1 rounded flex items-center gap-1">
+                          <button onClick={()=>handleCheckIn(att.employeeId?._id)} className="bg-green-500 text-white p-1 rounded text-[10px] flex items-center gap-1">
                             <FaCheck /> In
                           </button>
                         )}
                         {att.checkIn && !att.checkOut && (
-                          <button onClick={()=>handleCheckOut(att.employeeId?._id)} className="bg-red-500 text-white p-1 rounded flex items-center gap-1">
+                          <button onClick={()=>handleCheckOut(att.employeeId?._id)} className="bg-red-500 text-white p-1 rounded text-[10px] flex items-center gap-1">
                             <FaTimes /> Out
                           </button>
                         )}
-                        <AttendanceActions record={att} onUpdate={fetchAttendance} />
                       </td>
                     </tr>
                   );
                 })
               ) : (
-                <tr><td colSpan="11" className="text-center p-2">No Records</td></tr>
+                <tr><td colSpan="10" className="text-center p-2">No Records</td></tr>
               )}
             </tbody>
           </table>
         </div>
-
       </div>
     </Layout>
   );

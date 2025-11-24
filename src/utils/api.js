@@ -17,10 +17,33 @@ export const getEmployees = async () => {
   return res.data; // backend response = { success, employees: [...] }
 };
 
+// ======================
+// EMPLOYEE PROFILE (with Avatar Upload)
+// ======================
+
+// Create employee with avatar
+export const createEmployeeProfile = (formData) =>
+  api.post("/employees/profile", formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+
+// Update employee profile with avatar
+export const updateEmployeeProfile = (id, formData) =>
+  api.put(`/employees/profile/${id}`, formData, {
+    headers: { "Content-Type": "multipart/form-data" },
+  });
+
 export const getEmployeeById = (id) => api.get(`/employees/${id}`);
 export const addEmployee = (data) => api.post("/employees", data);
 export const updateEmployee = (id, data) => api.put(`/employees/${id}`, data);
 export const deleteEmployee = (id) => api.delete(`/employees/${id}`);
+export const filterEmployees = async (filters) => {
+  const response = await api.get(`/employees/filter`, {
+    params: {...filters },
+  });
+  return response.data;
+};
+
 
 // Salary APIs
 export const addSalary = (data) => api.post("/salary", data);
@@ -36,15 +59,6 @@ export const deleteSalary = (id) => api.delete(`/salary/${id}`);
 export const markSalaryPaid = (id) => api.patch(`/salary/${id}/pay`);
 export const getSalaryById = (id) => api.get(`/salary/${id}`);
 
-
-// promote user  to admin
-// export const addUser = (user) => api.post("/company/add-user", user);
-// export const promoteUser = (userId) => api.post(`/admin/${userId}`);
-// export const demoteUser = (adminId) => api.delete(`/admin/${adminId}`);
-// export const getAdminDashboardData = () => api.get("/admin-dashboard");
-// export const deleteUser = (userId) => api.delete(`/company/user/${userId}`);
-// // Reactivate user
-// export const reactivateUser = (userId) => api.post(`/user/reactivate/${userId}`);
 
 // ADD user
 export const addUser = (user) => api.post("/company/add-user", user);
@@ -97,6 +111,9 @@ export const filterAttendance = async (filters = {}) => {
   return res.data; // { success, count, records }
 };
 
+
+
+
 // ======================
 // 5) Add Attendance manually (Admin/Owner)
 // data = { employeeId, date, status, checkIn, checkOut, remarks }
@@ -125,12 +142,6 @@ export const deleteAttendance = async (id) => {
 
 
 
-export const filterEmployees = async (filters) => {
-  const response = await api.get(`/employees/filter`, {
-    params: {...filters },
-  });
-  return response.data;
-};
 
 // Profile APIs
 export const getProfile = () => api.get("/auth/profile");
