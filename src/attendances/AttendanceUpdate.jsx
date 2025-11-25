@@ -3,19 +3,33 @@ import { useState } from "react";
 import { updateAttendance } from "../utils/api";
 
 export default function AttendanceUpdate({ record, onUpdate, onClose }) {
+  
+  // Convert stored date to LOCAL HH:MM (NO UTC SHIFT)
+  const formatLocalTime = (dateStr) => {
+    if (!dateStr) return "";
+    return new Date(dateStr).toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: false
+    });
+  };
+
   const [status, setStatus] = useState(record.status || "present");
-  const [checkInTime, setCheckInTime] = useState(
-    record.checkIn ? new Date(record.checkIn).toISOString().slice(11, 16) : ""
-  );
-  const [checkOutTime, setCheckOutTime] = useState(
-    record.checkOut ? new Date(record.checkOut).toISOString().slice(11, 16) : ""
-  );
+  const [checkInTime, setCheckInTime] = useState(formatLocalTime(record.checkIn));
+  const [checkOutTime, setCheckOutTime] = useState(formatLocalTime(record.checkOut));
   const [remarks, setRemarks] = useState(record.remarks || "");
 
   const handleUpdate = async () => {
     const today = record.date.split("T")[0];
-    const checkInISO = checkInTime ? new Date(`${today}T${checkInTime}`).toISOString() : null;
-    const checkOutISO = checkOutTime ? new Date(`${today}T${checkOutTime}`).toISOString() : null;
+
+    // Rebuild ISO but keep LOCAL time exactly as user selects
+    const checkInISO = checkInTime
+      ? new Date(`${today}T${checkInTime}:00`).toISOString()
+      : null;
+
+    const checkOutISO = checkOutTime
+      ? new Date(`${today}T${checkOutTime}:00`).toISOString()
+      : null;
 
     await updateAttendance(record._id, {
       status,
@@ -34,9 +48,9 @@ export default function AttendanceUpdate({ record, onUpdate, onClose }) {
 
         {/* Avatar + Name */}
         <div className="flex items-center gap-2 mb-2">
-          <img 
-            src={record.employeeId?.avatar || "/default-avatar.png"} 
-            alt={record.employeeId?.name || "Avatar"} 
+          <img
+            src={record.employeeId?.avatar || "/default-avatar.png"}
+            alt={record.employeeId?.name || "Avatar"}
             className="w-8 h-8 rounded-full"
           />
           <p className="font-semibold text-xs">{record.employeeId?.name || "-"}</p>
@@ -47,7 +61,7 @@ export default function AttendanceUpdate({ record, onUpdate, onClose }) {
         <label>Status</label>
         <select
           value={status}
-          onChange={e => setStatus(e.target.value)}
+          onChange={(e) => setStatus(e.target.value)}
           className="border p-1 rounded w-full text-xs"
         >
           <option value="present">Present</option>
@@ -59,7 +73,7 @@ export default function AttendanceUpdate({ record, onUpdate, onClose }) {
         <input
           type="time"
           value={checkInTime}
-          onChange={e => setCheckInTime(e.target.value)}
+          onChange={(e) => setCheckInTime(e.target.value)}
           className="border p-1 rounded w-full text-xs"
         />
 
@@ -67,7 +81,7 @@ export default function AttendanceUpdate({ record, onUpdate, onClose }) {
         <input
           type="time"
           value={checkOutTime}
-          onChange={e => setCheckOutTime(e.target.value)}
+          onChange={(e) => setCheckOutTime(e.target.value)}
           className="border p-1 rounded w-full text-xs"
         />
 
@@ -75,7 +89,7 @@ export default function AttendanceUpdate({ record, onUpdate, onClose }) {
         <input
           type="text"
           value={remarks}
-          onChange={e => setRemarks(e.target.value)}
+          onChange={(e) => setRemarks(e.target.value)}
           className="border p-1 rounded w-full text-xs"
         />
 

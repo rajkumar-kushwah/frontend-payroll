@@ -1,170 +1,233 @@
+// src/pages/attendance/AttendanceMain.jsx
 import { useEffect, useState } from "react";
 import Layout from "../components/Layout";
-import { getEmployees, getAttendance, checkIn, checkOut, addAttendance } from "../utils/api";
-import { FaCheck, FaTimes } from "react-icons/fa";
+import AttendanceFilter from "./AttendanceFilter";
+import {
+  getEmployees,
+  getAttendance,
+  checkIn,
+  checkOut,
+  deleteAttendance
+} from "../utils/api";
 
-export default function AttendanceManual() {
+import { FaTrash, FaCheck, FaTimes } from "react-icons/fa";
+
+export default function AttendanceMain() {
   const [employees, setEmployees] = useState([]);
+  const [attendanceList, setAttendanceList] = useState([]);
   const [selectedEmployee, setSelectedEmployee] = useState("");
   const [remarks, setRemarks] = useState("");
-  const [attendanceList, setAttendanceList] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  const fetchEmployees = async () => {
-    try {
-      const res = await getEmployees();
-      setEmployees(res.employees || []);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  const fetchAttendance = async () => {
-    setLoading(true);
-    try {
-      const res = await getAttendance();
-      const list = Array.isArray(res.data) ? res.data : res.data?.records || [];
-      setAttendanceList(list);
-    } catch (err) {
-      console.error(err);
-      setAttendanceList([]);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
   useEffect(() => {
-    fetchEmployees();
-    fetchAttendance();
+    loadAll();
   }, []);
 
+  const loadAll = async () => {
+    const emp = await getEmployees();
+    const att = await getAttendance();
+    setEmployees(emp || []);
+    setAttendanceList(att.records || []);
+  };
+
   const handleCheckIn = async () => {
-    if (!selectedEmployee) return alert("Select an employee");
-    try {
-      await checkIn(selectedEmployee);
-      setRemarks("");
-      setSelectedEmployee("");
-      fetchAttendance();
-    } catch {
-      alert("Check-in failed");
-    }
+    if (!selectedEmployee) return alert("Select Employee");
+
+    await checkIn({
+      employeeId: selectedEmployee,
+      remarks: remarks
+    });
+
+    setSelectedEmployee("");
+    setRemarks("");
+    loadAll();
   };
 
-  const handleCheckOut = async (employeeId) => {
-    try {
-      await checkOut(employeeId);
-      fetchAttendance();
-    } catch {
-      alert("Check-out failed");
-    }
+  const handleCheckOut = async (id) => {
+    await checkOut(id);
+    loadAll();
   };
 
-  const formatTime = (date) => {
-    if (!date) return "-";
-    const d = new Date(date);
-    return d.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+  const handleDelete = async (id) => {
+    await deleteAttendance(id);
+    loadAll();
   };
 
-  const calculateHours = (inTime, outTime) => {
-    if (!inTime || !outTime) return { total: "-", overtime: "-" };
-    const diffMs = new Date(outTime) - new Date(inTime);
-    const totalHours = diffMs / (1000*60*60);
-    const h = Math.floor(totalHours);
-    const m = Math.round((totalHours - h)*60);
-    const overtime = totalHours > 8 ? totalHours - 8 : 0;
-    const oh = Math.floor(overtime);
-    const om = Math.round((overtime - oh)*60);
-    return { total: `${h}:${m.toString().padStart(2,"0")}`, overtime: `${oh}:${om.toString().padStart(2,"0")}` };
+  const handleFilterData = (filtered) => {
+    setAttendanceList(filtered);
   };
+
+   const calculateHours = (inTime, outTime) => {
+  if (!inTime || !outTime) return { total: "-", overtime: "-" };
+
+  const start = new Date(inTime);
+  const end = new Date(outTime);
+
+  let diffMs = end - start;
+  if (diffMs < 0) return { total: "-", overtime: "-" };
+
+  // Total Working Minutes
+  const totalMinutes = Math.floor(diffMs / (1000 * 60));
+  const totalH = Math.floor(totalMinutes / 60);
+  const totalM = totalMinutes % 60;
+  const total = `${totalH}:${String(totalM).padStart(2, "0")}`;
+
+  // **FIXED OFFICE END TIME = 6:30 PM**
+  const fixedEnd = new Date(inTime);
+  fixedEnd.setHours(18, 30, 0, 0); // 6:30 PM
+
+  let overtimeMinutes = 0;
+
+  if (end > fixedEnd) {
+    overtimeMinutes = Math.floor((end - fixedEnd) / (1000 * 60));
+  }
+
+  const oh = Math.floor(overtimeMinutes / 60);
+  const om = overtimeMinutes % 60;
+
+  const overtime = `${oh}:${String(om).padStart(2, "0")}`;
+
+  return { total, overtime };
+};
+
 
   return (
     <Layout>
-      <div className="p-2 text-xs">
-        {/* Manual Check-In Form */}
-        <div className="bg-white rounded shadow p-2 mb-3 grid grid-cols-1 sm:grid-cols-3 gap-2">
-          <div>
-            <label>Employee</label>
-            <select
-              value={selectedEmployee}
-              onChange={(e) => setSelectedEmployee(e.target.value)}
-              className="border p-1 rounded w-full text-xs"
-            >
-              <option value="">-- Select Employee --</option>
-              {employees.map(emp => (
-                <option key={emp._id} value={emp._id}>
-                  {emp.name} ({emp.employeeCode})
-                </option>
-              ))}
-            </select>
-          </div>
-          <div>
-            <label>Remarks</label>
+      <div className="p-2 flex flex-col gap-3">
+
+        {/*  SEARCH FILTER */}
+        <AttendanceFilter onFilter={handleFilterData} />
+
+        {/*  MANUAL CHECK-IN FORM */}
+        <div className="rounded p-3 bg-transparent border border-gray-200 
+        shadow-sm backdrop-blur-xl flex flex-col gap-3">
+
+          {/* Employee Dropdown */}
+        {/* Employee Dropdown */}
+<div className="relative">
+  <div
+    className="border rounded w-full p-1 text-xs bg-white cursor-pointer flex justify-between items-center"
+    onClick={() => setDropdownOpen(prev => !prev)}
+  >
+    <span>
+      {selectedEmployee
+        ? employees.find(e => e._id === selectedEmployee)?.name
+        : "-- Select Employee --"}
+    </span>
+    <i className="fa fa-chevron-down text-gray-500 text-[10px]"></i>
+  </div>
+
+  {dropdownOpen && (
+    <ul className="absolute z-50 mt-1 w-full bg-white border rounded shadow-lg max-h-40 overflow-y-auto text-xs">
+      {/* Default Option */}
+      <li
+        className="p-2 hover:bg-gray-100 cursor-pointer"
+        onClick={() => { setSelectedEmployee(""); setDropdownOpen(false); }}
+      >
+        -- Select Employee --
+      </li>
+
+      {/* Employee List */}
+      {employees.length === 0 ? (
+        <li className="p-2 text-gray-500">No employees</li>
+      ) : (
+        employees.map(emp => (
+          <li
+            key={emp._id}
+            className="p-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2"
+            onClick={() => { setSelectedEmployee(emp._id); setDropdownOpen(false); }}
+          >
+            <img
+              src={emp.avatar || "/default-avatar.png"}
+              className="w-5 h-5 rounded-full"
+            />
+            <span>{emp.name} ({emp.employeeCode})</span>
+          </li>
+        ))
+      )}
+    </ul>
+  )}
+</div>
+
+
+
+          {/* Remarks */}
+          <div className="flex flex-col gap-1">
+            <label className="text-gray-600 text-xs font-medium">Remarks</label>
             <input
               value={remarks}
               onChange={(e) => setRemarks(e.target.value)}
               placeholder="Optional"
-              className="border p-1 rounded w-full text-xs"
+              className="w-full border border-gray-300 rounded-lg py-2 px-2 text-xs 
+              bg-transparent focus:outline-none"
             />
           </div>
-          <div className="flex gap-2 items-end">
+
+          {/* Buttons */}
+          <div className="flex gap-2">
             <button
               onClick={handleCheckIn}
-              className="bg-green-500 text-white p-1 rounded flex items-center gap-1"
+              className="bg-green-500 text-white px-3 py-2 rounded-lg text-xs flex 
+              items-center gap-1 shadow"
             >
-              <FaCheck /> In
+              <FaCheck size={10} /> Check In
             </button>
           </div>
         </div>
 
-        {/* Attendance Table */}
-        <div className="overflow-x-auto bg-white rounded shadow text-xs max-h-[60vh]">
-          <table className="w-full border-collapse">
-            <thead className="bg-gray-100 sticky top-0">
+        {/*  ATTENDANCE TABLE */}
+        <div className="overflow-auto rounded border border-gray-200">
+          <table className="w-full text-xs">
+            <thead className="bg-gray-100 text-gray-700">
               <tr>
-                {["Avatar", "Employee", "Code", "Date", "Status", "In", "Out", "Total Hours", "Overtime", "Remarks", "Action"].map(h => (
-                  <th key={h} className="p-1">{h}</th>
-                ))}
+                <th className="p-2 text-left">Employee</th>
+                <th className="p-2">Date</th>
+                <th className="p-2">In</th>
+                <th className="p-2">Out</th>
+                <th className="p-2">Hours</th>
+                <th className="p-2">OT</th>
+                <th className="p-2">Action</th>
               </tr>
             </thead>
+
             <tbody>
-              {loading ? (
-                <tr><td colSpan="11" className="text-center p-2">Loading...</td></tr>
-              ) : attendanceList.length ? (
-                attendanceList.map(att => {
-                  const { total, overtime } = calculateHours(att.checkIn, att.checkOut);
-                  return (
-                    <tr key={att._id} className="hover:bg-gray-50">
-                      <td className="p-1">
-                        <img src={att.employeeId?.avatar || "/default-avatar.png"} alt={att.employeeId?.name} className="w-6 h-6 rounded-full"/>
-                      </td>
-                      <td className="p-1">{att.employeeId?.name || "-"}</td>
-                      <td className="p-1">{att.employeeId?.employeeCode || "-"}</td>
-                      <td className="p-1">{att.date ? new Date(att.date).toLocaleDateString() : "-"}</td>
-                      <td className="p-1">{att.status}</td>
-                      <td className="p-1">{att.checkIn ? formatTime(att.checkIn) : "-"}</td>
-                      <td className="p-1">{att.checkOut ? formatTime(att.checkOut) : "-"}</td>
-                      <td className="p-1">{total}</td>
-                      <td className="p-1">{overtime}</td>
-                      <td className="p-1">{att.remarks || "-"}</td>
-                      <td className="p-1">
-                        {!att.checkOut && att.checkIn && (
-                          <button
-                            onClick={() => handleCheckOut(att.employeeId?._id)}
-                            className="bg-red-500 text-white p-1 rounded flex items-center gap-1"
-                          >
-                            <FaTimes /> Out
-                          </button>
-                        )}
-                      </td>
-                    </tr>
-                  )
-                })
-              ) : (
-                <tr><td colSpan="11" className="text-center p-2">No Records</td></tr>
-              )}
+              {attendanceList.map((item) => {
+                const { total, overtime } = calculateHours(item.inTime, item.outTime);
+
+                return (
+                  <tr key={item._id} className="border-t">
+                    <td className="p-2">{item.employeeName}</td>
+                    <td className="p-2">{item.date}</td>
+                    <td className="p-2">{item.inTimeDisplay}</td>
+                    <td className="p-2">{item.outTimeDisplay || "-"}</td>
+
+                    <td className="p-2">{total}</td>
+                    <td className="p-2">{overtime}</td>
+
+                    <td className="p-2 flex gap-2">
+                      {!item.outTime && (
+                        <button
+                          onClick={() => handleCheckOut(item._id)}
+                          className="bg-blue-500 text-white p-1 rounded"
+                        >
+                          <FaTimes size={10} />
+                        </button>
+                      )}
+
+                      <button
+                        onClick={() => handleDelete(item._id)}
+                        className="bg-red-500 text-white p-1 rounded"
+                      >
+                        <FaTrash size={10} />
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
+
       </div>
     </Layout>
   );
