@@ -19,10 +19,9 @@ export default function AttendanceMain() {
   const [showForm, setShowForm] = useState(false);
   const [selectedEmployee, setSelectedEmployee] = useState("");
   const [dropdownOpen, setDropdownOpen] = useState(false);
-
   const dropdownRef = useRef(null);
 
-  // =================== EMPLOYEE FETCH ===================
+  // =================== FETCH EMPLOYEES ===================
   const fetchEmployees = async () => {
     try {
       const res = await getEmployees();
@@ -32,7 +31,7 @@ export default function AttendanceMain() {
     }
   };
 
-  // =================== ATTENDANCE FETCH ===================
+  // =================== FETCH ATTENDANCE ===================
   const fetchAttendance = async () => {
     setLoading(true);
     try {
@@ -62,20 +61,26 @@ export default function AttendanceMain() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // =================== CHECK IN ===================
+  // =================== CHECK-IN ===================
   const handleCheckIn = async () => {
     if (!selectedEmployee) return alert("Select an employee");
 
-    // Prevent duplicate check-in
-    if (attendanceList.some(a => a.employeeId?._id === selectedEmployee)) {
-      return alert("This employee is already added!");
-    }
+    const emp = employees.find(e => e._id === selectedEmployee);
+    if (!emp) return alert("Employee not added");
+
+    // Check if employee already has attendance record today
+    const alreadyChecked = attendanceList.some(a => a.employeeId?._id === selectedEmployee);
+    if (alreadyChecked) return alert("This employee is already checked in");
+
+    // Ensure employee has inTime set
+    if (!emp.inTime) return alert("In time not set for this employee");
 
     try {
-      await checkIn(selectedEmployee);
+      await checkIn({ employeeId: selectedEmployee, inTime: emp.inTime });
       setSelectedEmployee("");
       fetchAttendance();
-    } catch {
+    } catch (err) {
+      console.error(err);
       alert("Check-in failed");
     }
   };
@@ -92,7 +97,7 @@ export default function AttendanceMain() {
     fetchAttendance();
   };
 
-  // =================== TIME FORMAT ===================
+  // =================== FORMAT TIME ===================
   const formatTime = (date) => {
     if (!date) return "-";
     const d = new Date(date);
@@ -103,24 +108,22 @@ export default function AttendanceMain() {
     return `${hours}:${minutes} ${ampm}`;
   };
 
-  // =================== HOUR CALC ===================
+  // =================== CALCULATE HOURS ===================
   const calculateHours = (inTime, outTime) => {
     if (!inTime || !outTime) return { total: "-", overtime: "-" };
     const start = new Date(inTime);
     const end = new Date(outTime);
     let diffMs = end - start;
     if (diffMs < 0) return { total: "-", overtime: "-" };
+
     const totalMinutes = Math.floor(diffMs / (1000 * 60));
     const totalH = Math.floor(totalMinutes / 60);
     const totalM = totalMinutes % 60;
     const total = `${totalH}:${String(totalM).padStart(2, "0")}`;
 
-    const fixedEnd = new Date(inTime);
-    fixedEnd.setHours(18, 30, 0, 0); // 6:30 PM
-    let overtimeMinutes = end > fixedEnd ? Math.floor((end - fixedEnd) / (1000 * 60)) : 0;
-    const oh = Math.floor(overtimeMinutes / 60);
-    const om = overtimeMinutes % 60;
-    const overtime = `${oh}:${String(om).padStart(2, "0")}`;
+    // Overtime = anything beyond employee's in-out difference?
+    // If you have a separate overtime rule, you can modify here
+    const overtime = "-"; // Placeholder for now, or calculate if needed
 
     return { total, overtime };
   };
@@ -131,6 +134,41 @@ export default function AttendanceMain() {
   return (
     <Layout>
       <div className="p-2 text-xs">
+
+        {/* ================= ACTIONS + FILTERS ================= */}
+        <div className="flex flex-col md:flex-row md:justify-between  gap-2 relative">
+
+          {/* ACTIONS & FILTERS */}
+          <div className="mb-4 md:mb-0 md:absolute md:top-0 md:right-0  w-full md:w-auto">
+            <h3 className="font-semibold mb-2 text-gray-700">Actions & Filters</h3>
+            <div className="flex flex-wrap gap-2 items-center">
+              <AttendanceFilter onFilter={setAttendanceList} />
+              <button
+                onClick={() => setShowForm(!showForm)}
+                className="border p-1 rounded flex items-center gap-1"
+              >
+                <FaPlus className="text-blue-500" /> New
+              </button>
+              <button
+                onClick={handleDeleteSelected}
+                className="border p-1 rounded flex items-center gap-1"
+              >
+                <FaTrash className="text-red-500" /> Delete
+              </button>
+            </div>
+          </div>
+
+          {/* ADD ATTENDANCE FORM */}
+          {showForm && (
+            <div className="mb-4 border rounded-lg p-3 bg-white shadow-sm w-full md:w-auto">
+              <AttendanceForm
+                onAdd={() => { fetchAttendance(); setShowForm(false); }}
+                onClose={() => setShowForm(false)}
+                existingAttendance={attendanceList}
+              />
+            </div>
+          )}
+        </div>
 
         {/* ================= CHECK-IN PANEL ================= */}
         <div className="mb-4">
@@ -147,7 +185,7 @@ export default function AttendanceMain() {
                 <i className={`fa fa-chevron-down text-xs text-gray-500 transition-transform duration-300 ${dropdownOpen ? "rotate-180" : ""}`} />
               </div>
               {dropdownOpen && (
-                <ul className="absolute z-50 mt-1 w-full bg-gray-100 border rounded shadow-lg max-h-40 overflow-y-auto text-xs ">
+                <ul className="absolute z-50 mt-1 w-full bg-gray-100 border rounded shadow-lg max-h-40 overflow-y-auto text-xs">
                   <li
                     className="p-2 hover:bg-gray-200 text-center cursor-pointer"
                     onClick={() => { setSelectedEmployee(""); setDropdownOpen(false); }}
@@ -155,7 +193,7 @@ export default function AttendanceMain() {
                     -- Select Employee --
                   </li>
                   {employees.length === 0 ? (
-                    <li className="p-2 text-gray-500 "> No employees</li>
+                    <li className="p-2 text-gray-500"> No employees</li>
                   ) : employees.map(emp => (
                     <li
                       key={emp._id}
@@ -179,37 +217,12 @@ export default function AttendanceMain() {
           </div>
         </div>
 
-        {/* ================= ACTIONS + FILTERS ================= */}
-        <div className="mb-4">
-          <h3 className="font-semibold mb-2 text-gray-700">Actions & Filters</h3>
-          <div className="flex flex-wrap gap-2 items-center">
-            <AttendanceFilter onFilter={setAttendanceList} />
-            <button onClick={() => setShowForm(!showForm)} className="border p-1 rounded flex items-center gap-1">
-              <FaPlus className="text-blue-500" /> New
-            </button>
-            <button onClick={handleDeleteSelected} className="border p-1 rounded flex items-center gap-1">
-              <FaTrash className="text-red-500" /> Delete
-            </button>
-          </div>
-        </div>
-
-        {/* ================= ADD ATTENDANCE FORM ================= */}
-        {showForm && (
-          <div className="mb-4 border rounded-lg p-3 bg-white shadow-sm">
-            <AttendanceForm
-              onAdd={() => { fetchAttendance(); setShowForm(false); }}
-              onClose={() => setShowForm(false)}
-              existingAttendance={attendanceList}
-            />
-          </div>
-        )}
-
         {/* ================= ATTENDANCE TABLE ================= */}
         <div className="flex flex-col">
           <h3 className="font-semibold mb-3 text-gray-700">Attendance Records</h3>
           <div className="overflow-x-auto rounded max-h-[60vh]">
             <table className="min-w-[900px] w-full text-xs border-collapse">
-              <thead className="bg-gray-200 sticky top-0 text-left">
+              <thead className="bg-gray-100 sticky top-0 text-left">
                 <tr className="border-b">
                   <th className="p-2 w-10">
                     <input
@@ -237,7 +250,7 @@ export default function AttendanceMain() {
                   attendanceList.map(att => {
                     const { total, overtime } = calculateHours(att.checkIn, att.checkOut);
                     return (
-                      <tr key={att._id} className="hover:bg-gray-50 border-b">
+                      <tr key={att._id} className="hover:bg-gray-200 border-b">
                         <td className="p-2 align-middle">
                           <input type="checkbox" checked={selectedRecords.includes(att._id)}
                             onChange={(e) => e.target.checked ? setSelectedRecords([...selectedRecords, att._id]) : setSelectedRecords(selectedRecords.filter(id => id !== att._id))}

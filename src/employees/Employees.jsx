@@ -102,7 +102,7 @@ export default function Employees() {
       <div className="flex flex-col sm:flex-row justify-between items-center mb-2 text-xs gap-2">
         {/* Date + Stats */}
         <div className="flex items-center gap-3">
-          <div>{new Date().toLocaleDateString()} {new Date().toLocaleTimeString()}</div>
+          <div>{new Date().toLocaleDateString()} </div>
           <div className="hidden sm:block">Active: {activeCount}</div>
           <div className="hidden sm:block">Inactive: {inactiveCount}</div>
         </div>
@@ -126,7 +126,7 @@ export default function Employees() {
             className="flex items-center gap-1 bg-green-500 text-white px-2 py-1 rounded text-xs"
             onClick={() => setShowForm(prev => !prev)}
           >
-            <FaPlus className="sm:hidden" /> <span className="hidden sm:inline text-sm">Create</span>
+            <FaPlus className="sm:hidden" /> <span className="hidden sm:inline text-xs">+ Create</span>
           </button>
         </div>
       </div>
@@ -190,44 +190,56 @@ export default function Employees() {
         </div>
       )}
 
-      {/* ===== EMPLOYEES TABLE ===== */}
-      <div className="overflow-x-auto max-h-[60vh] bg-white rounded shadow text-xs">
-        <table className="w-full border-collapse">
-          <thead className="bg-gray-100 sticky top-0">
-            <tr>
-              {["Avatar","ID", "Name", "Email", "Phone", "Role", "Dept", "Status", "Join", "Actions"].map(h => (
-                <th key={h} className="p-1">{h}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {loading ? (
-              <tr><td colSpan="10" className="text-center p-2">Loading...</td></tr>
-            ) : filteredEmployees.length ? filteredEmployees.map(emp => (
-              <tr key={emp._id} className="hover:bg-gray-50">
-                <td className="p-1">
-                  <img src={emp.avatar || "/default-avatar.png"} alt="avatar" className="w-8 h-8 rounded-full object-cover" />
-                </td>
-                <td className="p-1">{emp.employeeCode}</td>
-                <td className="p-1">{emp.name}</td>
-                <td className="p-1">{emp.email}</td>
-                <td className="p-1">{emp.phone || "-"}</td>
-                <td className="p-1">{emp.jobRole}</td>
-                <td className="p-1">{emp.department}</td>
-                <td className="p-1">{emp.status}</td>
-                <td className="p-1">{emp.joinDate ? new Date(emp.joinDate).toLocaleDateString() : "-"}</td>
-                <td className="p-1 flex gap-1">
-                  <Eye size={14} className="cursor-pointer" onClick={() => navigate(`/employee/${emp._id}`)} />
-                  <Pencil size={14} className="cursor-pointer" onClick={() => navigate(`/employee/${emp._id}/edit`)} />
-                  <Trash2 size={14} className="cursor-pointer" onClick={() => handleDelete(emp._id)} />
-                </td>
-              </tr>
-            )) : (
-              <tr><td colSpan="10" className="text-center p-2">No Employees</td></tr>
-            )}
-          </tbody>
-        </table>
-      </div>
+      
+{/* ===== EMPLOYEES TABLE ===== */}
+<div className="overflow-x-auto max-h-[60vh] bg-transparent rounded text-xs">
+  <h3 className="font-semibold mb-2 text-gray-700 px-3 pt-2 text-xs">Employee Records</h3>
+  <div className="overflow-auto">
+    <table className="w-full border-collapse text-left min-w-[700px]">
+      <thead className="bg-gray-100 sticky top-0">
+        <tr>
+          {["Name", "ID", "Email", "Phone", "Role", "Dept", "Status", "Join", "Actions"].map(h => (
+            <th key={h} className="px-3 py-2 border-b text-left text-xs">{h}</th>
+          ))}
+        </tr>
+      </thead>
+      <tbody>
+        {loading ? (
+          <tr><td colSpan="9" className="text-center px-3 py-3 text-xs">Loading...</td></tr>
+        ) : filteredEmployees.length ? filteredEmployees.map(emp => (
+          <tr key={emp._id} className="hover:bg-gray-50 border-b text-xs">
+            {/* Name + Avatar */}
+            <td className="px-3 py-2 flex items-center gap-2 whitespace-nowrap text-xs">
+              <img src={emp.avatar || "/default-avatar.png"} alt="avatar" className="w-5 h-5 rounded-full object-cover" />
+              <span className="truncate text-xs">{emp.name}</span>
+            </td>
+
+            {/* Employee ID */}
+            <td className="px-3 py-2 whitespace-nowrap text-xs">{emp.employeeCode}</td>
+            <td className="px-3 py-2 truncate text-xs">{emp.email}</td>
+            <td className="px-3 py-2 whitespace-nowrap text-xs">{emp.phone || "-"}</td>
+            <td className="px-3 py-2 whitespace-nowrap text-xs">{emp.jobRole}</td>
+            <td className="px-3 py-2 whitespace-nowrap text-xs">{emp.department}</td>
+            <td className="px-3 py-2 whitespace-nowrap text-xs">{emp.status}</td>
+            <td className="px-3 py-2 whitespace-nowrap text-xs">{emp.joinDate ? new Date(emp.joinDate).toLocaleDateString() : "-"}</td>
+
+            {/* Actions */}
+            <td className="px-3 py-2 flex justify-center items-center gap-1 whitespace-nowrap">
+              <Eye size={12} className="cursor-pointer text-blue-500" onClick={() => navigate(`/employee/${emp._id}`)} />
+              <Pencil size={12} className="cursor-pointer text-yellow-500" onClick={() => navigate(`/employee/${emp._id}/edit`)} />
+              <Trash2 size={12} className="cursor-pointer text-red-500" onClick={() => handleDelete(emp._id)} />
+            </td>
+          </tr>
+        )) : (
+          <tr><td colSpan="9" className="text-center px-3 py-3 text-xs">No Employees</td></tr>
+        )}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+
+
     </Layout>
   );
 }

@@ -43,7 +43,7 @@ export default function AttendanceUpdate({ record, onUpdate, onClose }) {
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-30 flex justify-center items-center z-50">
+    <div className="fixed inset-0 flex justify-center items-center z-50">
       <div className="bg-white p-4 rounded shadow w-80 text-xs grid gap-2">
 
         {/* Avatar + Name */}
