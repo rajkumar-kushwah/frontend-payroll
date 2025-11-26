@@ -143,6 +143,7 @@ export const deleteAttendance = async (id) => {
 
 
 
+
 // Profile APIs
 export const getProfile = () => api.get("/auth/profile");
 export const updateProfile = (data, isFormData = false) =>

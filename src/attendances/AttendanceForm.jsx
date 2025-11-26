@@ -54,13 +54,12 @@ export default function AttendanceForm({ onAdd, onClose }) {
         remarks,
         date,
         checkIn: inTime ? new Date(`${date}T${inTime}`) : null,
-        checkOut: outTime ? new Date(`${date}T${outTime}`) : null
+        checkOut: outTime ? new Date(`${date}T${outTime}`) : null,
+        registeredFromForm: true // ✅ important
       });
 
-      // Refresh attendance list after adding
       await fetchAttendance();
 
-      // Reset form
       setSelectedEmployee(null);
       setSearchTerm("");
       setStatus("present");
@@ -83,67 +82,40 @@ export default function AttendanceForm({ onAdd, onClose }) {
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center">
-      {/* Background Overlay */}
-      <div 
-        className="absolute inset-0 bg-black opacity-50" 
-        onClick={onClose} 
-      />
-
-      {/* Modal */}
+      <div className="absolute inset-0 bg-black opacity-50" onClick={onClose} />
       <div className="bg-white rounded shadow-lg z-10 p-4 w-full max-w-xl relative">
-        {/* Close Button */}
-        <button 
-          className="absolute top-2 right-2 text-gray-500 hover:text-gray-800"
-          onClick={onClose}
-        >
+        <button className="absolute top-2 right-2 text-gray-500 hover:text-gray-800" onClick={onClose}>
           <FaTimes />
         </button>
-
         <h3 className="font-semibold mb-3 text-gray-700">Add Attendance</h3>
-
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-          {/* Employee Select */}
           <div className="sm:col-span-2 relative">
             <label>Employee</label>
             <input
               type="text"
               value={selectedEmployee ? employees.find(e => e._id === selectedEmployee)?.name : searchTerm}
               placeholder="Type to search..."
-              onChange={e => {
-                setSearchTerm(e.target.value);
-                setDropdownOpen(true);
-              }}
+              onChange={e => { setSearchTerm(e.target.value); setDropdownOpen(true); }}
               onClick={() => setDropdownOpen(true)}
               className="border p-1 rounded w-full"
             />
-
             {dropdownOpen && (
               <ul className="absolute z-50 w-full bg-white border rounded shadow-lg max-h-40 overflow-y-auto mt-1 text-xs">
                 {filteredEmployees.map(emp => (
                   <li
                     key={emp._id}
                     className="p-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2"
-                    onClick={() => {
-                      setSelectedEmployee(emp._id);
-                      setSearchTerm(emp.name);
-                      setDropdownOpen(false);
-                    }}
+                    onClick={() => { setSelectedEmployee(emp._id); setSearchTerm(emp.name); setDropdownOpen(false); }}
                   >
-                    <img
-                      src={emp.avatar || "/default-avatar.png"}
-                      className="w-5 h-5 rounded-full"
-                    />
+                    <img src={emp.avatar || "/default-avatar.png"} className="w-5 h-5 rounded-full" />
                     <span>{emp.name} ({emp.employeeCode})</span>
                   </li>
                 ))}
-                {filteredEmployees.length === 0 && (
-                  <li className="p-2 text-gray-500">No employees found</li>
-                )}
+                {filteredEmployees.length === 0 && <li className="p-2 text-gray-500">No employees found</li>}
               </ul>
             )}
           </div>
 
-          {/* Status */}
           <div>
             <label>Status</label>
             <select value={status} onChange={e => setStatus(e.target.value)} className="border p-1 rounded w-full">
@@ -153,42 +125,31 @@ export default function AttendanceForm({ onAdd, onClose }) {
             </select>
           </div>
 
-          {/* Date */}
           <div>
             <label>Date</label>
             <input type="date" value={date} onChange={e => setDate(e.target.value)} className="border p-1 rounded w-full"/>
           </div>
 
-          {/* In Time */}
           <div>
             <label>In Time</label>
             <input type="time" value={inTime} onChange={e => setInTime(e.target.value)} className="border p-1 rounded w-full"/>
           </div>
 
-          {/* Out Time */}
           <div>
             <label>Out Time</label>
             <input type="time" value={outTime} onChange={e => setOutTime(e.target.value)} className="border p-1 rounded w-full"/>
           </div>
 
-          {/* Remarks */}
           <div className="sm:col-span-2">
             <label>Remarks</label>
             <input value={remarks} onChange={e => setRemarks(e.target.value)} className="border p-1 rounded w-full"/>
           </div>
 
-          {/* Submit */}
           <div className="sm:col-span-2 flex justify-end mt-2 gap-2">
-            <button 
-              onClick={handleAdd} 
-              className="bg-green-500 text-white p-1 rounded flex items-center gap-1"
-            >
+            <button onClick={handleAdd} className="bg-green-500 text-white p-1 rounded flex items-center gap-1">
               <FaPlus /> Add Attendance
             </button>
-            <button 
-              onClick={onClose} 
-              className="bg-gray-300 text-gray-800 p-1 rounded flex items-center gap-1"
-            >
+            <button onClick={onClose} className="bg-gray-300 text-gray-800 p-1 rounded flex items-center gap-1">
               <FaTimes /> Close
             </button>
           </div>

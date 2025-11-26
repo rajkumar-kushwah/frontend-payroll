@@ -1,3 +1,4 @@
+// src/pages/attendance/AttendanceMain.jsx
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Layout from "../components/Layout";
@@ -20,7 +21,11 @@ export default function AttendanceMain() {
     try {
       const res = await getAttendance();
       const list = Array.isArray(res.data) ? res.data : res.data?.records || [];
-      setAttendanceList(list);
+
+      // ✅ Correct filter: only registered employees
+      const filtered = list.filter(a => a.employeeId?.registeredFromForm === true);
+      setAttendanceList(filtered);
+
     } catch (err) {
       console.error(err);
       setAttendanceList([]);
@@ -52,9 +57,10 @@ export default function AttendanceMain() {
         <div className="flex flex-col md:flex-row md:justify-between gap-2 relative">
           <div className="mb-4 md:mb-0 md:absolute md:top-0 md:right-0 w-full md:w-auto">
             <h3 className="font-semibold mb-2 text-gray-700">Actions & Filters</h3>
+
             <div className="flex flex-wrap gap-2 items-center">
               <AttendanceFilter onFilter={setAttendanceList} />
-              
+
               <button
                 onClick={() => setShowRegisterForm(true)}
                 className="border p-1 rounded flex items-center gap-1"
@@ -82,6 +88,7 @@ export default function AttendanceMain() {
         {/* ================= ATTENDANCE TABLE ================= */}
         <div className="flex flex-col mt-16">
           <h3 className="font-semibold mb-3 text-gray-700">Attendance Records</h3>
+
           <div className="overflow-x-auto rounded max-h-[60vh]">
             <table className="min-w-[900px] w-full text-xs border-collapse">
               <thead className="bg-gray-100 sticky top-0 text-left">
@@ -89,10 +96,7 @@ export default function AttendanceMain() {
                   <th className="p-2 w-10">
                     <input
                       type="checkbox"
-                      checked={
-                        selectedRecords.length === attendanceList.length &&
-                        attendanceList.length > 0
-                      }
+                      checked={selectedRecords.length === attendanceList.length && attendanceList.length > 0}
                       onChange={(e) =>
                         e.target.checked
                           ? setSelectedRecords(attendanceList.map(a => a._id))
@@ -100,59 +104,74 @@ export default function AttendanceMain() {
                       }
                     />
                   </th>
-                  <th className="p-2 min-w-[150px]">Employee</th>
-                  <th className="p-2 min-w-[80px]">Code</th>
-                  <th className="p-2 min-w-[100px]">Date</th>
-                  <th className="p-2 min-w-[80px]">Status</th>
-                  <th className="p-2 min-w-[70px]">In</th>
-                  <th className="p-2 min-w-[70px]">Out</th>
-                  <th className="p-2 min-w-[110px]">Total Hours</th>
-                  <th className="p-2 min-w-[100px]">Overtime</th>
-                  <th className="p-2 min-w-[120px]">Remarks</th>
-                  <th className="p-2 min-w-[80px]">Actions</th>
+                  <th className="p-2">Employee</th>
+                  <th className="p-2">Code</th>
+                  <th className="p-2">Date</th>
+                  <th className="p-2">Status</th>
+                  <th className="p-2">In</th>
+                  <th className="p-2">Out</th>
+                  <th className="p-2">Total Hours</th>
+                  <th className="p-2">Overtime</th>
+                  <th className="p-2">Remarks</th>
+                  <th className="p-2">Actions</th>
                 </tr>
               </thead>
+
               <tbody>
                 {loading ? (
                   <tr>
-                    <td colSpan="11" className="text-center p-3">
-                      Loading...
-                    </td>
+                    <td colSpan="11" className="text-center p-3">Loading...</td>
                   </tr>
                 ) : attendanceList.length ? (
-                  attendanceList.map(att => (
-                    <tr key={att._id} className="hover:bg-gray-200 border-b">
-                      <td className="p-2 align-middle">
-                        <input
-                          type="checkbox"
-                          checked={selectedRecords.includes(att._id)}
-                          onChange={(e) =>
-                            e.target.checked
-                              ? setSelectedRecords([...selectedRecords, att._id])
-                              : setSelectedRecords(selectedRecords.filter(id => id !== att._id))
-                          }
-                        />
-                      </td>
-                      <td className="p-2 flex items-center gap-2 min-w-[150px] align-middle">
-                        <img
-                          src={att.employeeId?.avatar || "/default-avatar.png"}
-                          className="w-7 h-7 rounded-full shrink-0"
-                        />
-                        <span className="whitespace-nowrap">{att.employeeId?.name || "-"}</span>
-                      </td>
-                      <td className="p-2 whitespace-nowrap">{att.employeeId?.employeeCode || "-"}</td>
-                      <td className="p-2 whitespace-nowrap">{att.date ? new Date(att.date).toLocaleDateString() : "-"}</td>
-                      <td className="p-2 whitespace-nowrap">{att.status}</td>
-                      <td className="p-2 whitespace-nowrap">{att.checkIn ? new Date(att.checkIn).toLocaleTimeString() : "-"}</td>
-                      <td className="p-2 whitespace-nowrap">{att.checkOut ? new Date(att.checkOut).toLocaleTimeString() : "-"}</td>
-                      <td className="p-2 whitespace-nowrap">-</td>
-                      <td className="p-2 whitespace-nowrap">-</td>
-                      <td className="p-2 whitespace-nowrap">{att.remarks || "-"}</td>
-                      <td className="p-2 whitespace-nowrap">
-                        <AttendanceActions record={att} onUpdate={fetchAttendance} />
-                      </td>
-                    </tr>
-                  ))
+                  attendanceList.map(att => {
+                    let totalHours = "-";
+                    let overtime = "-";
+
+                    if (att.checkIn && att.checkOut) {
+                      const diffMs = new Date(att.checkOut) - new Date(att.checkIn);
+                      const diffHrs = diffMs / (1000 * 60 * 60);
+
+                      totalHours = diffHrs.toFixed(2);
+                      overtime = diffHrs > 8 ? (diffHrs - 8).toFixed(2) : "0.00";
+                    }
+
+                    return (
+                      <tr key={att._id} className="hover:bg-gray-200 border-b">
+                        <td className="p-2">
+                          <input
+                            type="checkbox"
+                            checked={selectedRecords.includes(att._id)}
+                            onChange={(e) =>
+                              e.target.checked
+                                ? setSelectedRecords([...selectedRecords, att._id])
+                                : setSelectedRecords(selectedRecords.filter(id => id !== att._id))
+                            }
+                          />
+                        </td>
+
+                        <td className="p-2 flex items-center gap-2">
+                          <img
+                            src={att.employeeId?.avatar || "/default-avatar.png"}
+                            className="w-7 h-7 rounded-full"
+                          />
+                          {att.employeeId?.name}
+                        </td>
+
+                        <td className="p-2">{att.employeeId?.employeeCode}</td>
+                        <td className="p-2">{new Date(att.date).toLocaleDateString()}</td>
+                        <td className="p-2">{att.status}</td>
+                        <td className="p-2">{att.checkIn ? new Date(att.checkIn).toLocaleTimeString() : "-"}</td>
+                        <td className="p-2">{att.checkOut ? new Date(att.checkOut).toLocaleTimeString() : "-"}</td>
+                        <td className="p-2">{totalHours}</td>
+                        <td className="p-2">{overtime}</td>
+                        <td className="p-2">{att.remarks || "-"}</td>
+
+                        <td className="p-2">
+                          <AttendanceActions record={att} onUpdate={fetchAttendance} />
+                        </td>
+                      </tr>
+                    );
+                  })
                 ) : (
                   <tr>
                     <td colSpan="11" className="text-center p-3">No Records</td>
@@ -165,17 +184,16 @@ export default function AttendanceMain() {
 
       </div>
 
-      {/* ================= REGISTER EMPLOYEE MODAL ================= */}
+       {/* REGISTER EMPLOYEE MODAL  */}
       {showRegisterForm && (
         <AttendanceForm
           onAdd={() => {
             setShowRegisterForm(false);
-            fetchAttendance();
+            fetchAttendance(); //  Refresh table after adding
           }}
           onClose={() => setShowRegisterForm(false)}
         />
       )}
-
     </Layout>
   );
 }

@@ -1,3 +1,4 @@
+// src/pages/attendance/AttendancePage.jsx
 import { useEffect, useState, useRef } from "react";
 import Layout from "../components/Layout";
 import { getEmployees, getAttendance, checkIn, checkOut, deleteAttendance } from "../utils/api";
@@ -10,6 +11,10 @@ export default function AttendancePage() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
 
+  // Default office time (can later fetch from backend)
+  const OFFICE_START = "09:30"; // 9:30 AM
+  const OFFICE_END = "18:30";   // 6:30 PM
+
   // ================= FETCH EMPLOYEES & ATTENDANCE =================
   const loadAll = async () => {
     try {
@@ -17,7 +22,7 @@ export default function AttendancePage() {
       const att = await getAttendance();
       setEmployees(emp.employees || []);
       const filtered = (Array.isArray(att.data) ? att.data : att.data?.records || [])
-        .filter(a => a.checkIn); // sirf check-in wale records
+        .filter(a => a.checkIn);
       setAttendanceList(filtered);
     } catch (err) {
       console.error(err);
@@ -41,25 +46,45 @@ export default function AttendancePage() {
 
   // ================= CHECK-IN =================
   const handleCheckIn = async () => {
-    if (!selectedEmployee) return alert("Select an employee");
+    if (!selectedEmployee) {
+      return alert("⚠️ Please select an employee first!");
+    }
+
+    // Check if attendance already exists today
+    const todayStr = new Date().toISOString().slice(0, 10);
+    const existing = attendanceList.find(a => 
+      a.employeeId?._id === selectedEmployee && a.date?.startsWith(todayStr)
+    );
+
+    if (existing) {
+      return alert("⚠️ Attendance already recorded for today!");
+    }
+
+    // Optional: Validate office time (just an example)
+    if (!OFFICE_START || !OFFICE_END) {
+      return alert("⚠️ Office start/end time is not set. Cannot check-in.");
+    }
+
     try {
       await checkIn(selectedEmployee);
       setSelectedEmployee("");
       loadAll();
+      alert("✅ Check-in recorded successfully!");
     } catch (err) {
       console.error(err);
-      alert("Check-in failed");
+      alert("❌ Check-in failed. Try again.");
     }
   };
 
   // ================= CHECK-OUT =================
   const handleCheckOut = async (employeeId) => {
+    if (!employeeId) return alert("⚠️ Employee ID missing!");
     try {
       await checkOut(employeeId);
       loadAll();
-    } catch (err) {
-      console.error(err);
-      alert("Check-out failed");
+      alert("✅ Check-out recorded successfully!");
+    } catch {
+      alert("❌ Check-out failed");
     }
   };
 
@@ -68,18 +93,20 @@ export default function AttendancePage() {
     try {
       await deleteAttendance(id);
       loadAll();
-    } catch (err) {
-      console.error(err);
-      alert("Delete failed");
+      alert("✅ Attendance deleted!");
+    } catch {
+      alert("❌ Delete failed");
     }
   };
 
   // ================= CALCULATE HOURS & OVERTIME =================
   const calculateHours = (inTime, outTime) => {
-    if (!inTime) return { total: "-", overtime: "-" };
+    if (!inTime || !outTime) return { total: "-", overtime: "-" };
+
     const start = new Date(inTime);
-    const end = outTime ? new Date(outTime) : new Date();
-    let diffMs = end - start;
+    const end = new Date(outTime);
+
+    const diffMs = end - start;
     if (diffMs < 0) return { total: "-", overtime: "-" };
 
     const totalMinutes = Math.floor(diffMs / 60000);
@@ -87,28 +114,35 @@ export default function AttendancePage() {
     const minutes = totalMinutes % 60;
 
     const fixedEnd = new Date(start);
-    fixedEnd.setHours(18, 30, 0, 0); // 6:30 PM
+    fixedEnd.setHours(18, 30, 0, 0);
     let overtimeMinutes = 0;
     if (end > fixedEnd) overtimeMinutes = Math.floor((end - fixedEnd) / 60000);
 
+    const oh = Math.floor(overtimeMinutes / 60);
+    const om = overtimeMinutes % 60;
+
     return {
-      total: `${hours}:${String(minutes).padStart(2, "0")}`,
-      overtime: `${Math.floor(overtimeMinutes / 60)}:${String(overtimeMinutes % 60).padStart(2, "0")}`
+      total: `${hours}:${String(minutes).padStart(2,"0")}`,
+      overtime: overtimeMinutes > 0 ? `${oh}:${String(om).padStart(2,"0")}` : "0:00"
     };
+  };
+
+  // ================= FORMAT TIME 12-HOUR =================
+  const formatTime12 = (time) => {
+    if (!time) return "-";
+    return new Date(time).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
   };
 
   return (
     <Layout>
       <div className="p-2 flex flex-col gap-3">
-
-        {/* ================= PAGE HEADING ================= */}
         <h2 className="text-left text-sm font-semibold mb-2">Attendance Report</h2>
 
-        {/* ================= SELECT EMPLOYEE + CHECK-IN ================= */}
+        {/* Employee Dropdown + Check-in */}
         <div className="flex gap-2 items-center mb-2">
           <div ref={dropdownRef} className="relative w-48">
             <div
-              className="flex items-center justify-between border border-gray-300 rounded px-2 py-1 text-xs cursor-pointer bg-transparent"
+              className="flex items-center justify-between border border-gray-300 rounded px-2 py-1 text-xs cursor-pointer bg-white"
               onClick={() => setDropdownOpen(prev => !prev)}
             >
               <span>{selectedEmployee ? employees.find(e => e._id === selectedEmployee)?.name : "-- Select Employee --"}</span>
@@ -142,17 +176,18 @@ export default function AttendancePage() {
           </button>
         </div>
 
-        {/* ================= ATTENDANCE TABLE ================= */}
+        {/* Attendance Table */}
         <div className="overflow-auto rounded border border-gray-200">
           <table className="w-full text-xs">
             <thead className="bg-gray-100 text-gray-700">
               <tr>
                 <th className="p-2 text-left">Employee</th>
                 <th className="p-2">Date</th>
+                <th className="p-2">Status</th>
                 <th className="p-2">In</th>
                 <th className="p-2">Out</th>
-                <th className="p-2">Hours</th>
-                <th className="p-2">OT</th>
+                <th className="p-2">Total Hours</th>
+                <th className="p-2">Overtime</th>
                 <th className="p-2">Actions</th>
               </tr>
             </thead>
@@ -166,8 +201,9 @@ export default function AttendancePage() {
                       <span>{item.employeeId?.name}</span>
                     </td>
                     <td className="p-2">{item.date ? new Date(item.date).toLocaleDateString() : "-"}</td>
-                    <td className="p-2">{item.checkIn ? new Date(item.checkIn).toLocaleTimeString() : "-"}</td>
-                    <td className="p-2">{item.checkOut ? new Date(item.checkOut).toLocaleTimeString() : "-"}</td>
+                    <td className="p-2">{item.status || "-"}</td>
+                    <td className="p-2">{formatTime12(item.checkIn)}</td>
+                    <td className="p-2">{formatTime12(item.checkOut)}</td>
                     <td className="p-2">{total}</td>
                     <td className="p-2">{overtime}</td>
                     <td className="p-2 flex gap-1">
@@ -189,11 +225,12 @@ export default function AttendancePage() {
                   </tr>
                 );
               }) : (
-                <tr><td colSpan="7" className="text-center p-3">No Records</td></tr>
+                <tr><td colSpan="8" className="text-center p-3">No Records</td></tr>
               )}
             </tbody>
           </table>
         </div>
+
       </div>
     </Layout>
   );
