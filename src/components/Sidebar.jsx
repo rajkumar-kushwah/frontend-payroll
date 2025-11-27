@@ -121,6 +121,17 @@ export default function Sidebar({ isOpen, toggle }) {
           </NavLink>
 
 
+          <NavLink
+            to="/manual-checkin"
+            className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition ${isActive(
+              "/manual-checkin"
+            )}`}
+          >
+            < ClipboardList className="w-4 h-4" />
+            <span className="text-sm">Daily Attendance</span>
+          </NavLink>
+
+
 
 
           <NavLink
