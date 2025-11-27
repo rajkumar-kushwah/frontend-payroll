@@ -119,7 +119,7 @@ export const filterAttendance = async (filters = {}) => {
 // data = { employeeId, date, status, checkIn, checkOut, remarks }
 // ======================
 export const addAttendance = async (data) => {
-  const res = await api.post("/add-attendance/add", data);
+  const res = await api.post("/attendance/add", data);
   return res.data;
 };
 
