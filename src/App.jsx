@@ -23,6 +23,7 @@ import AddUser from './admin/UserList';
 import Attendance from './attendances/Attendance';
 import AttendanceManual from './attendances/AttendanceManual';
 import WorkScheduleMain from './worksechudel/WorkScheduleMain';
+import AttendancePage from './attendances/AttendancePage';
 function App() {
   return (
      <UserProvider>
@@ -52,6 +53,7 @@ function App() {
         <Route path="/attendance" element={<ProtectedRoute><Attendance /></ProtectedRoute>} />
         <Route path="/manual-checkin" element={<ProtectedRoute><AttendanceManual/></ProtectedRoute>} />
         <Route path="/worksechudel" element={<ProtectedRoute><WorkScheduleMain /></ProtectedRoute>} />
+        <Route path="/attendance-page" element={<ProtectedRoute><AttendancePage /></ProtectedRoute>} />
         
         {/* protected route end */}
       </Routes>
