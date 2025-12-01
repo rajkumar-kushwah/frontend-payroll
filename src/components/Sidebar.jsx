@@ -10,7 +10,11 @@ import {
   Calendar,
   Wallet,
   Settings,
-  ClipboardList, 
+  ClipboardList,
+  Workflow,
+
+  
+
 } from "lucide-react";
 
 export default function Sidebar({ isOpen, toggle }) {
@@ -111,13 +115,13 @@ export default function Sidebar({ isOpen, toggle }) {
           </NavLink>
 
           <NavLink
-            to="/attendance"
+            to="/worksechudel"
             className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition ${isActive(
-              "/attendance"
+              "/worksechudel"
             )}`}
           >
-            < ClipboardList className="w-4 h-4" />
-            <span>Attedance</span>
+            < Workflow className="w-4 h-4" />
+            <span className="text-sm">Work Schedule</span>
           </NavLink>
 
 

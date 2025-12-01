@@ -74,24 +74,24 @@ export const toggleUser = (userId) =>
 export const deleteUser = (userId) =>
   api.delete(`/company/user/${userId}`);
 
-
 export const getWorkSchedules = async () => {
-  const res = await api.get("/worksechudel"); // match backend
+  const res = await api.get("/workSchedule"); // fix typo
   return res.data;
 };
 
+
 export const addWorkSchedule = async (data) => {
-  const res = await api.post("/worksechudel/add", data);
+  const res = await api.post("/workSchedule/add", data);
   return res.data;
 };
 
 export const updateWorkSchedule = async (id, data) => {
-  const res = await api.put(`/worksechudel/${id}`, data);
+  const res = await api.put(`/workSchedule/${id}`, data);
   return res.data;
 };
 
 export const deleteWorkSchedule = async (id) => {
-  const res = await api.delete(`/worksechudel/${id}`);
+  const res = await api.delete(`/workSchedule/${id}`);
   return res.data;
 };
 

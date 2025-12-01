@@ -17,10 +17,12 @@ export default function WorkScheduleForm({ selectedSchedule, onSubmit, onClose }
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
 
+  // Fetch employees on mount
   useEffect(() => {
     fetchEmployees();
   }, []);
 
+  // Populate form when editing
   useEffect(() => {
     if (selectedSchedule) {
       setEmployeeId(selectedSchedule.employeeId?._id || "");
@@ -31,15 +33,9 @@ export default function WorkScheduleForm({ selectedSchedule, onSubmit, onClose }
       setWeeklyOff(selectedSchedule.weeklyOff || ["Sunday"]);
       setBreakStart(selectedSchedule.breakStart || "");
       setBreakEnd(selectedSchedule.breakEnd || "");
+      setSearchTerm(selectedSchedule.employeeId?.name || "");
     } else {
-      setEmployeeId("");
-      setInTime("");
-      setOutTime("");
-      setShiftName("Default Shift");
-      setShiftType("Full-day");
-      setWeeklyOff(["Sunday"]);
-      setBreakStart("");
-      setBreakEnd("");
+      resetForm();
     }
   }, [selectedSchedule]);
 
@@ -52,24 +48,36 @@ export default function WorkScheduleForm({ selectedSchedule, onSubmit, onClose }
     }
   };
 
+  const resetForm = () => {
+    setEmployeeId("");
+    setInTime("");
+    setOutTime("");
+    setShiftName("Default Shift");
+    setShiftType("Full-day");
+    setWeeklyOff(["Sunday"]);
+    setBreakStart("");
+    setBreakEnd("");
+    setSearchTerm("");
+  };
+
   const filteredEmployees = employees.filter(emp =>
     emp.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   const toggleWeeklyOff = (day) => {
-    if (weeklyOff.includes(day)) {
-      setWeeklyOff(weeklyOff.filter(d => d !== day));
-    } else {
-      setWeeklyOff([...weeklyOff, day]);
-    }
+    setWeeklyOff(prev =>
+      prev.includes(day) ? prev.filter(d => d !== day) : [...prev, day]
+    );
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!employeeId) return alert("Select an employee");
-
+const selectedEmployee = employees.find(emp => emp._id === employeeId);
     onSubmit({
       employeeId,
+       employeeName: selectedEmployee?.name || "",
+  employeeAvatar: selectedEmployee?.avatar || "/default-avatar.png",
       inTime,
       outTime,
       shiftName,
@@ -79,17 +87,7 @@ export default function WorkScheduleForm({ selectedSchedule, onSubmit, onClose }
       breakEnd,
     });
 
-    if (!selectedSchedule) {
-      setEmployeeId("");
-      setInTime("");
-      setOutTime("");
-      setShiftName("Default Shift");
-      setShiftType("Full-day");
-      setWeeklyOff(["Sunday"]);
-      setBreakStart("");
-      setBreakEnd("");
-      setSearchTerm("");
-    }
+    if (!selectedSchedule) resetForm();
   };
 
   return (
@@ -110,8 +108,12 @@ export default function WorkScheduleForm({ selectedSchedule, onSubmit, onClose }
           <div className="relative">
             <input
               type="text"
-              value={employeeId ? employees.find(e => e._id === employeeId)?.name : searchTerm}
-              onChange={e => { setSearchTerm(e.target.value); setDropdownOpen(true); }}
+              value={
+                employeeId
+                  ? employees.find(e => e._id === employeeId)?.name || ""
+                  : searchTerm
+              }
+              onChange={e => { setSearchTerm(e.target.value); setDropdownOpen(true); setEmployeeId(""); }}
               onClick={() => setDropdownOpen(true)}
               placeholder="Type to search..."
               className="border p-1 rounded w-full text-xs"
@@ -145,15 +147,23 @@ export default function WorkScheduleForm({ selectedSchedule, onSubmit, onClose }
             className="border p-1 rounded text-xs"
           />
 
-          {/* Shift Type */}
-          <label>Shift Type</label>
-          <select
-            value={shiftType}
-            onChange={e => setShiftType(e.target.value)}
-            className="border p-1 rounded text-xs"
-          >
-            {SHIFT_TYPES.map(type => <option key={type} value={type}>{type}</option>)}
-          </select>
+        {/* Shift Type Simple Toggle */}
+<label>Shift Type (Optional)</label>
+<div className="flex gap-2 flex-wrap">
+  {["Full-day", "Half-day", "Night", "Custom"].map((type) => (
+    <button
+      key={type}
+      type="button"
+      onClick={() => setShiftType(type)}
+      className={`px-2 py-1 border rounded text-xs ${
+        shiftType === type ? "bg-blue-200 border-blue-400" : "bg-white border-gray-300"
+      }`}
+    >
+      {type}
+    </button>
+  ))}
+</div>
+
 
           {/* Weekly Off */}
           <label>Weekly Off</label>
