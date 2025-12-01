@@ -75,44 +75,61 @@ export const deleteUser = (userId) =>
   api.delete(`/company/user/${userId}`);
 
 
-// ======================
-// 1) Check-In (Admin/Owner can provide employeeId)
-// ======================
-// 1) Auto Check In
-export const checkIn = async (employeeId) => {
-  const res = await api.post("/attendance/check-in", { employeeId }); // send string, not object
+export const getWorkSchedules = async () => {
+  const res = await api.get("/worksechudel"); // match backend
   return res.data;
 };
 
+export const addWorkSchedule = async (data) => {
+  const res = await api.post("/worksechudel/add", data);
+  return res.data;
+};
+
+export const updateWorkSchedule = async (id, data) => {
+  const res = await api.put(`/worksechudel/${id}`, data);
+  return res.data;
+};
+
+export const deleteWorkSchedule = async (id) => {
+  const res = await api.delete(`/worksechudel/${id}`);
+  return res.data;
+};
+
+
+// ======================
+// 1) Check-In (Admin/Owner can provide employeeId)
+// ======================
+export const checkIn = async (employeeId) => {
+  const res = await api.post("/attendance/check-in", { employeeId });
+  return res.data;
+};
 
 // ======================
 // 2) Check-Out (Admin/Owner can provide employeeId)
 // ======================
-// 2) Auto Check Out
 export const checkOut = async (employeeId) => {
-  const res = await api.post("/attendance/check-out", { employeeId }); // send string
+  const res = await api.post("/attendance/check-out", { employeeId });
   return res.data;
 };
+
 // ======================
 // 3) Get All Attendance (Admin/Owner only)
-// filters = { employeeId, status, startDate, endDate, page, limit }
+// filters = { employeeId, status, startDate, endDate, month, year, page, limit }
 // ======================
 export const getAttendance = async (filters = {}) => {
   const res = await api.get("/attendance", { params: filters });
-  return res.data; // { success, count, data }
+  return res.data;
 };
 
 // ======================
 // 4) Filter Attendance (Advanced search)
 // filters = { employeeName, employeeCode, department, role, status, startDate, endDate, page, limit }
 // ======================
+// Filter attendance (Advanced search)
 export const filterAttendance = async (filters = {}) => {
-  const res = await api.get("/attendance/filter", { params: filters });
-  return res.data; // { success, count, records }
+  const res = await api.get("/attendance", { params: filters });
+  return res.data;
 };
-
-
-
 
 // ======================
 // 5) Add Attendance manually (Admin/Owner)
@@ -139,8 +156,6 @@ export const deleteAttendance = async (id) => {
   const res = await api.delete(`/attendance/${id}`);
   return res.data;
 };
-
-
 
 
 

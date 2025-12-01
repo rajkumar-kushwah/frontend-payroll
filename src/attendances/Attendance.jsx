@@ -1,4 +1,4 @@
-// src/pages/attendance/AttendanceMain.jsx
+// src/pages/attendance/Attendance.jsx
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Layout from "../components/Layout";
