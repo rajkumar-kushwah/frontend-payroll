@@ -12,37 +12,25 @@ export default function AttendanceTable({
   if (loading) return <p className="text-xs">Loading...</p>;
   if (!attendanceList.length) return <p className="text-xs">No attendance records found.</p>;
 
+  // Format Date to 12-hour time
   const formatTime12 = (time) => {
     if (!time) return "-";
-    return new Date(time).toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: true,
-    });
+    const dt = new Date(time);
+    return dt.toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit", hour12: true });
   };
 
   const formatDate = (date) => {
     if (!date) return "-";
-    return new Date(date).toLocaleDateString([], {
-      day: "2-digit",
-      month: "short",
-      year: "numeric",
-    });
+    const dt = new Date(date);
+    return dt.toLocaleDateString("en-IN", { day: "2-digit", month: "short", year: "numeric" });
   };
 
-  const calculateHours = (checkIn, checkOut) => {
-    if (!checkIn || !checkOut) return { total: "-", overtime: "-" };
-
-    const start = new Date(checkIn);
-    const end = new Date(checkOut);
-    const totalMins = Math.floor((end - start) / 60000);
-    const hours = Math.floor(totalMins / 60);
-    const mins = totalMins % 60;
-
-    return {
-      total: `${hours}:${String(mins).padStart(2, "0")}`,
-      overtime: "0:00",
-    };
+  // Convert decimal hours to hh:mm
+  const formatDecimalHours = (hoursDecimal) => {
+    if (hoursDecimal == null) return "-";
+    const h = Math.floor(hoursDecimal);
+    const m = Math.round((hoursDecimal - h) * 60);
+    return `${h}:${String(m).padStart(2, "0")}`;
   };
 
   return (
@@ -62,84 +50,64 @@ export default function AttendanceTable({
         </thead>
 
         <tbody>
-          {attendanceList.map((att) => {
-            const { total, overtime } = calculateHours(att.checkIn, att.checkOut);
+          {attendanceList.map((att) => (
+            <tr
+              key={att._id}
+              className="border-t hover:bg-gray-50/70 transition-all text-[11px]"
+            >
+              <td className="p-3 flex items-center gap-2 flex-wrap">
+                <img
+                  src={att.employeeId?.avatar || "/default-avatar.png"}
+                  className="w-6 h-6 rounded-full border border-gray-300"
+                />
+                <div className="flex flex-col leading-tight">
+                  <span className="text-[11px] font-medium">{att.employeeId?.name}</span>
+                  <span className="text-[10px] text-gray-500">{att.employeeId?.employeeCode || "-"}</span>
+                </div>
+              </td>
 
-            return (
-              <tr
-                key={att._id}
-                className="border-t hover:bg-gray-50/70 transition-all text-[11px]"
-              >
-                <td className="p-3 flex items-center gap-2 flex-wrap">
-                  <img
-                    src={att.employeeId?.avatar || "/default-avatar.png"}
-                    className="w-6 h-6 rounded-full border border-gray-300"
-                  />
-                  <div className="flex flex-col leading-tight">
-                    <span className="text-[11px] font-medium">
-                      {att.employeeId?.name}
-                    </span>
-                    <span className="text-[10px] text-gray-500">
-                      {att.employeeId?.employeeCode || "-"}
-                    </span>
-                  </div>
-                </td>
+              <td className="p-3 text-center">{formatDate(att.date || att.checkIn)}</td>
+              <td className="p-3 text-center">{formatTime12(att.checkIn)}</td>
+              <td className="p-3 text-center">{formatTime12(att.checkOut)}</td>
+              <td className="p-3 text-center">{att.status || "-"}</td>
+              <td className="p-3 text-center">{formatDecimalHours(att.totalHours)}</td>
+              <td className="p-3 text-center">{formatDecimalHours(att.overtimeHours)}</td>
 
-                <td className="p-3 text-center">
-                  {formatDate(att.date || att.checkIn)}
-                </td>
-
-                <td className="p-3 text-center">
-                  {formatTime12(att.checkIn)}
-                </td>
-
-                <td className="p-3 text-center">
-                  {formatTime12(att.checkOut)}
-                </td>
-
-                <td className="p-3 text-center">
-                  {att.status || "-"}
-                </td>
-
-                <td className="p-3 text-center">{total}</td>
-                <td className="p-3 text-center">{overtime}</td>
-
-                <td className="p-3 flex gap-1 justify-center flex-wrap">
-                  {!att.checkIn && (
-                    <button
-                      className="bg-green-500 text-white px-2 py-1 rounded text-[10px] shadow-sm"
-                      onClick={() => onCheckIn(att.employeeId?._id)}
-                    >
-                      Check In
-                    </button>
-                  )}
-
-                  {att.checkIn && !att.checkOut && (
-                    <button
-                      className="bg-blue-500 text-white px-2 py-1 rounded text-[10px] shadow-sm"
-                      onClick={() => onCheckOut(att.employeeId?._id)}
-                    >
-                      Check Out
-                    </button>
-                  )}
-
+              <td className="p-3 flex gap-1 justify-center flex-wrap">
+                {!att.checkIn && (
                   <button
-                    className="bg-yellow-400 text-white px-2 py-1 rounded text-[10px] shadow-sm"
-                    onClick={() => onEdit(att)}
+                    className="bg-green-500 text-white px-2 py-1 rounded text-[10px] shadow-sm"
+                    onClick={() => onCheckIn(att.employeeId?._id)}
                   >
-                    Edit
+                    Check In
                   </button>
+                )}
 
+                {att.checkIn && !att.checkOut && (
                   <button
-                    className="bg-red-500 text-white p-1 rounded text-[10px] shadow-sm flex items-center justify-center"
-                    onClick={() => onDelete(att._id)}
+                    className="bg-blue-500 text-white px-2 py-1 rounded text-[10px] shadow-sm"
+                    onClick={() => onCheckOut(att.employeeId?._id)}
                   >
-                    <FaTrash size={10} />
+                    Check Out
                   </button>
-                </td>
-              </tr>
-            );
-          })}
+                )}
+
+                <button
+                  className="bg-yellow-400 text-white px-2 py-1 rounded text-[10px] shadow-sm"
+                  onClick={() => onEdit(att)}
+                >
+                  Edit
+                </button>
+
+                <button
+                  className="bg-red-500 text-white p-1 rounded text-[10px] shadow-sm flex items-center justify-center"
+                  onClick={() => onDelete(att._id)}
+                >
+                  <FaTrash size={10} />
+                </button>
+              </td>
+            </tr>
+          ))}
         </tbody>
       </table>
     </div>
