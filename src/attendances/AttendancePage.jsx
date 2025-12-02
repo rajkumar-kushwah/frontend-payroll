@@ -64,7 +64,6 @@ setLoading(false);
 }
 };
 
-// Check-in selected employee
 const handleCheckIn = async () => {
 if (!selectedEmployee) return alert("Please select an employee!");
 try {
@@ -78,7 +77,6 @@ alert("Check-in failed");
 }
 };
 
-// Check-out callback
 const handleCheckOut = async (employeeId) => {
 try {
 await checkOut(employeeId);
@@ -90,7 +88,6 @@ alert("Check-out failed");
 }
 };
 
-// Delete callback
 const handleDelete = async (id) => {
 try {
 await deleteAttendance(id);
@@ -111,7 +108,6 @@ useEffect(() => {
 fetchAttendance();
 }, [filters.status, filters.date]);
 
-// Filter attendance by search (name or code)
 const filteredAttendance = attendanceList.filter(att => {
 if (!filters.search) return true;
 const searchLower = filters.search.toLowerCase();
@@ -120,7 +116,13 @@ const code = att.employeeId?.employeeCode?.toLowerCase() || "";
 return name.includes(searchLower) || code.includes(searchLower);
 });
 
-return ( <Layout> <div className="p-2 flex flex-col gap-3"> <h2 className="text-sm font-semibold">Daily Attendance</h2>
+return ( <Layout> <div className="p-2 flex flex-col gap-4">
+
+
+    {/* Header */}
+    <div>
+      <h2 className="text-sm font-semibold">Daily Attendance</h2>
+    </div>
 
     {/* Employee Dropdown + Check-In */}
     <div className="flex gap-2 items-center mb-2">
@@ -130,11 +132,12 @@ return ( <Layout> <div className="p-2 flex flex-col gap-3"> <h2 className="text-
           onClick={() => setDropdownOpen(prev => !prev)}
         >
           <span>
-            {selectedEmployee 
-              ? employees.find(e => e._id === selectedEmployee)?.name 
+            {selectedEmployee
+              ? employees.find(e => e._id === selectedEmployee)?.name
               : "-- Select Employee --"}
           </span>
         </div>
+
         {dropdownOpen && (
           <ul className="absolute z-50 mt-1 w-full bg-white border rounded shadow-lg max-h-40 overflow-y-auto text-xs">
             <li
@@ -149,31 +152,38 @@ return ( <Layout> <div className="p-2 flex flex-col gap-3"> <h2 className="text-
                 className="p-1 hover:bg-gray-100 cursor-pointer flex items-center gap-2"
                 onClick={() => { setSelectedEmployee(emp._id); setDropdownOpen(false); }}
               >
-                <img src={emp.avatar || "/default-avatar.png"} className="w-5 h-5 rounded-full"/>
+                <img src={emp.avatar || "/default-avatar.png"} className="w-5 h-5 rounded-full" />
                 <span>{emp.name} ({emp.employeeCode})</span>
               </li>
             ))}
           </ul>
         )}
       </div>
+
       <button
         onClick={handleCheckIn}
         className="bg-green-500 text-white px-2 py-1 rounded text-xs flex items-center gap-1"
       >
-        <FaCheck size={12}/> Check In
+        <FaCheck size={12} /> Check In
       </button>
     </div>
 
     {/* Filter Component */}
-    <AttendanceFilter filters={filters} setFilters={setFilters} employees={employees} />
+    
+    <div className="flex justify-end">
+      <AttendanceFilter filters={filters} setFilters={setFilters} employees={employees} />
+    </div>
 
     {/* Attendance Table */}
-    <AttendanceTable
-      attendanceList={filteredAttendance}
-      loading={loading}
-      onCheckOut={handleCheckOut}
-      onDelete={handleDelete}
-    />
+    <div>
+      <AttendanceTable
+        attendanceList={filteredAttendance}
+        loading={loading}
+        onCheckOut={handleCheckOut}
+        onDelete={handleDelete}
+      />
+    </div>
+
   </div>
 </Layout>
 
