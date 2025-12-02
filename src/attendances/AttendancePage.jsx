@@ -1,146 +1,182 @@
-// src/pages/attendance/MainAttendancePage.jsx
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import Layout from "../components/Layout";
 import AttendanceFilter from "./AttendanceFilter";
 import AttendanceTable from "./AttendanceTable";
+import { FaCheck } from "react-icons/fa";
 import { getWorkSchedules, getAttendance, checkIn, checkOut, deleteAttendance } from "../utils/api";
 
 export default function MainAttendancePage() {
-  const [employees, setEmployees] = useState([]);
-  const [attendanceList, setAttendanceList] = useState([]);
-  const [selectedEmployee, setSelectedEmployee] = useState("");
-  const [filters, setFilters] = useState({ employeeId: "", status: "", date: "" });
-  const [loading, setLoading] = useState(false);
+const [employees, setEmployees] = useState([]);
+const [attendanceList, setAttendanceList] = useState([]);
+const [selectedEmployee, setSelectedEmployee] = useState("");
+const [filters, setFilters] = useState({ search: "", status: "", date: "" });
+const [loading, setLoading] = useState(false);
+const [dropdownOpen, setDropdownOpen] = useState(false);
+const dropdownRef = useRef(null);
 
-  // Fetch employees from WorkSchedule
-  const fetchEmployees = async () => {
-    try {
-      const data = await getWorkSchedules();
-      const emps = (data.data || [])
-        .filter(s => s.employeeId)
-        .map(s => ({
-          _id: s.employeeId._id,
-          name: s.employeeId.name,
-          avatar: s.employeeId.avatar || "/default-avatar.png",
-          employeeCode: s.employeeId.employeeCode,
-        }));
-      setEmployees(emps);
-    } catch (err) {
-      console.error("Fetch Employees Error:", err);
-      setEmployees([]);
-    }
-  };
+// Close dropdown when clicking outside
+useEffect(() => {
+const handleClickOutside = (event) => {
+if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+setDropdownOpen(false);
+}
+};
+document.addEventListener("mousedown", handleClickOutside);
+return () => document.removeEventListener("mousedown", handleClickOutside);
+}, []);
 
-  // Fetch attendance records
-  const fetchAttendance = async () => {
-    setLoading(true);
-    try {
-      const params = {};
-      if (filters.employeeId) params.employeeId = filters.employeeId;
-      if (filters.status) params.status = filters.status;
-      if (filters.date) {
-        params.startDate = filters.date;
-        params.endDate = filters.date;
-      }
-      const data = await getAttendance(params);
-      setAttendanceList(data.data || []);
-    } catch (err) {
-      console.error("Fetch Attendance Error:", err);
-      setAttendanceList([]);
-    } finally {
-      setLoading(false);
-    }
-  };
+// Fetch employees
+const fetchEmployees = async () => {
+try {
+const data = await getWorkSchedules();
+const emps = (data.data || [])
+.filter(s => s.employeeId)
+.map(s => ({
+_id: s.employeeId._id,
+name: s.employeeId.name,
+avatar: s.employeeId.avatar || "/default-avatar.png",
+employeeCode: s.employeeId.employeeCode,
+}));
+setEmployees(emps);
+} catch (err) {
+console.error("Fetch Employees Error:", err);
+setEmployees([]);
+}
+};
 
-  // Check-in selected employee
-  const handleCheckIn = async () => {
-    if (!selectedEmployee) return alert("⚠️ Please select an employee!");
-    try {
-      await checkIn(selectedEmployee);
-      setSelectedEmployee("");
-      fetchAttendance();
-      alert("✅ Check-in recorded!");
-    } catch (err) {
-      console.error(err);
-      alert("❌ Check-in failed");
-    }
-  };
+// Fetch attendance records
+const fetchAttendance = async () => {
+setLoading(true);
+try {
+const params = {};
+if (filters.status) params.status = filters.status;
+if (filters.date) {
+params.startDate = filters.date;
+params.endDate = filters.date;
+}
+const data = await getAttendance(params);
+setAttendanceList(data.data || []);
+} catch (err) {
+console.error("Fetch Attendance Error:", err);
+setAttendanceList([]);
+} finally {
+setLoading(false);
+}
+};
 
-  // Check-out callback (table se)
-  const handleCheckOut = async (employeeId) => {
-    try {
-      await checkOut(employeeId);
-      fetchAttendance();
-      alert("✅ Check-out recorded!");
-    } catch (err) {
-      console.error(err);
-      alert("❌ Check-out failed");
-    }
-  };
+// Check-in selected employee
+const handleCheckIn = async () => {
+if (!selectedEmployee) return alert("Please select an employee!");
+try {
+await checkIn(selectedEmployee);
+setSelectedEmployee("");
+fetchAttendance();
+alert("Check-in recorded!");
+} catch (err) {
+console.error(err);
+alert("Check-in failed");
+}
+};
 
-  // Delete callback (table se)
-  const handleDelete = async (id) => {
-    try {
-      await deleteAttendance(id);
-      fetchAttendance();
-      alert("✅ Attendance deleted!");
-    } catch (err) {
-      console.error(err);
-      alert("❌ Delete failed");
-    }
-  };
+// Check-out callback
+const handleCheckOut = async (employeeId) => {
+try {
+await checkOut(employeeId);
+fetchAttendance();
+alert("Check-out recorded!");
+} catch (err) {
+console.error(err);
+alert("Check-out failed");
+}
+};
 
-  useEffect(() => {
-    fetchEmployees();
-    fetchAttendance();
-  }, []);
+// Delete callback
+const handleDelete = async (id) => {
+try {
+await deleteAttendance(id);
+fetchAttendance();
+alert("Attendance deleted!");
+} catch (err) {
+console.error(err);
+alert("Delete failed");
+}
+};
 
-  useEffect(() => {
-    fetchAttendance();
-  }, [filters]);
+useEffect(() => {
+fetchEmployees();
+fetchAttendance();
+}, []);
 
-  return (
-    <Layout>
-      <div className="p-2 flex flex-col gap-3">
-        <h2 className="text-sm font-semibold">Daily Attendance</h2>
+useEffect(() => {
+fetchAttendance();
+}, [filters.status, filters.date]);
 
-        {/* Select Employee + Check-In */}
-        <div className="flex gap-2 items-center">
-          <select
-            value={selectedEmployee}
-            onChange={(e) => setSelectedEmployee(e.target.value)}
-            className="border px-2 py-1 rounded text-sm"
-          >
-            <option value="">-- Select Employee --</option>
-            {employees.map(emp => (
-              <option key={emp._id} value={emp._id}>
-                {emp.name} ({emp.employeeCode})
-              </option>
-            ))}
-          </select>
-          <button
-            onClick={handleCheckIn}
-            className="bg-green-500 text-white px-3 py-1 rounded text-sm"
-          >
-            Check In
-          </button>
+// Filter attendance by search (name or code)
+const filteredAttendance = attendanceList.filter(att => {
+if (!filters.search) return true;
+const searchLower = filters.search.toLowerCase();
+const name = att.employeeId?.name?.toLowerCase() || "";
+const code = att.employeeId?.employeeCode?.toLowerCase() || "";
+return name.includes(searchLower) || code.includes(searchLower);
+});
+
+return ( <Layout> <div className="p-2 flex flex-col gap-3"> <h2 className="text-sm font-semibold">Daily Attendance</h2>
+
+    {/* Employee Dropdown + Check-In */}
+    <div className="flex gap-2 items-center mb-2">
+      <div ref={dropdownRef} className="relative w-48">
+        <div
+          className="flex items-center justify-between border border-gray-300 rounded px-2 py-1 text-xs cursor-pointer bg-white"
+          onClick={() => setDropdownOpen(prev => !prev)}
+        >
+          <span>
+            {selectedEmployee 
+              ? employees.find(e => e._id === selectedEmployee)?.name 
+              : "-- Select Employee --"}
+          </span>
         </div>
-
-        {/* Filter Component */}
-        <AttendanceFilter
-          filters={filters}
-          setFilters={setFilters}
-          employees={employees}
-        />
-
-        {/* Attendance Table */}
-        <AttendanceTable
-          attendanceList={attendanceList}
-          loading={loading}
-          onCheckOut={handleCheckOut}
-          onDelete={handleDelete}
-        />
+        {dropdownOpen && (
+          <ul className="absolute z-50 mt-1 w-full bg-white border rounded shadow-lg max-h-40 overflow-y-auto text-xs">
+            <li
+              className="p-2 hover:bg-gray-100 cursor-pointer"
+              onClick={() => { setSelectedEmployee(""); setDropdownOpen(false); }}
+            >
+              -- Select Employee --
+            </li>
+            {employees.map(emp => (
+              <li
+                key={emp._id}
+                className="p-1 hover:bg-gray-100 cursor-pointer flex items-center gap-2"
+                onClick={() => { setSelectedEmployee(emp._id); setDropdownOpen(false); }}
+              >
+                <img src={emp.avatar || "/default-avatar.png"} className="w-5 h-5 rounded-full"/>
+                <span>{emp.name} ({emp.employeeCode})</span>
+              </li>
+            ))}
+          </ul>
+        )}
       </div>
-    </Layout>
-  );
+      <button
+        onClick={handleCheckIn}
+        className="bg-green-500 text-white px-2 py-1 rounded text-xs flex items-center gap-1"
+      >
+        <FaCheck size={12}/> Check In
+      </button>
+    </div>
+
+    {/* Filter Component */}
+    <AttendanceFilter filters={filters} setFilters={setFilters} employees={employees} />
+
+    {/* Attendance Table */}
+    <AttendanceTable
+      attendanceList={filteredAttendance}
+      loading={loading}
+      onCheckOut={handleCheckOut}
+      onDelete={handleDelete}
+    />
+  </div>
+</Layout>
+
+
+);
 }

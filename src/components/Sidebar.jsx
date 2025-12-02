@@ -126,9 +126,9 @@ export default function Sidebar({ isOpen, toggle }) {
 
 
           <NavLink
-            to="/manual-checkin"
+            to="/attendance-page"
             className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition ${isActive(
-              "/manual-checkin"
+              "/attendance-page"
             )}`}
           >
             < ClipboardList className="w-4 h-4" />

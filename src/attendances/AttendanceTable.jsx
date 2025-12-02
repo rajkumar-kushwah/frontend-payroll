@@ -1,71 +1,93 @@
 // src/attendances/AttendanceTable.jsx
 import React from "react";
 
-export default function AttendanceTable({ attendanceList, loading, employees, onCheckIn, onCheckOut }) {
+export default function AttendanceTable({
+  attendanceList,
+  loading,
+  employees,
+  onCheckIn,
+  onCheckOut,
+}) {
   if (loading) return <p className="text-xs">Loading...</p>;
   if (!attendanceList.length) return <p className="text-xs">No attendance records found.</p>;
 
-  // Format time to 12-hour
   const formatTime12 = (time) => {
     if (!time) return "-";
-    return new Date(time).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: true });
+    return new Date(time).toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    });
   };
 
-  // Calculate total hours and overtime
+  const formatDate = (date) => {
+    if (!date) return "-";
+    return new Date(date).toLocaleDateString([], {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    });
+  };
+
   const calculateHours = (checkIn, checkOut) => {
     if (!checkIn || !checkOut) return { total: "-", overtime: "-" };
+
     const start = new Date(checkIn);
     const end = new Date(checkOut);
-    const diffMs = end - start;
-    if (diffMs < 0) return { total: "-", overtime: "-" };
-    const totalMins = Math.floor(diffMs / 60000);
+
+    const totalMins = Math.floor((end - start) / 60000);
     const hours = Math.floor(totalMins / 60);
     const mins = totalMins % 60;
 
-    // Example: office end 18:30
-    const officeEnd = new Date(start);
-    officeEnd.setHours(18, 30, 0, 0);
-    let overtimeMins = end > officeEnd ? Math.floor((end - officeEnd)/60000) : 0;
+
     return {
-      total: `${hours}:${String(mins).padStart(2,"0")}`,
-      overtime: `${Math.floor(overtimeMins/60)}:${String(overtimeMins%60).padStart(2,"0")}`
+      total: `${hours}:${String(mins).padStart(2, "0")}`,
+      overtime: "0:00",
     };
   };
 
   return (
-    <div className="overflow-auto rounded border border-gray-200">
-      <table className="w-full text-xs">
-        <thead className="bg-gray-100 text-gray-700">
+    <div className="w-full overflow-x-auto rounded-lg bg-transparent scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent">
+      <table className="w-full text-xs border-collapse min-w-[750px]">
+        <thead className="bg-gray-100/70 backdrop-blur-sm sticky top-0 z-10 text-gray-700">
           <tr>
-            <th className="p-2 text-left">Employee</th>
-            <th className="p-2">Shift</th>
-            <th className="p-2">In</th>
-            <th className="p-2">Out</th>
-            <th className="p-2">Status</th>
-            <th className="p-2">Total Hours</th>
-            <th className="p-2">Overtime</th>
-            <th className="p-2">Actions</th>
+            <th className="p-3 text-left">Employee</th>
+            <th className="p-3 text-center">Date</th>
+            <th className="p-3 text-center">In</th>
+            <th className="p-3 text-center">Out</th>
+            <th className="p-3 text-center">Status</th>
+            <th className="p-3 text-center">Total</th>
+            <th className="p-3 text-center">OverTime</th>
+            <th className="p-3 text-center">Actions</th>
           </tr>
         </thead>
+
+
         <tbody>
-          {attendanceList.map(att => {
+          {attendanceList.map((att) => {
             const { total, overtime } = calculateHours(att.checkIn, att.checkOut);
             return (
-              <tr key={att._id} className="border-t hover:bg-gray-50">
-                <td className="p-2 flex items-center gap-2">
-                  <img src={att.employeeId?.avatar || "/default-avatar.png"} className="w-5 h-5 rounded-full"/>
-                  <span>{att.employeeId?.name}</span>
+              <tr key={att._id} className="border-t hover:bg-gray-50/70 transition-all text-[11px]">
+                <td className="p-3 flex items-center gap-2 flex-wrap">
+                  <img
+                    src={att.employeeId?.avatar || "/default-avatar.png"}
+                    className="w-6 h-6 rounded-full border border-gray-300"
+                  />
+                  <div className="flex flex-col leading-tight">
+                    <span className="text-[11px] font-medium">{att.employeeId?.name}</span>
+                    <span className="text-[10px] text-gray-500">{att.employeeId?.employeeCode || "-"}</span>
+                  </div>
                 </td>
-                <td className="p-2">{att.shiftId?.shiftName || "N/A"}</td>
-                <td className="p-2">{formatTime12(att.checkIn)}</td>
-                <td className="p-2">{formatTime12(att.checkOut)}</td>
-                <td className="p-2">{att.status || "-"}</td>
-                <td className="p-2">{total}</td>
-                <td className="p-2">{overtime}</td>
-                <td className="p-2 flex gap-1">
+                <td className="p-3 text-center">{formatDate(att.date || att.checkIn)}</td>
+                <td className="p-3 text-center">{formatTime12(att.checkIn)}</td>
+                <td className="p-3 text-center">{formatTime12(att.checkOut)}</td>
+                <td className="p-3 text-center">{att.status || "-"}</td>
+                <td className="p-3 text-center">{total}</td>
+                <td className="p-3 text-center">{overtime}</td>
+                <td className="p-3 flex gap-2 justify-center flex-wrap">
                   {!att.checkIn && (
                     <button
-                      className="bg-green-500 text-white p-1 rounded text-xs"
+                      className="bg-green-500 text-white px-3 py-1 rounded text-[10px] shadow-sm"
                       onClick={() => onCheckIn(att.employeeId?._id)}
                     >
                       Check In
@@ -73,7 +95,7 @@ export default function AttendanceTable({ attendanceList, loading, employees, on
                   )}
                   {att.checkIn && !att.checkOut && (
                     <button
-                      className="bg-blue-500 text-white p-1 rounded text-xs"
+                      className="bg-blue-500 text-white px-3 py-1 rounded text-[10px] shadow-sm"
                       onClick={() => onCheckOut(att.employeeId?._id)}
                     >
                       Check Out
@@ -84,6 +106,7 @@ export default function AttendanceTable({ attendanceList, loading, employees, on
             );
           })}
         </tbody>
+
       </table>
     </div>
   );
