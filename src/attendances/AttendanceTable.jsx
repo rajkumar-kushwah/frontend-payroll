@@ -1,12 +1,13 @@
-// src/attendances/AttendanceTable.jsx
 import React from "react";
+import { FaTrash } from "react-icons/fa";
 
 export default function AttendanceTable({
   attendanceList,
   loading,
-  employees,
   onCheckIn,
   onCheckOut,
+  onDelete,
+  onEdit,
 }) {
   if (loading) return <p className="text-xs">Loading...</p>;
   if (!attendanceList.length) return <p className="text-xs">No attendance records found.</p>;
@@ -34,11 +35,9 @@ export default function AttendanceTable({
 
     const start = new Date(checkIn);
     const end = new Date(checkOut);
-
     const totalMins = Math.floor((end - start) / 60000);
     const hours = Math.floor(totalMins / 60);
     const mins = totalMins % 60;
-
 
     return {
       total: `${hours}:${String(mins).padStart(2, "0")}`,
@@ -62,51 +61,86 @@ export default function AttendanceTable({
           </tr>
         </thead>
 
-
         <tbody>
           {attendanceList.map((att) => {
             const { total, overtime } = calculateHours(att.checkIn, att.checkOut);
+
             return (
-              <tr key={att._id} className="border-t hover:bg-gray-50/70 transition-all text-[11px]">
+              <tr
+                key={att._id}
+                className="border-t hover:bg-gray-50/70 transition-all text-[11px]"
+              >
                 <td className="p-3 flex items-center gap-2 flex-wrap">
                   <img
                     src={att.employeeId?.avatar || "/default-avatar.png"}
                     className="w-6 h-6 rounded-full border border-gray-300"
                   />
                   <div className="flex flex-col leading-tight">
-                    <span className="text-[11px] font-medium">{att.employeeId?.name}</span>
-                    <span className="text-[10px] text-gray-500">{att.employeeId?.employeeCode || "-"}</span>
+                    <span className="text-[11px] font-medium">
+                      {att.employeeId?.name}
+                    </span>
+                    <span className="text-[10px] text-gray-500">
+                      {att.employeeId?.employeeCode || "-"}
+                    </span>
                   </div>
                 </td>
-                <td className="p-3 text-center">{formatDate(att.date || att.checkIn)}</td>
-                <td className="p-3 text-center">{formatTime12(att.checkIn)}</td>
-                <td className="p-3 text-center">{formatTime12(att.checkOut)}</td>
-                <td className="p-3 text-center">{att.status || "-"}</td>
+
+                <td className="p-3 text-center">
+                  {formatDate(att.date || att.checkIn)}
+                </td>
+
+                <td className="p-3 text-center">
+                  {formatTime12(att.checkIn)}
+                </td>
+
+                <td className="p-3 text-center">
+                  {formatTime12(att.checkOut)}
+                </td>
+
+                <td className="p-3 text-center">
+                  {att.status || "-"}
+                </td>
+
                 <td className="p-3 text-center">{total}</td>
                 <td className="p-3 text-center">{overtime}</td>
-                <td className="p-3 flex gap-2 justify-center flex-wrap">
+
+                <td className="p-3 flex gap-1 justify-center flex-wrap">
                   {!att.checkIn && (
                     <button
-                      className="bg-green-500 text-white px-3 py-1 rounded text-[10px] shadow-sm"
+                      className="bg-green-500 text-white px-2 py-1 rounded text-[10px] shadow-sm"
                       onClick={() => onCheckIn(att.employeeId?._id)}
                     >
                       Check In
                     </button>
                   )}
+
                   {att.checkIn && !att.checkOut && (
                     <button
-                      className="bg-blue-500 text-white px-3 py-1 rounded text-[10px] shadow-sm"
+                      className="bg-blue-500 text-white px-2 py-1 rounded text-[10px] shadow-sm"
                       onClick={() => onCheckOut(att.employeeId?._id)}
                     >
                       Check Out
                     </button>
                   )}
+
+                  <button
+                    className="bg-yellow-400 text-white px-2 py-1 rounded text-[10px] shadow-sm"
+                    onClick={() => onEdit(att)}
+                  >
+                    Edit
+                  </button>
+
+                  <button
+                    className="bg-red-500 text-white p-1 rounded text-[10px] shadow-sm flex items-center justify-center"
+                    onClick={() => onDelete(att._id)}
+                  >
+                    <FaTrash size={10} />
+                  </button>
                 </td>
               </tr>
             );
           })}
         </tbody>
-
       </table>
     </div>
   );
