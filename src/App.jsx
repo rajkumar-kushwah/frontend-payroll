@@ -20,8 +20,6 @@ import NotFound from "./notfound/NotFound";
 import EditEmployee from "./employees/EditEmployee";
 import AdminList from './admin/AdminManament';
 import AddUser from './admin/UserList';
-import Attendance from './attendances/Attendance';
-// import AttendanceManual from './attendances/AttendanceManual';
 import WorkScheduleMain from './worksechudel/WorkScheduleMain';
 import AttendancePage from './attendances/AttendancePage';
 function App() {
@@ -50,8 +48,6 @@ function App() {
         <Route path="/settings" element={<ProtectedRoute allowedRoles={["owner"]}><Settings/></ProtectedRoute>} />
         <Route path="/admin" element={<ProtectedRoute><AdminList /></ProtectedRoute>} />
         <Route path='/admin/add-user' element={<ProtectedRoute><AddUser /></ProtectedRoute>} />
-        <Route path="/attendance" element={<ProtectedRoute><Attendance /></ProtectedRoute>} />
-        {/* <Route path="/manual-checkin" element={<ProtectedRoute><AttendanceManual/></ProtectedRoute>} /> */}
         <Route path="/worksechudel" element={<ProtectedRoute><WorkScheduleMain /></ProtectedRoute>} />
         <Route path="/attendance-page" element={<ProtectedRoute><AttendancePage /></ProtectedRoute>} />
         
