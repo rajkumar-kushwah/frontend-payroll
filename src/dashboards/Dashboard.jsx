@@ -12,6 +12,7 @@ export default function Dashboard() {
   const { user } = useUser();
   const navigate = useNavigate();
   const [employees, setEmployees] = useState([]);
+  const [attendanceList, setAttendanceList] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const [stats, setStats] = useState({
@@ -33,8 +34,14 @@ export default function Dashboard() {
   });
 
   const [attendanceChart, setAttendanceChart] = useState({
-    labels: ["Present", "Absent"],
-    datasets: [{ label: "Attendance", data: [0, 0], borderColor: ["#3B82F6", "#F87171"], backgroundColor: ["#3B82F6", "#F87171"], fill: true }],
+    labels: ["Present", "Half-Day", "Absent"],
+    datasets: [{
+      label: "Attendance",
+      data: [0, 0, 0],
+      borderColor: ["#3B82F6", "#FBBF24", "#F87171"],
+      backgroundColor: ["#3B82F6", "#FBBF24", "#F87171"],
+      fill: true
+    }],
   });
 
   const [salaryChart, setSalaryChart] = useState({
@@ -55,46 +62,76 @@ export default function Dashboard() {
   };
 
   // ----------------------------- Fetch Data -----------------------------
-  const fetchEmployees = async () => {
+  const fetchDashboardData = async () => {
+    setLoading(true);
     try {
-      const res = await api.get("/employees");
-      const data = res.data.employees || res.data || [];
-      setEmployees(data);
+      // Employees
+      const empRes = await api.get("/employees");
+      const empData = empRes.data.employees || empRes.data || [];
+      setEmployees(empData);
 
-      // Stats
-      const reports = data.reduce((acc, emp) => acc + (emp.reports?.length || 0), 0);
-      const attendance = data.filter(e => e.attendanceMarked).length;
-      const salaryPaid = data.filter(e => e.paymentStatus === "paid").length;
+      // Attendance (from AttendancePage API)
+      const attRes = await api.get("/attendance");
+      const attData = attRes.data.data || [];
+      setAttendanceList(attData);
 
-      setStats({ employees: data.length, reports, attendance, salaryPaid });
+      // ----------------- Stats -----------------
+      const totalReports = empData.reduce((acc, emp) => acc + (emp.reports?.length || 0), 0);
+      const salaryPaidCount = empData.filter(emp => emp.paymentStatus === "paid").length;
 
-      // Status Chart
-      const active = data.filter((e) => e.status === "active").length;
-      const inactive = data.filter((e) => e.status === "inactive").length;
-      const pending = data.filter((e) => e.status === "pending").length;
+      const presentCount = attData.filter(a => a.status === "present").length;
+      const halfDayCount = attData.filter(a => a.status === "half-day").length;
+
+      setStats({
+        employees: empData.length,
+        reports: totalReports,
+        attendance: presentCount + halfDayCount,
+        salaryPaid: salaryPaidCount
+      });
+
+      // ----------------- Status Chart -----------------
+      const active = empData.filter(e => e.status === "active").length;
+      const inactive = empData.filter(e => e.status === "inactive").length;
+      const pending = empData.filter(e => e.status === "pending").length;
       setStatusChart({ ...statusChart, datasets: [{ ...statusChart.datasets[0], data: [active, inactive, pending] }] });
 
-      // Report Chart
-      setReportChart({ labels: data.map((e) => e.name), datasets: [{ ...reportChart.datasets[0], data: data.map((e) => e.reports?.length || 0) }] });
+      // ----------------- Report Chart -----------------
+      setReportChart({
+        labels: empData.map(e => e.name),
+        datasets: [{
+          ...reportChart.datasets[0],
+          data: empData.map(e => e.reports?.length || 0)
+        }]
+      });
 
-      // Attendance Chart
-      const present = data.filter(e => e.attendanceMarked).length;
-      const absent = data.length - present;
-      setAttendanceChart({ ...attendanceChart, datasets: [{ ...attendanceChart.datasets[0], data: [present, absent] }] });
+      // ----------------- Attendance Chart -----------------
+      const absentCount = empData.length - presentCount - halfDayCount;
+      setAttendanceChart({
+        ...attendanceChart,
+        datasets: [{
+          ...attendanceChart.datasets[0],
+          data: [presentCount, halfDayCount, absentCount]
+        }]
+      });
 
-      // Salary Chart
-      const paid = data.filter((e) => e.paymentStatus === "paid").length;
-      const pendingSalary = data.length - paid;
-      setSalaryChart({ ...salaryChart, datasets: [{ ...salaryChart.datasets[0], data: [paid, pendingSalary] }] });
+      // ----------------- Salary Chart -----------------
+      const pendingSalary = empData.length - salaryPaidCount;
+      setSalaryChart({
+        ...salaryChart,
+        datasets: [{
+          ...salaryChart.datasets[0],
+          data: [salaryPaidCount, pendingSalary]
+        }]
+      });
 
     } catch (err) {
-      console.error(err);
+      console.error("Dashboard Fetch Error:", err);
     } finally {
       setLoading(false);
     }
   };
 
-  useEffect(() => { fetchEmployees(); }, []);
+  useEffect(() => { fetchDashboardData(); }, []);
 
   return (
     <Layout>
@@ -104,7 +141,7 @@ export default function Dashboard() {
       <div className="flex justify-end gap-1 mb-2">
         <button onClick={() => navigate("/employee/add")} className="bg-blue-600 p-1 rounded text-white text-[9px]">+ Create</button>
         <button onClick={() => navigate("/employees")} className="bg-white p-1 rounded text-blue-600 text-[9px]">All</button>
-        <button onClick={() => navigate("/employee/attendance")} className="bg-green-600 p-1 rounded text-white text-[9px]">Attendance</button>
+        <button onClick={() => navigate("/attendance-page")} className="bg-green-600 p-1 rounded text-white text-[9px]">Attendance</button>
       </div>
 
       {/* Small Cards */}
@@ -131,26 +168,25 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* Charts with different types */}
-     <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-2 text-[8px]">
-  <div className="bg-white p-1 rounded shadow-sm" style={{ height: '160px' }}>
-    <h3 className="text-center mb-0.5 text-[9px] font-semibold">Employee Status</h3>
-    <Doughnut data={statusChart} options={{ ...chartOptions, layout: { padding: 10 } }} />
-  </div>
-  <div className="bg-white p-1 rounded shadow-sm" style={{ height: '160px' }}>
-    <h3 className="text-center mb-0.5 text-[9px] font-semibold">Reports</h3>
-    <Line data={reportChart} options={{ ...chartOptions, layout: { padding: 10 } }} />
-  </div>
-  <div className="bg-white p-1 rounded shadow-sm" style={{ height: '160px' }}>
-    <h3 className="text-center mb-0.5 text-[9px] font-semibold">Attendance</h3>
-    <Bar data={attendanceChart} options={{ ...chartOptions, layout: { padding: 10 } }} />
-  </div>
-  <div className="bg-white p-1 rounded shadow-sm" style={{ height: '160px' }}>
-    <h3 className="text-center mb-0.5 text-[9px] font-semibold">Salary</h3>
-    <Pie data={salaryChart} options={{ ...chartOptions, layout: { padding: 10 } }} />
-  </div>
-</div>
-
+      {/* Charts */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mb-2 text-[8px]">
+        <div className="bg-white p-1 rounded shadow-sm" style={{ height: '160px' }}>
+          <h3 className="text-center mb-0.5 text-[9px] font-semibold">Employee Status</h3>
+          <Doughnut data={statusChart} options={{ ...chartOptions, layout: { padding: 10 } }} />
+        </div>
+        <div className="bg-white p-1 rounded shadow-sm" style={{ height: '160px' }}>
+          <h3 className="text-center mb-0.5 text-[9px] font-semibold">Reports</h3>
+          <Line data={reportChart} options={{ ...chartOptions, layout: { padding: 10 } }} />
+        </div>
+        <div className="bg-white p-1 rounded shadow-sm" style={{ height: '160px' }}>
+          <h3 className="text-center mb-0.5 text-[9px] font-semibold">Attendance</h3>
+          <Bar data={attendanceChart} options={{ ...chartOptions, layout: { padding: 10 } }} />
+        </div>
+        <div className="bg-white p-1 rounded shadow-sm" style={{ height: '160px' }}>
+          <h3 className="text-center mb-0.5 text-[9px] font-semibold">Salary</h3>
+          <Pie data={salaryChart} options={{ ...chartOptions, layout: { padding: 10 } }} />
+        </div>
+      </div>
     </Layout>
   );
 }
