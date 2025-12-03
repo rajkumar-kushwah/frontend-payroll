@@ -28,6 +28,11 @@ export const createEmployeeProfile = (formData) =>
     headers: { "Content-Type": "multipart/form-data" },
   });
 
+  // Unified add employee (handles avatar)
+export const addEmployeeProfile = (formData) =>
+  api.post("/employees/profile", formData);
+
+
 // Update employee profile with avatar
 export const updateEmployeeProfile = (id, formData) =>
   api.put(`/employees/profile/${id}`, formData, {

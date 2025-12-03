@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Layout from "../components/Layout";
-import { createEmployeeProfile } from "../utils/api";
 import { Pencil } from "lucide-react";
+import api from "../utils/api"; // Axios instance
 
 export default function EmployeeAdd() {
   const [form, setForm] = useState({
@@ -24,20 +24,18 @@ export default function EmployeeAdd() {
   };
 
   const handleSubmit = async () => {
-    if (!form.name || !form.email) {
-      return alert("Please fill Name and Email");
-    }
+    if (!form.name || !form.email) return alert("Please fill Name and Email");
 
     const formData = new FormData();
     Object.entries(form).forEach(([key, value]) => formData.append(key, value));
     if (avatarFile) formData.append("avatar", avatarFile);
 
     try {
-      await createEmployeeProfile(formData);
+      await api.post("/employees/profile", formData); // ✅ correct Cloudinary route
       alert("Employee added successfully!");
       navigate("/dashboard");
     } catch (error) {
-      console.log(error);
+      console.log(error.response || error);
       alert("Error saving employee");
     }
   };
@@ -45,18 +43,13 @@ export default function EmployeeAdd() {
   return (
     <Layout>
       <h2 className="text-xl font-semibold mb-4 text-center">Add New Employee</h2>
-
       <div className="bg-white rounded-lg shadow p-4 max-w-xl mx-auto space-y-3">
 
         {/* Avatar */}
         <div className="flex justify-center mb-3">
           <div className="relative w-24 h-24">
             <img
-              src={
-                avatarFile
-                  ? URL.createObjectURL(avatarFile)
-                  : "https://via.placeholder.com/150"
-              }
+              src={avatarFile ? URL.createObjectURL(avatarFile) : "https://via.placeholder.com/150"}
               alt="Avatar"
               className="w-24 h-24 rounded-full border object-cover"
             />
