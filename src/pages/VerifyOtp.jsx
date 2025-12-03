@@ -52,6 +52,7 @@ const VerifyOtp = () => {
         // Save only token and email
         localStorage.setItem("resetToken", res.data.resetToken);
         localStorage.setItem("resetEmail", email);
+         navigate("/reset-password");
       }
 
       setTimeout(() => {

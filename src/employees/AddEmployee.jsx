@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Layout from "../components/Layout";
-import api from "../utils/api";
+import { createEmployeeProfile } from "../utils/api";
 import { Pencil } from "lucide-react";
 
 export default function EmployeeAdd() {
@@ -15,16 +15,12 @@ export default function EmployeeAdd() {
     status: "active",
     notes: "",
   });
-  const [avatarFile, setAvatarFile] = useState(null);
 
+  const [avatarFile, setAvatarFile] = useState(null);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setForm({
-      ...form,
-      [name]: value,
-    });
+    setForm({ ...form, [e.target.name]: e.target.value });
   };
 
   const handleSubmit = async () => {
@@ -32,22 +28,17 @@ export default function EmployeeAdd() {
       return alert("Please fill Name and Email");
     }
 
+    const formData = new FormData();
+    Object.entries(form).forEach(([key, value]) => formData.append(key, value));
+    if (avatarFile) formData.append("avatar", avatarFile);
+
     try {
-      const formData = new FormData();
-      for (const key in form) {
-        formData.append(key, form[key]);
-      }
-      if (avatarFile) formData.append("avatar", avatarFile);
-
-      await api.post("/employees/profile", formData, {
-        headers: { "Content-Type": "multipart/form-data" },
-      });
-
+      await createEmployeeProfile(formData);
       alert("Employee added successfully!");
       navigate("/dashboard");
-    } catch (err) {
-      console.error(err);
-      alert("Error adding employee");
+    } catch (error) {
+      console.log(error);
+      alert("Error saving employee");
     }
   };
 
@@ -85,70 +76,23 @@ export default function EmployeeAdd() {
           </div>
         </div>
 
-        {/* Name */}
-        <div>
-          <label className="block text-sm font-medium mb-1">Full Name *</label>
-          <input
-            type="text"
-            name="name"
-            placeholder="Enter full name"
-            value={form.name}
-            onChange={handleChange}
-            className="border p-1.5 w-full rounded text-sm focus:outline-none focus:ring-1 focus:ring-blue-400"
-          />
-        </div>
-
-        {/* Email */}
-        <div>
-          <label className="block text-sm font-medium mb-1">Email *</label>
-          <input
-            type="email"
-            name="email"
-            placeholder="Enter email"
-            value={form.email}
-            onChange={handleChange}
-            className="border p-1.5 w-full rounded text-sm focus:outline-none focus:ring-1 focus:ring-blue-400"
-          />
-        </div>
-
-        {/* Phone */}
-        <div>
-          <label className="block text-sm font-medium mb-1">Phone</label>
-          <input
-            type="text"
-            name="phone"
-            placeholder="Enter phone number"
-            value={form.phone}
-            onChange={handleChange}
-            className="border p-1.5 w-full rounded text-sm focus:outline-none focus:ring-1 focus:ring-blue-400"
-          />
-        </div>
-
-        {/* Job Role */}
-        <div>
-          <label className="block text-sm font-medium mb-1">Job Role</label>
-          <input
-            type="text"
-            name="jobRole"
-            placeholder="e.g. Manager, Sales Executive"
-            value={form.jobRole}
-            onChange={handleChange}
-            className="border p-1.5 w-full rounded text-sm focus:outline-none focus:ring-1 focus:ring-blue-400"
-          />
-        </div>
-
-        {/* Department */}
-        <div>
-          <label className="block text-sm font-medium mb-1">Department</label>
-          <input
-            type="text"
-            name="department"
-            placeholder="e.g. HR, Finance"
-            value={form.department}
-            onChange={handleChange}
-            className="border p-1.5 w-full rounded text-sm focus:outline-none focus:ring-1 focus:ring-blue-400"
-          />
-        </div>
+        {/* Form Inputs */}
+        {Object.keys(form).map((key) =>
+          key !== "status" && key !== "notes" && key !== "joinDate" ? (
+            <div key={key}>
+              <label className="block text-sm font-medium mb-1">
+                {key.charAt(0).toUpperCase() + key.slice(1)}
+              </label>
+              <input
+                type="text"
+                name={key}
+                value={form[key]}
+                onChange={handleChange}
+                className="border p-1.5 w-full rounded text-sm"
+              />
+            </div>
+          ) : null
+        )}
 
         {/* Join Date */}
         <div>
@@ -158,7 +102,7 @@ export default function EmployeeAdd() {
             name="joinDate"
             value={form.joinDate}
             onChange={handleChange}
-            className="border p-1.5 w-full rounded text-sm focus:outline-none focus:ring-1 focus:ring-blue-400"
+            className="border p-1.5 w-full rounded text-sm"
           />
         </div>
 
@@ -169,7 +113,7 @@ export default function EmployeeAdd() {
             name="status"
             value={form.status}
             onChange={handleChange}
-            className="border p-1.5 w-full rounded text-sm focus:outline-none focus:ring-1 focus:ring-blue-400"
+            className="border p-1.5 w-full rounded text-sm"
           >
             <option value="active">Active</option>
             <option value="inactive">Inactive</option>
@@ -182,11 +126,10 @@ export default function EmployeeAdd() {
           <label className="block text-sm font-medium mb-1">Notes</label>
           <textarea
             name="notes"
-            placeholder="Additional remarks"
             value={form.notes}
             onChange={handleChange}
             rows="2"
-            className="border p-1.5 w-full rounded text-sm focus:outline-none focus:ring-1 focus:ring-blue-400"
+            className="border p-1.5 w-full rounded text-sm"
           ></textarea>
         </div>
 
@@ -194,13 +137,13 @@ export default function EmployeeAdd() {
         <div className="flex justify-end gap-2 pt-3">
           <button
             onClick={() => navigate("/dashboard")}
-            className="bg-gray-500 text-white px-3 py-1.5 rounded text-sm hover:bg-gray-600"
+            className="bg-gray-500 text-white px-3 py-1.5 rounded text-sm"
           >
             Cancel
           </button>
           <button
             onClick={handleSubmit}
-            className="bg-green-600 text-white px-3 py-1.5 rounded text-sm hover:bg-green-700"
+            className="bg-green-600 text-white px-3 py-1.5 rounded text-sm"
           >
             Save
           </button>

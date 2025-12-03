@@ -6,6 +6,7 @@ import axios from 'axios';
 const api = axios.create({
   baseURL: "https://project-payroll.onrender.com/api", 
     headers: { "Content-Type": "application/json" },
+    withCredentials: true,
 });
 
 
