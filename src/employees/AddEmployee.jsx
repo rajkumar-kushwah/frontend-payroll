@@ -6,6 +6,7 @@ import api from "../utils/api"; // Axios instance
 
 export default function EmployeeAdd() {
   const [form, setForm] = useState({
+    avatar: "",
     name: "",
     email: "",
     phone: "",
@@ -27,11 +28,16 @@ export default function EmployeeAdd() {
     if (!form.name || !form.email) return alert("Please fill Name and Email");
 
     const formData = new FormData();
-    Object.entries(form).forEach(([key, value]) => formData.append(key, value));
-    if (avatarFile) formData.append("avatar", avatarFile);
+   Object.entries(form).forEach(([key, value]) => {
+  if (key !== "avatar") formData.append(key, value);  // avatar string mat bhejo
+});
+
+if (avatarFile) {
+  formData.append("avatar", avatarFile);
+}
 
     try {
-      await api.post("/employees/profile", formData); // ✅ correct Cloudinary route
+      await api.post("/employees/profile", formData); //  correct Cloudinary route
       alert("Employee added successfully!");
       navigate("/dashboard");
     } catch (error) {

@@ -12,27 +12,18 @@ const api = axios.create({
 
 
 // Employee APIs
-// Employee APIs
 export const getEmployees = async () => {
   const res = await api.get("/employees");
   return res.data; // backend response = { success, employees: [...] }
 };
 
-// ======================
-// EMPLOYEE PROFILE (with Avatar Upload)
-// ======================
 
-// Create employee with avatar
-export const createEmployeeProfile = (formData) =>
+  // ADD employee (with avatar support)
+export const addEmployee = (formData) =>
   api.post("/employees/profile", formData, {
     headers: { "Content-Type": "multipart/form-data" },
   });
-
-  // Unified add employee (handles avatar)
-export const addEmployeeProfile = (formData) =>
-  api.post("/employees/profile", formData);
-
-
+ 
 // Update employee profile with avatar
 export const updateEmployeeProfile = (id, formData) =>
   api.put(`/employees/profile/${id}`, formData, {
@@ -40,8 +31,6 @@ export const updateEmployeeProfile = (id, formData) =>
   });
 
 export const getEmployeeById = (id) => api.get(`/employees/${id}`);
-export const addEmployee = (data) => api.post("/employees", data);
-export const updateEmployee = (id, data) => api.put(`/employees/${id}`, data);
 export const deleteEmployee = (id) => api.delete(`/employees/${id}`);
 export const filterEmployees = async (filters) => {
   const response = await api.get(`/employees/filter`, {
@@ -102,63 +91,63 @@ export const deleteWorkSchedule = async (id) => {
 };
 
 
-// ======================
+
 // 1) Check-In (Admin/Owner can provide employeeId)
-// ======================
+
 export const checkIn = async (employeeId) => {
   const res = await api.post("/attendance/check-in", { employeeId });
   return res.data;
 };
 
-// ======================
+
 // 2) Check-Out (Admin/Owner can provide employeeId)
-// ======================
+
 export const checkOut = async (employeeId) => {
   const res = await api.post("/attendance/check-out", { employeeId });
   return res.data;
 };
 
-// ======================
+
 // 3) Get All Attendance (Admin/Owner only)
 // filters = { employeeId, status, startDate, endDate, month, year, page, limit }
-// ======================
+
 export const getAttendance = async (filters = {}) => {
   const res = await api.get("/attendance", { params: filters });
   return res.data;
 };
 
 
-// ======================
+
 // 4) Filter Attendance (Advanced search)
-// filters = { employeeName, employeeCode, department, role, status, startDate, endDate, page, limit }
-// ======================
+// filters = { employeeName, employeeCode, department, role, status, startDate,  page, limit }
+
 // Filter attendance (Advanced search)
 export const filterAttendance = async (filters = {}) => {
   const res = await api.get("/attendance", { params: filters });
   return res.data;
 };
 
-// ======================
+
 // 5) Add Attendance manually (Admin/Owner)
 // data = { employeeId, date, status, checkIn, checkOut, remarks }
-// ======================
+
 export const addAttendance = async (data) => {
   const res = await api.post("/attendance/add", data);
   return res.data;
 };
 
-// ======================
+
 // 6) Update Attendance (Admin/Owner)
 // data = { date, status, checkIn, checkOut, remarks }
-// ======================
+
 export const updateAttendance = async (id, data) => {
   const res = await api.put(`/attendance/${id}`, data);
   return res.data;
 };
 
-// ======================
+
 // 7) Delete Attendance (Admin/Owner)
-// ======================
+
 export const deleteAttendance = async (id) => {
   const res = await api.delete(`/attendance/${id}`);
   return res.data;
