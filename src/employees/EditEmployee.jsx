@@ -53,21 +53,28 @@ export default function EditEmployee() {
     fetchEmployee();
   }, [id, navigate]);
 
-  const handleUpdate = async (e) => {
-    e.preventDefault();
-    try {
-      const formData = new FormData();
-      for (const key in employee) formData.append(key, employee[key]);
-      if (avatarFile) formData.append("avatar", avatarFile);
+ const handleUpdate = async (e) => {
+  e.preventDefault();
+  try {
+    const formData = new FormData();
 
-      await updateEmployeeProfile(id, formData);
-      alert("Employee updated successfully!");
-      navigate("/employees");
-    } catch (err) {
-      console.error("Error updating employee:", err);
-      alert("Failed to update employee.");
+    // Append all fields except avatar
+    for (const key in employee) {
+      if (key !== "avatar") formData.append(key, employee[key]);
     }
-  };
+
+    // Append avatar only if a new file is selected
+    if (avatarFile) formData.append("avatar", avatarFile);
+
+    await updateEmployeeProfile(id, formData);
+    alert("Employee updated successfully!");
+    navigate("/employees");
+  } catch (err) {
+    console.error("Error updating employee:", err.response || err);
+    alert("Failed to update employee.");
+  }
+};
+
 
   if (loading) {
     return <Layout><div className='p-6 text-center text-xs'>Loading...</div></Layout>;
