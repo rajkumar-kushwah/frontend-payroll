@@ -132,7 +132,7 @@ export default function Sidebar({ isOpen, toggle }) {
             )}`}
           >
             < ClipboardList className="w-4 h-4" />
-            <span className="text-sm">Daily Attendance</span>
+            <span className="text-sm">Attendance</span>
           </NavLink>
 
 
