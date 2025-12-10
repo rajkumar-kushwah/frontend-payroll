@@ -47,7 +47,7 @@ export default function DeleteAccount() {
         <span>I agree to permanently delete this user.</span>
       </label>
       <button
-        className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+        className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
         onClick={handleDelete}
       >
         Close My Account

@@ -62,7 +62,7 @@ export default function SecuritySettings() {
             <div className="relative">
               <input
                 type={showPassword ? "text" : "password"}
-                className={`w-full border px-3 py-2 rounded ${
+                className={`w-full border px-3 py-1 rounded ${
                   errors.oldPassword ? "border-red-500" : ""
                 }`}
                 placeholder="Enter your old password"
@@ -71,7 +71,7 @@ export default function SecuritySettings() {
               />
               <button
                 type="button"
-                className="absolute right-3 top-2.5 text-gray-600"
+                className="absolute right-3 top-2 text-gray-600"
                 onClick={() => setShowPassword(!showPassword)}
               >
                 {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
@@ -87,7 +87,7 @@ export default function SecuritySettings() {
             <label className="block">New Password</label>
             <input
               type={showPassword ? "text" : "password" }
-              className={`w-full border px-3 py-2 rounded ${
+              className={`w-full border px-3 py-1 rounded ${
                 errors.newPassword ? "border-red-500" : ""
               }`}
               placeholder="Enter new password"
@@ -105,7 +105,7 @@ export default function SecuritySettings() {
             <label className="block">Confirm New Password</label>
             <input
               type={showPassword ? "text" : "password"}
-              className={`w-full border px-3 py-2 rounded ${
+              className={`w-full border px-3 py-1 rounded ${
                 errors.confirmPassword ? "border-red-500" : ""
               }`}
               placeholder="Confirm new password"
@@ -119,17 +119,12 @@ export default function SecuritySettings() {
 
           <button
             type="submit"
-            className="w-full bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+            className="w-full bg-lime-400 text-white px-3 py-1 rounded hover:bg-lime-500"
           >
             Update Password
           </button>
 
-          <p
-            className="text-sm text-green-600 cursor-pointer mt-2"
-            onClick={() => setStep("forgotEmail")}
-          >
-            Forgot Password?
-          </p>
+         
         </form>
       )}
     </div>

@@ -94,7 +94,7 @@ export default function ProfileSettings() {
 
       <label>First Name *</label>
       <input
-        className="w-full border px-3 py-2 rounded"
+        className="w-full border px-3 py-1 rounded"
         placeholder="First name*"
         value={form.firstName}
         onChange={(e) => setForm({ ...form, firstName: e.target.value })}
@@ -103,7 +103,7 @@ export default function ProfileSettings() {
 
       <label>Last Name *</label>
       <input
-        className="w-full border px-3 py-2 rounded"
+        className="w-full border px-3 py-1 rounded"
         placeholder="Last name*"
         value={form.lastName}
         onChange={(e) => setForm({ ...form, lastName: e.target.value })}
@@ -111,7 +111,7 @@ export default function ProfileSettings() {
       />
       <label>Email Address*</label>
       <input
-        className="w-full border px-3 py-2 rounded"
+        className="w-full border px-3 py-1 rounded"
         placeholder="Email address*"
         type="email"
         value={form.email}
@@ -121,7 +121,7 @@ export default function ProfileSettings() {
 
       <label>Phone*</label>
       <input
-        className="w-full border px-3 py-2 rounded"
+        className="w-full border px-3 py-1 rounded"
         placeholder="Phone number*"
         value={form.phone}
         onChange={(e) => setForm({ ...form, phone: e.target.value })}
@@ -133,7 +133,7 @@ export default function ProfileSettings() {
 
       <label>Company / Organization*</label>
       <input
-        className="w-full border px-3 py-2 rounded"
+        className="w-full border px-3 py-1 rounded"
         placeholder="Company / Organization*"
         value={form.companyName}
         onChange={(e) => setForm({ ...form, companyName: e.target.value })}
@@ -142,7 +142,7 @@ export default function ProfileSettings() {
 
       <label>Website (Optional)</label>
       <input
-        className="w-full border px-3 py-2 rounded"
+        className="w-full border px-3 py-1 rounded"
         placeholder="Website (Optional)"
         value={form.website}
         onChange={(e) => setForm({ ...form, website: e.target.value })}
@@ -156,7 +156,7 @@ export default function ProfileSettings() {
 
       <label>Street Address*</label>
       <input
-        className="w-full border px-3 py-2 rounded"
+        className="w-full border px-3 py-1 rounded"
         placeholder="Street Address*"
         value={form.address.street}
         onChange={(e) =>
@@ -169,7 +169,7 @@ export default function ProfileSettings() {
 
       <label>Pin Code*</label>
       <input
-        className="w-full border px-3 py-2 rounded"
+        className="w-full border px-3 py-1 rounded"
         placeholder="PIN code*"
         value={form.address.zip}
         onChange={(e) =>
@@ -180,7 +180,7 @@ export default function ProfileSettings() {
 
       <label>City*</label>
       <input
-        className="w-full border px-3 py-2 rounded"
+        className="w-full border px-3 py-1 rounded"
         placeholder="City*"
         value={form.address.city}
         onChange={(e) =>
@@ -191,7 +191,7 @@ export default function ProfileSettings() {
 
       <label>Country*</label>
       <input
-        className="w-full border px-3 py-2 rounded"
+        className="w-full border px-3 py-1 rounded"
         placeholder="Country*"
         value={form.address.country}
         onChange={(e) =>
@@ -213,7 +213,7 @@ export default function ProfileSettings() {
       {/* Update button */}
       <button
         type="submit"
-        className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 mt-4"
+        className="bg-lime-400 text-white px-4 py-2 rounded hover:bg-lime-500 mt-4"
       >
         Update Profile
       </button>

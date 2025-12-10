@@ -18,7 +18,7 @@ import PublicRoute from "./routes/PublicRoute";
 import AddSalary from "./salarys/AddSalary";
 import NotFound from "./notfound/NotFound";
 import EditEmployee from "./employees/EditEmployee";
-import AdminList from './admin/AdminManament';
+import AdminList from './admin/AdminManagment';
 import AddUser from './admin/UserList';
 import WorkScheduleMain from './worksechudel/WorkScheduleMain';
 import AttendancePage from './attendances/AttendancePage';
