@@ -107,7 +107,24 @@ export default function Employees() {
           <div className="hidden sm:block">Inactive: {inactiveCount}</div>
         </div>
 
-        {/* Search + Add Button */}
+        
+      </div>
+
+      {/* ===== STATS CARDS ===== */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-3 text-xs">
+        <div className="bg-gray-50 p-2 rounded shadow text-center">
+          <FaUsers className="mx-auto text-sm" />{totalEmployees}<div>Total</div>
+        </div>
+        <div className="bg-gray-50 p-2 rounded shadow text-center">
+          <FaCheckCircle className="mx-auto text-sm" />{activeCount}<div>Active</div>
+        </div>
+        <div className="bg-gray-50 p-2 rounded shadow text-center">
+          <FaTimesCircle className="mx-auto text-sm" />{inactiveCount}<div>Inactive</div>
+        </div>
+      </div>
+
+{/* Search + Add Button */}
+<div className=" flex flex-col sm:flex-row justify-end mb-2">
         <div className="flex items-center gap-2 sm:gap-1 ml-auto">
           {/* Search Input with Icon */}
           <div className="relative">
@@ -131,19 +148,6 @@ export default function Employees() {
         </div>
       </div>
 
-      {/* ===== STATS CARDS ===== */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 mb-3 text-xs">
-        <div className="bg-gray-50 p-2 rounded shadow text-center">
-          <FaUsers className="mx-auto text-sm" />{totalEmployees}<div>Total</div>
-        </div>
-        <div className="bg-gray-50 p-2 rounded shadow text-center">
-          <FaCheckCircle className="mx-auto text-sm" />{activeCount}<div>Active</div>
-        </div>
-        <div className="bg-gray-50 p-2 rounded shadow text-center">
-          <FaTimesCircle className="mx-auto text-sm" />{inactiveCount}<div>Inactive</div>
-        </div>
-      </div>
-
       {/* ===== ADD EMPLOYEE FORM ===== */}
       {showForm && (
         <div className="bg-white p-2 rounded shadow text-xs mb-3 grid grid-cols-1 sm:grid-cols-2 gap-2 relative">
@@ -157,7 +161,7 @@ export default function Employees() {
               src={avatarFile ? URL.createObjectURL(avatarFile) :  "/default-avatar.png"}
               id="avatar"
               alt="Avatar"
-              className="w-16 h-16 rounded-full mb-1 object-cover"
+              className="w-8 h-8 border rounded-full mb-1 object-cover"
             />
             <input type="file" accept="image/*" onChange={e => setAvatarFile(e.target.files[0])} />
           </div>
@@ -195,11 +199,11 @@ export default function Employees() {
 {/* ===== EMPLOYEES TABLE ===== */}
 <div className="overflow-x-auto max-h-[60vh] bg-transparent rounded text-xs">
   <h3 className="font-semibold mb-2 text-gray-700 px-3 pt-2 text-xs">Employee Records</h3>
-  <div className="overflow-auto">
+  <div className="overflow-auto border">
     <table className="w-full border-collapse text-left min-w-[700px]">
       <thead className="bg-gray-100 sticky top-0">
         <tr>
-          {["Name", "ID", "Email", "Phone", "Role", "Dept", "Status", "Join", "Actions"].map(h => (
+          {["Name", "ID", "Email", "Phone", "Role", "Dept", "Status", "Join", "Notes", "Actions"].map(h => (
             <th key={h} className="px-3 py-2 border-b text-left text-xs">{h}</th>
           ))}
         </tr>
@@ -223,6 +227,7 @@ export default function Employees() {
             <td className="px-3 py-2 whitespace-nowrap text-xs">{emp.department}</td>
             <td className="px-3 py-2 whitespace-nowrap text-xs">{emp.status}</td>
             <td className="px-3 py-2 whitespace-nowrap text-xs">{emp.joinDate ? new Date(emp.joinDate).toLocaleDateString() : "-"}</td>
+            <td className="px-3 py-2 truncate text-xs">{emp.notes || "-"}</td>
 
             {/* Actions */}
             <td className="px-3 py-2 flex justify-center items-center gap-1 whitespace-nowrap">
