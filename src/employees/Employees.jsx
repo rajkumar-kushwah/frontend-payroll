@@ -48,12 +48,14 @@ export default function Employees() {
   };
 
   // Filter Employees
-  const filteredEmployees = employees.filter(emp =>
-    (emp.employeeCode || "").toLowerCase().includes(search.toLowerCase()) ||
-    (emp.name || "").toLowerCase().includes(search.toLowerCase()) ||
-    (emp.email || "").toLowerCase().includes(search.toLowerCase()) ||
-    (emp.department || "").toLowerCase().includes(search.toLowerCase())
-  );
+ const filteredEmployees = employees.filter(emp =>
+  (emp.employeeCode || "").toLowerCase().includes(search.toLowerCase()) ||
+  (emp.name || "").toLowerCase().includes(search.toLowerCase()) ||
+  (emp.email || "").toLowerCase().includes(search.toLowerCase()) ||
+  (emp.department || "").toLowerCase().includes(search.toLowerCase()) ||
+  (emp.phone || "").toString().includes(search)
+);
+
 
   const totalEmployees = employees.length;
   const activeCount = employees.filter(e => e.status === "active").length;
