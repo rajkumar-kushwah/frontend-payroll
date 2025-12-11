@@ -10,12 +10,12 @@ export default function Employees() {
   const navigate = useNavigate();
 
   const [employees, setEmployees] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const [search, setSearch] = useState("");
 
   // Fetch Employees
   const fetchEmployees = async () => {
-    setLoading(true);
+  if(employees.length === 0) setLoading(true);
     try {
       const res = await getEmployees();
       const empArray = res.employees || [];
@@ -103,7 +103,7 @@ export default function Employees() {
             onClick={() => navigate("/employee/add")}
           >
             <FaPlus className="sm:hidden" />
-            <span className="hidden sm:inline text-xs">+ Create</span>
+            <span className="hidden sm:inline cursor-pointer text-xs">+ Create</span>
           </button>
         </div>
 

@@ -53,9 +53,9 @@ export default function AttendanceTable({
           {attendanceList.map((att) => (
             <tr
               key={att._id}
-              className="border-t hover:bg-gray-50/70 transition-all text-[11px]"
+              className=" hover:bg-gray-50/70 transition-all text-[11px]"
             >
-              <td className="p-3 flex items-center gap-2 flex-wrap">
+              <td className="p-2 flex items-center gap-2 flex-wrap">
                 <img
                   src={att.employeeId?.avatar || "/default-avatar.png"}
                   className="w-6 h-6 rounded-full border border-gray-300"

@@ -45,13 +45,13 @@ export default function EmployeeAdd() {
   return (
     <Layout>
       <div className="bg-white p-3 rounded shadow text-xs max-w-md mx-auto mt-5 relative">
-        <button className="absolute top-2 right-2 text-red-500" onClick={() => navigate("/employees")}>
-          <X size={16} />
+        <button className="absolute top-2 right-2 cursor-pointer" onClick={() => navigate("/employees")}>
+          <X size={18} />
         </button>
 
         {/* Avatar */}
         <div className="flex flex-col items-center mb-3">
-          <img src={avatarFile ? URL.createObjectURL(avatarFile) : "/default-avatar.png"} alt="Avatar" className="w-8 h-8 rounded-full border mb-2 object-cover" />
+          <img src={avatarFile ? URL.createObjectURL(avatarFile) : "/default-avatar.png"} alt="Avatar" className="w-8 h-8 rounded-full cursor-pointer border mb-2 object-cover" />
           <input type="file" accept="image/*" onChange={e => setAvatarFile(e.target.files[0])} />
         </div>
 
@@ -73,7 +73,7 @@ export default function EmployeeAdd() {
           <input type="date" className="border p-1 rounded" value={newEmp.joinDate} onChange={e => setNewEmp({ ...newEmp, joinDate: e.target.value })} />
         </div>
 
-        <button className="bg-green-500 text-white p-2 rounded w-full" onClick={handleAdd}>Submit</button>
+        <button className="bg-green-500 cursor-pointer text-white p-2 rounded w-full" onClick={handleAdd}>Submit</button>
       </div>
     </Layout>
   );
