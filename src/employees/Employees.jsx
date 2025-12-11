@@ -86,7 +86,7 @@ export default function Employees() {
         </div>
       </div>
 
-      <div className="flex flex-col sm:flex-row justify-end items-center gap-2 sm:gap-1 ml-auto">
+      <div className="flex sm:flex-row justify-end items-center gap-2 sm:gap-1 ml-auto">
           <div className="relative">
             <FaSearch className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-400 pointer-events-none" />
             <input
