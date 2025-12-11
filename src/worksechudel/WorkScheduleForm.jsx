@@ -16,6 +16,7 @@ export default function WorkScheduleForm({ selectedSchedule, onSubmit, onClose }
   const [breakEnd, setBreakEnd] = useState("");
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
+  const [effectiveFrom, setEffectiveFrom] = useState("");
 
   // Fetch employees on mount
   useEffect(() => {
@@ -73,11 +74,11 @@ export default function WorkScheduleForm({ selectedSchedule, onSubmit, onClose }
   const handleSubmit = (e) => {
     e.preventDefault();
     if (!employeeId) return alert("Select an employee");
-const selectedEmployee = employees.find(emp => emp._id === employeeId);
+    const selectedEmployee = employees.find(emp => emp._id === employeeId);
     onSubmit({
       employeeId,
-       employeeName: selectedEmployee?.name || "",
-  employeeAvatar: selectedEmployee?.avatar || "/default-avatar.png",
+      employeeName: selectedEmployee?.name || "",
+      employeeAvatar: selectedEmployee?.avatar || "/default-avatar.png",
       inTime,
       outTime,
       shiftName,
@@ -85,6 +86,7 @@ const selectedEmployee = employees.find(emp => emp._id === employeeId);
       weeklyOff,
       breakStart,
       breakEnd,
+      effectiveFrom: effectiveFrom ? new Date(effectiveFrom).toISOString() : null,
     });
 
     if (!selectedSchedule) resetForm();
@@ -147,22 +149,21 @@ const selectedEmployee = employees.find(emp => emp._id === employeeId);
             className="border p-1 rounded text-xs"
           />
 
-        {/* Shift Type Simple Toggle */}
-<label>Shift Type (Optional)</label>
-<div className="flex gap-2 flex-wrap">
-  {["Full-day", "Half-day", "Night", "Custom"].map((type) => (
-    <button
-      key={type}
-      type="button"
-      onClick={() => setShiftType(type)}
-      className={`px-2 py-1 border rounded text-xs ${
-        shiftType === type ? "bg-blue-200 border-blue-400" : "bg-white border-gray-300"
-      }`}
-    >
-      {type}
-    </button>
-  ))}
-</div>
+          {/* Shift Type Simple Toggle */}
+          <label>Shift Type (Optional)</label>
+          <div className="flex gap-2 flex-wrap">
+            {["Full-day", "Half-day", "Night", "Custom"].map((type) => (
+              <button
+                key={type}
+                type="button"
+                onClick={() => setShiftType(type)}
+                className={`px-2 py-1 border rounded text-xs ${shiftType === type ? "bg-blue-200 border-blue-400" : "bg-white border-gray-300"
+                  }`}
+              >
+                {type}
+              </button>
+            ))}
+          </div>
 
 
           {/* Weekly Off */}
@@ -175,10 +176,19 @@ const selectedEmployee = employees.find(emp => emp._id === employeeId);
                   checked={weeklyOff.includes(day)}
                   onChange={() => toggleWeeklyOff(day)}
                 />
-                {day.slice(0,3)}
+                {day.slice(0, 3)}
               </label>
             ))}
           </div>
+
+          {/* Effective From */}
+          <label>Effective Date</label>
+          <input
+            type="date"
+            value={effectiveFrom}
+            onChange={e => setEffectiveFrom(e.target.value)}
+            className="border p-1 rounded text-xs"
+          />
 
           {/* Fixed In/Out */}
           <label>Fixed In</label>

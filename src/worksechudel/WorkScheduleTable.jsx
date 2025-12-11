@@ -20,6 +20,7 @@ export default function WorkScheduleTable({ schedules, onEdit, onDelete }) {
                         <th className="p-2 text-left">Emp ID</th>
                         <th className="p-2 text-left">Shift Name</th>
                         <th className="p-2 text-left">Shift Type</th>
+                        <th className="p-2 text-left">Effective Date</th>
                         <th className="p-2 text-left">Fixed In</th>
                         <th className="p-2 text-left">Fixed Out</th>
                         <th className="p-2 text-left">Weekly Off</th>
@@ -61,6 +62,7 @@ export default function WorkScheduleTable({ schedules, onEdit, onDelete }) {
                                     {/* Shift Details */}
                                     <td className="p-2">{sch.shiftName || "Default Shift"}</td>
                                     <td className="p-2">{sch.shiftType || "Full-day"}</td>
+                                    <td className="p-2">{sch.effectiveFrom ? new Date(sch.effectiveFrom).toLocaleDateString() : "N/A"}</td>
                                     <td className="p-2">{formatTime12(sch.inTime)}</td>
                                     <td className="p-2">{formatTime12(sch.outTime)}</td>
 
