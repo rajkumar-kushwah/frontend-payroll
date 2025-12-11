@@ -17,7 +17,7 @@ export default function Employees() {
   const [avatarFile, setAvatarFile] = useState(null);
   const [newEmp, setNewEmp] = useState({
     name: "", email: "", phone: "", jobRole: "employee",
-    department: "", joinDate: "", status: "active", notes: "", avatar: ""
+    department: "", joinDate: "", status: "active", notes: "", 
   });
 
   // ---------------- FETCH EMPLOYEES ----------------
@@ -60,7 +60,7 @@ export default function Employees() {
 
       setNewEmp({
         name: "", email: "", phone: "", jobRole: "employee",
-        department: "", joinDate: "", status: "active", notes: "", avatar: ""
+        department: "", joinDate: "", status: "active", notes: "", avatar: "",
       });
       setAvatarFile(null);
       setShowForm(false);
@@ -154,7 +154,8 @@ export default function Employees() {
           {/* Avatar */}
           <div className="flex flex-col col-span-1 sm:col-span-2 items-center">
             <img
-              src={avatarFile ? URL.createObjectURL(avatarFile) : (newEmp.avatar || "/default-avatar.png")}
+              src={avatarFile ? URL.createObjectURL(avatarFile) :  "/default-avatar.png"}
+              id="avatar"
               alt="Avatar"
               className="w-16 h-16 rounded-full mb-1 object-cover"
             />

@@ -19,10 +19,11 @@ export const getEmployees = async () => {
 
 
   // ADD employee (with avatar support)
-export const createEmployeeProfile = (formData) =>
-  api.post("/employees/profile", formData, {
+export const addEmployee = (formData) =>
+  api.post("/employees", formData, {
     headers: { "Content-Type": "multipart/form-data" },
   });
+
  
 // Update employee profile with avatar
 export const updateEmployeeProfile = (id, formData) =>
@@ -32,7 +33,7 @@ export const updateEmployeeProfile = (id, formData) =>
 
 export const getEmployeeById = (id) => api.get(`/employees/${id}`);
 export const deleteEmployee = (id) => api.delete(`/employees/${id}`);
-export const addEmployee = (data) => api.post("/employees", data);
+// export const addEmployee = (data) => api.post("/employees", data);
 
 export const filterEmployees = async (filters) => {
   const response = await api.get(`/employees/filter`, {
