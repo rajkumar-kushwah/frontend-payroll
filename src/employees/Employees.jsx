@@ -48,14 +48,13 @@ export default function Employees() {
   };
 
   // Filter Employees
- const filteredEmployees = employees.filter(emp =>
-  (emp.employeeCode || "").toLowerCase().includes(search.toLowerCase()) ||
-  (emp.name || "").toLowerCase().includes(search.toLowerCase()) ||
-  (emp.email || "").toLowerCase().includes(search.toLowerCase()) ||
-  (emp.department || "").toLowerCase().includes(search.toLowerCase()) ||
-  (emp.phone || "").toString().includes(search)
-);
-
+  const filteredEmployees = employees.filter(emp =>
+    (emp.employeeCode || "").toLowerCase().includes(search.toLowerCase()) ||
+    (emp.name || "").toLowerCase().includes(search.toLowerCase()) ||
+    (emp.email || "").toLowerCase().includes(search.toLowerCase()) ||
+    (emp.department || "").toLowerCase().includes(search.toLowerCase()) ||
+    (emp.phone || "").toString().includes(search)
+  );
 
   const totalEmployees = employees.length;
   const activeCount = employees.filter(e => e.status === "active").length;
@@ -116,7 +115,7 @@ export default function Employees() {
           <table className="w-full border-collapse text-left min-w-[700px]">
             <thead className="bg-gray-100 sticky top-0">
               <tr>
-                {["Name", "ID", "Email", "Phone", "Role", "Dept", "Status", "Join", "Notes", "Actions"].map(h => (
+                {["Name", "ID", "Email", "Phone", "Role", "Dept", "Status", "Join", "BasicSalary", "Notes", "Actions"].map(h => (
                   <th key={h} className="px-3 py-2 border-b text-left text-xs">{h}</th>
                 ))}
               </tr>
@@ -137,6 +136,7 @@ export default function Employees() {
                   <td className="px-3 py-2 whitespace-nowrap text-xs">{emp.department}</td>
                   <td className="px-3 py-2 whitespace-nowrap text-xs">{emp.status}</td>
                   <td className="px-3 py-2 whitespace-nowrap text-xs">{emp.joinDate ? new Date(emp.joinDate).toLocaleDateString() : "-"}</td>
+                  <td className="px-3 py-2 whitespace-nowrap text-xs">{emp.basicSalary || "-"}</td>
                   <td className="px-3 py-2 truncate text-xs">{emp.notes || "-"}</td>
                   <td className="px-3 py-2 flex justify-center items-center gap-1 whitespace-nowrap">
                     <Eye size={12} className="cursor-pointer text-blue-500" onClick={() => navigate(`/employee/${emp._id}`)} />

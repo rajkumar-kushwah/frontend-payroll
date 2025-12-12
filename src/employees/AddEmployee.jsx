@@ -10,7 +10,7 @@ export default function EmployeeAdd() {
   const [avatarFile, setAvatarFile] = useState(null);
   const [newEmp, setNewEmp] = useState({
     name: "", email: "", phone: "", jobRole: "employee",
-    department: "", joinDate: "", status: "active", notes: ""
+    department: "", joinDate: "", status: "active", notes: "", basicSalary: 0,
   });
 
  const handleAdd = async () => {
@@ -56,7 +56,7 @@ export default function EmployeeAdd() {
         </div>
 
         {/* Form Fields */}
-        {["name", "email", "phone", "jobRole", "department", "status", "notes"].map(f => (
+        {["name", "email", "phone", "jobRole", "department", "basicSalary", "status", "notes"].map(f => (
           <div key={f} className="flex flex-col mb-2">
             <label className="capitalize">{f}</label>
             <input

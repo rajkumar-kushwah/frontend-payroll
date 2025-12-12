@@ -16,6 +16,7 @@ export default function EditEmployee() {
     joinDate: "",
     status: "active",
     notes: "",
+    basicSalary: 0,
     avatar: ""
   });
   const [avatarFile, setAvatarFile] = useState(null);
@@ -38,6 +39,7 @@ export default function EditEmployee() {
           joinDate: emp.joinDate ? emp.joinDate.split("T")[0] : "",
           status: emp.status || "active",
           notes: emp.notes || "",
+          basicSalary: emp.basicSalary || 0,
           avatar: emp.avatar || ""
         });
 
@@ -99,7 +101,7 @@ export default function EditEmployee() {
             </div>
 
             {/* Text inputs */}
-            {["name","email","phone","jobRole","department","notes"].map(f => (
+            {["name","email","phone","jobRole","department", "basicSalary", "notes"].map(f => (
               <div key={f} className="flex flex-col">
                 <label className="capitalize">{f}</label>
                 {f === "notes" ? (
