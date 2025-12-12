@@ -187,7 +187,7 @@ export default function WorkScheduleForm({ selectedSchedule, onSubmit, onClose }
             type="date"
             value={effectiveFrom}
             onChange={e => setEffectiveFrom(e.target.value)}
-            className="border p-1 rounded text-xs"
+            className="border p-1 cursor-pointer rounded text-xs"
           />
 
           {/* Fixed In/Out */}
@@ -227,7 +227,7 @@ export default function WorkScheduleForm({ selectedSchedule, onSubmit, onClose }
           {/* Submit */}
           <button
             type="submit"
-            className="mt-2 border rounded bg-blue-100 hover:bg-blue-200 p-1 text-xs"
+            className="mt-2 border rounded bg-blue-100 cursor-pointer hover:bg-blue-200 p-1 text-xs"
           >
             {selectedSchedule ? "Update" : "Add"}
           </button>

@@ -82,14 +82,14 @@ export default function WorkScheduleTable({ schedules, onEdit, onDelete }) {
                                     <td className="p-2 flex gap-2">
                                         <button
                                             onClick={() => onEdit(sch)}
-                                            className="bg-yellow-400 text-white px-2 py-1 rounded text-xs hover:bg-yellow-500"
+                                            className="bg-yellow-400 text-white px-2 py-1 cursor-pointer rounded text-xs hover:bg-yellow-500"
                                         >
                                             Edit
                                         </button>
 
                                         <button
                                             onClick={() => onDelete(sch._id)}
-                                            className="bg-red-500 text-white px-2 py-1 rounded text-xs hover:bg-red-600"
+                                            className="bg-red-500 text-white px-2 py-1 cursor-pointer rounded text-xs hover:bg-red-600"
                                         >
                                             Delete
                                         </button>

@@ -47,7 +47,8 @@ const today = record.date.split("T")[0];
 };
 
 return ( 
-<div className="fixed inset-0 flex justify-center items-center z-50 bg-black/30"> <div className="bg-white p-4 rounded shadow w-80 text-xs grid gap-2">
+<div className="fixed inset-0 flex justify-center items-center z-50 bg-black/30">
+ <div className="bg-white p-4 rounded shadow w-80 text-xs grid gap-2">
 
 
     {/* Avatar + Name */}
@@ -67,7 +68,7 @@ return (
     <select
       value={status}
       onChange={(e) => setStatus(e.target.value)}
-      className="border p-1 rounded w-full text-xs"
+      className="border p-1 cursor-pointer rounded w-full text-xs"
     >
       <option value="present">Present</option>
       <option value="absent">Absent</option>
@@ -99,13 +100,13 @@ return (
     <div className="flex justify-between mt-2">
       <button
         onClick={onClose}
-        className="bg-gray-300 p-1 rounded text-xs"
+        className="bg-gray-300 p-1 cursor-pointer rounded text-xs"
       >
         Cancel
       </button>
       <button
         onClick={handleUpdate}
-        className={`bg-blue-500 text-white p-1 rounded text-xs ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
+        className={`bg-blue-500 text-white p-1 cursor-pointer rounded text-xs ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
         disabled={loading}
       >
         {loading ? "Updating..." : "Update"}

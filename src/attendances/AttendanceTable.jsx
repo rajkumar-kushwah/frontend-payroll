@@ -85,7 +85,7 @@ export default function AttendanceTable({
 
                 {att.checkIn && !att.checkOut && (
                   <button
-                    className="bg-blue-500 text-white px-2 py-1 rounded text-[10px] shadow-sm"
+                    className="bg-blue-500 text-white px-2 py-1 cursor-pointer rounded text-[10px] shadow-sm"
                     onClick={() => onCheckOut(att.employeeId?._id)}
                   >
                     Check Out
@@ -93,14 +93,14 @@ export default function AttendanceTable({
                 )}
 
                 <button
-                  className="bg-yellow-400 text-white px-2 py-1 rounded text-[10px] shadow-sm"
+                  className="bg-yellow-400 text-white px-2 cursor-pointer py-1 rounded text-[10px] shadow-sm"
                   onClick={() => onEdit(att)}
                 >
                   Edit
                 </button>
 
                 <button
-                  className="bg-red-500 text-white p-1 rounded text-[10px] shadow-sm flex items-center justify-center"
+                  className="bg-red-500 text-white p-1 cursor-pointer rounded text-[10px] shadow-sm flex items-center justify-center"
                   onClick={() => onDelete(att._id)}
                 >
                   <FaTrash size={10} />

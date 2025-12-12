@@ -28,7 +28,7 @@ export default function AttendanceFilter({ filters, setFilters }) {
               date: e.target.value === "" ? "all" : e.target.value
             })
           }
-          className="border px-1 py-0.5 rounded text-xs w-[120px]"
+          className="border px-1 py-0.5 cursor-pointer rounded text-xs w-[120px]"
         />
       </div>
 
@@ -40,7 +40,7 @@ export default function AttendanceFilter({ filters, setFilters }) {
           onChange={(e) =>
             setFilters({ ...filters, status: e.target.value })
           }
-          className="border px-1 py-0.5 rounded text-xs w-[120px]"
+          className="border px-1 py-0.5 cursor-pointer rounded text-xs w-[120px]"
         >
           <option value="">Select status</option>
           <option value="present">Present</option>
