@@ -20,6 +20,8 @@ export default function EditEmployee() {
   const [status, setStatus] = useState("active");
   const [basicSalary, setBasicSalary] = useState("");
   // const [notes, setNotes] = useState("");
+  const [password, setPassword] = useState("");
+
 
   const [loading, setLoading] = useState(true);
 
@@ -68,13 +70,17 @@ export default function EditEmployee() {
       formData.append("status", status);
       formData.append("basicSalary", basicSalary);
       // formData.append("notes", notes);
+      formData.append("password", password);
+      if (password) formData.append("password", password);
+
+
 
       if (avatarFile) {
         formData.append("avatar", avatarFile);
       }
 
       await updateEmployeeProfile(id, formData);
-      alert("Employee updated");
+      alert("Employee updated successfully!");
       navigate("/employees");
     } catch (err) {
       alert("Update failed");
@@ -210,6 +216,17 @@ export default function EditEmployee() {
               />
             </div>
           </div>
+          <div className="mb-3">
+            <label className="block mb-1">Password</label>
+            <input
+              type="password"
+              className="w-full border rounded px-3 py-2"
+              value={password}
+              onChange={e => setPassword(e.target.value)}
+              placeholder="Enter new password (leave blank to keep current)"
+            />
+          </div>
+
 
           {/* Notes */}
 

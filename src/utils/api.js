@@ -156,6 +156,44 @@ export const deleteAttendance = async (id) => {
   return res.data;
 };
 
+// leave APIs
+
+
+// 1️ Add Leave
+export const addLeave = async (data) => {
+  const res = await api.post("/leave", data);
+  return res.data;
+};
+
+// 2️ Get Leaves by Month
+export const getLeavesByMonth = async (year, month) => {
+  const res = await api.get(`/leave/${year}/${month}`);
+  return res.data;
+};
+
+// 3️ Get All Leaves (optional, main page table)
+export const getLeaves = async () => {
+  const res = await api.get("/leave");
+  return res.data;
+};
+
+// 4️ Delete Leave
+export const deleteLeave = async (_id) => {
+  const res = await api.delete(`/leave/${_id}`);
+  return res.data;
+};
+
+// 5️ Update Leave
+export const updateLeave = async (_id, data) => {
+  const res = await api.put(`/leave/${_id}`, data);
+  return res.data;
+};
+
+// 6️ Get Employees for select dropdown
+export const getAllEmployees = async () => {
+  const res = await api.get("/leave/employees");
+  return res.data;
+};
 
 
 // Profile APIs

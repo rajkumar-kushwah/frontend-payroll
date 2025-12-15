@@ -22,7 +22,8 @@ import AdminList from './admin/AdminManagment';
 import AddUser from './admin/UserList';
 import WorkScheduleMain from './worksechudel/WorkScheduleMain';
 import AttendancePage from './attendances/AttendancePage';
-import AddLeave from './leaves/AddLeave';
+import LeaveMainPage from './leaves/LeaveMainPage';
+
 function App() {
   return (
      <UserProvider>
@@ -51,7 +52,7 @@ function App() {
         <Route path='/admin/add-user' element={<ProtectedRoute><AddUser /></ProtectedRoute>} />
         <Route path="/worksechudel" element={<ProtectedRoute><WorkScheduleMain /></ProtectedRoute>} />
         <Route path="/attendance-page" element={<ProtectedRoute><AttendancePage /></ProtectedRoute>} />
-        <Route path="/leave" element={<ProtectedRoute><AddLeave/></ProtectedRoute>}/>
+        <Route path="/leave" element={<ProtectedRoute><LeaveMainPage /></ProtectedRoute>}/>
         {/* protected route end */}
       </Routes>
     </Router>

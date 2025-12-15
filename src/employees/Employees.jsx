@@ -136,6 +136,8 @@ export default function Employees() {
           <td className="px-3 py-2 whitespace-nowrap">{emp.joinDate ? new Date(emp.joinDate).toLocaleDateString() : "-"}</td>
           <td className="px-3 py-2 whitespace-nowrap">{emp.basicSalary || "-"}</td>
           {/* <td className="px-3 py-2 whitespace-nowrap">{emp.notes || "-"}</td> */}
+
+          
           <td className="px-3 py-2 flex justify-center items-center gap-1 whitespace-nowrap">
             <Eye size={12} className="cursor-pointer text-blue-500" onClick={() => navigate(`/employee/${emp._id}`)} />
             <Pencil size={12} className="cursor-pointer text-yellow-500" onClick={() => navigate(`/employee/${emp._id}/edit`)} />

@@ -31,7 +31,7 @@ export default function Layout({ children }) {
         }`}
       >
         <Header toggle={() => setIsOpen(v => !v)} />
-        <main className="p-4 md:p-6 overflow-y-auto">{children}</main>
+        <main className="p-4 md:p-6 overflow-y-auto h-full">{children}</main>
       </div>
     </div>
   );
