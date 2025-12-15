@@ -7,74 +7,192 @@ import { X } from "lucide-react";
 
 export default function EmployeeAdd() {
   const navigate = useNavigate();
+
   const [avatarFile, setAvatarFile] = useState(null);
-  const [newEmp, setNewEmp] = useState({
-    name: "", email: "", phone: "", jobRole: "employee",
-    department: "", joinDate: "", status: "active", notes: "", basicSalary: 0,
-  });
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [jobRole, setJobRole] = useState("employee");
+  const [department, setDepartment] = useState("");
+  const [joinDate, setJoinDate] = useState("");
+  const [dob, setDob] = useState("");  
+  const [status, setStatus] = useState("active");
+  const [basicSalary, setBasicSalary] = useState("");
+  // const [notes, setNotes] = useState("");
 
- const handleAdd = async () => {
-  if (!newEmp.name || !newEmp.email || !newEmp.department) 
-    return alert("Fill required fields");
-
-  try {
-    const formData = new FormData();
-    
-    // Append text fields
-    for (const key in newEmp) {
-      if (newEmp[key] !== "") formData.append(key, newEmp[key]);
+  const handleAdd = async () => {
+    if (!name || !email || !department) {
+      alert("Name, Email, Department required");
+      return;
     }
 
-    // Append avatar only if file is selected
-    if (avatarFile instanceof File) {
-      formData.append("avatar", avatarFile);
+    try {
+      const formData = new FormData();
+      formData.append("name", name);
+      formData.append("email", email);
+      formData.append("phone", phone);
+      formData.append("jobRole", jobRole);
+      formData.append("department", department);
+      formData.append("joinDate", joinDate);
+      formData.append("dob", dob); //  DOB
+      formData.append("status", status);
+      formData.append("basicSalary", basicSalary);
+      // formData.append("notes", notes);
+
+      if (avatarFile) {
+        formData.append("avatar", avatarFile);
+      }
+
+      await addEmployee(formData);
+      navigate("/employees");
+    } catch (err) {
+      alert("Employee add failed");
     }
-
-    // Debug: check FormData entries
-    // for (let pair of formData.entries()) console.log(pair[0], pair[1]);
-
-    await addEmployee(formData);
-    navigate("/employees"); // after adding, go back to list
-  } catch (err) {
-    console.error(err.response?.data || err);
-    alert("Add failed");
-  }
-};
-
+  };
 
   return (
     <Layout>
-      <div className="bg-white p-3 rounded shadow text-xs max-w-md mx-auto mt-5 relative">
-        <button className="absolute top-2 right-2 cursor-pointer" onClick={() => navigate("/employees")}>
-          <X size={18} />
-        </button>
+  <div className="max-w-lg mx-auto mt-8 bg-white rounded-lg shadow p-5 relative text-sm">
 
-        {/* Avatar */}
-        <div className="flex flex-col items-center mb-3">
-          <img src={avatarFile ? URL.createObjectURL(avatarFile) : "/default-avatar.png"} alt="Avatar" className="w-8 h-8 rounded-full cursor-pointer border mb-2 object-cover" />
-          <input type="file" accept="image/*" onChange={e => setAvatarFile(e.target.files[0])} />
-        </div>
+    {/* Close */}
+    <button
+      onClick={() => navigate("/employees")}
+      className="absolute top-2 right-2 text-gray-500 hover:text-black"
+    >
+      <X size={18} />
+    </button>
 
-        {/* Form Fields */}
-        {["name", "email", "phone", "jobRole", "department", "basicSalary", "status", "notes"].map(f => (
-          <div key={f} className="flex flex-col mb-2">
-            <label className="capitalize">{f}</label>
-            <input
-              type="text"
-              className="border p-1 rounded"
-              value={newEmp[f]}
-              onChange={e => setNewEmp({ ...newEmp, [f]: e.target.value })}
-            />
-          </div>
-        ))}
+    {/* Avatar */}
+    <div className="flex flex-col items-center mb-5">
+      <img
+        src={avatarFile ? URL.createObjectURL(avatarFile) : "/default-avatar.png"}
+        className="w-12 h-12 rounded-full border object-cover mb-1"
+      />
+      <input
+        type="file"
+        accept="image/*"
+        className="text-xs cursor-pointer"
+        onChange={(e) => setAvatarFile(e.target.files[0])}
+      />
+    </div>
 
-        <div className="flex flex-col mb-2">
-          <label>Join Date</label>
-          <input type="date" className="border p-1 rounded" value={newEmp.joinDate} onChange={e => setNewEmp({ ...newEmp, joinDate: e.target.value })} />
-        </div>
+    {/* Name */}
+    <div className="mb-3">
+      <label className="block mb-1">Name</label>
+      <input
+        className="w-full border rounded px-2 py-1"
+        value={name}
+        onChange={e => setName(e.target.value)}
+      />
+    </div>
 
-        <button className="bg-green-500 cursor-pointer text-white p-2 rounded w-full" onClick={handleAdd}>Submit</button>
+    {/* DOB + Email */}
+    <div className="grid grid-cols-2 gap-3 mb-3">
+      <div>
+        <label className="block mb-1">Date of Birth</label>
+        <input
+          type="date"
+          className="w-full border rounded px-2 py-1"
+          value={dob}
+          onChange={e => setDob(e.target.value)}
+        />
       </div>
-    </Layout>
+
+      <div>
+        <label className="block mb-1">Email</label>
+        <input
+          className="w-full border rounded px-2 py-1"
+          value={email}
+          onChange={e => setEmail(e.target.value)}
+        />
+      </div>
+    </div>
+
+    {/* Phone + Department */}
+    <div className="grid grid-cols-2 gap-3 mb-3">
+      <div>
+        <label className="block mb-1">Phone</label>
+        <input
+          className="w-full border rounded px-2 py-1"
+          value={phone}
+          onChange={e => setPhone(e.target.value)}
+        />
+      </div>
+
+      <div>
+        <label className="block mb-1">Department</label>
+        <input
+          className="w-full border rounded px-2 py-1"
+          value={department}
+          onChange={e => setDepartment(e.target.value)}
+        />
+      </div>
+    </div>
+
+    {/* Job Role + Status */}
+    <div className="grid grid-cols-2 gap-3 mb-3">
+      <div>
+        <label className="block mb-1">Job Role</label>
+        <input
+          className="w-full border rounded px-2 py-1"
+          value={jobRole}
+          onChange={e => setJobRole(e.target.value)}
+        />
+      </div>
+
+      <div>
+        <label className="block mb-1">Status</label>
+        <input
+          className="w-full border rounded px-2 py-1"
+          value={status}
+          onChange={e => setStatus(e.target.value)}
+        />
+      </div>
+    </div>
+
+    {/* Join Date + Salary */}
+    <div className="grid grid-cols-2 gap-3 mb-3">
+      <div>
+        <label className="block mb-1">Join Date</label>
+        <input
+          type="date"
+          className="w-full border rounded px-2 py-1"
+          value={joinDate}
+          onChange={e => setJoinDate(e.target.value)}
+        />
+      </div>
+
+      <div>
+        <label className="block mb-1">Basic Salary</label>
+        <input
+          className="w-full border rounded px-2 py-1"
+          value={basicSalary}
+          onChange={e => setBasicSalary(e.target.value)}
+        />
+      </div>
+    </div>
+
+    {/* Notes */}
+
+    {/* <div className="mb-4">
+      <label className="block mb-1">Notes</label>
+      <textarea
+        rows="2"
+        className="w-full border rounded px-2 py-1 resize-none"
+        value={notes}
+        onChange={e => setNotes(e.target.value)}
+      />
+    </div> */}
+
+    {/* Submit */}
+    <button
+      onClick={handleAdd}
+      className="w-full bg-lime-400 cursor-pointer hover:bg-lime-500 text-white py-2 rounded"
+    >
+      Submit
+    </button>
+  </div>
+</Layout>
+
   );
 }

@@ -60,11 +60,12 @@ export default function EmployeeDetailPage() {
           <p><strong>ID:</strong> {employee.employeeCode}</p>
           <p><strong>Email:</strong> {employee.email}</p>
           <p><strong>Phone:</strong> {employee.phone || "-"}</p>
+          <p><strong>DOB:</strong> {employee.dateOfBirth ? new Date(employee.dateOfBirth).toLocaleDateString() : "-"}</p>
           <p><strong>Department:</strong> {employee.department || "-"}</p>
           <p><strong>Status:</strong> {employee.status}</p>
           <p><strong>Join Date:</strong> {employee.joinDate ? new Date(employee.joinDate).toLocaleDateString() : "-"}</p>
           <p><strong>BasicSalary:</strong> {employee.basicSalary || "-"}</p>
-          <p><strong>Notes:</strong> {employee.notes || "-"}</p>
+          {/* <p><strong>Notes:</strong> {employee.notes || "-"}</p> */}
         </div>
 
         {/* Actions */}

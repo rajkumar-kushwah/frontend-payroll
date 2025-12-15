@@ -51,7 +51,7 @@ export default function AddUser() {
           <select
             value={newUser.role}
             onChange={(e) => setNewUser({ ...newUser, role: e.target.value })}
-            className="border p-2 rounded text-sm"
+            className="border p-2 cursor-pointer rounded text-sm"
           >
             <option value="user">Employee</option>
             <option value="admin">Admin</option>
@@ -59,9 +59,12 @@ export default function AddUser() {
             <option value="hr">HR</option>
             <option value="manager">Manager</option>
           </select>
-          <button type="submit" className="bg-green-500 text-white px-3 py-1.5 rounded text-sm">
+          <div className="flex sm:flex-row justify-between">
+            <button type="back" className=" bg-gray-500 text-white px-3 py-1.5 cursor-pointer rounded text-sm" onClick={() => navigate("/admin")}>back</button>
+          <button type="submit" className="bg-lime-500 text-white px-3 py-1.5 cursor-pointer rounded text-sm">
             Add User
           </button>
+          </div>
         </form>
       </div>
     </Layout>

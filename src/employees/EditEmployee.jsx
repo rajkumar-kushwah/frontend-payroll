@@ -1,51 +1,48 @@
-import React, { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { getEmployeeById, updateEmployeeProfile } from '../utils/api';
-import Layout from '../components/Layout';
+import { useEffect, useState } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import Layout from "../components/Layout";
+import { getEmployeeById, updateEmployeeProfile } from "../utils/api";
 
 export default function EditEmployee() {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  const [employee, setEmployee] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    jobRole: "",
-    department: "",
-    joinDate: "",
-    status: "active",
-    notes: "",
-    basicSalary: 0,
-    avatar: ""
-  });
   const [avatarFile, setAvatarFile] = useState(null);
+  const [avatar, setAvatar] = useState("");
+
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [dob, setDob] = useState("");
+  const [jobRole, setJobRole] = useState("");
+  const [department, setDepartment] = useState("");
+  const [joinDate, setJoinDate] = useState("");
+  const [status, setStatus] = useState("active");
+  const [basicSalary, setBasicSalary] = useState("");
+  // const [notes, setNotes] = useState("");
+
   const [loading, setLoading] = useState(true);
 
+  // ================= FETCH EMPLOYEE =================
   useEffect(() => {
     const fetchEmployee = async () => {
       try {
         const res = await getEmployeeById(id);
-        const emp = res.data.emp; // <-- important: use emp
+        const emp = res.data.emp;
 
-        if (!emp) throw new Error("Employee not found");
-
-        setEmployee({
-          name: emp.name || "",
-          email: emp.email || "",
-          phone: emp.phone || "",
-          jobRole: emp.jobRole || "",
-          department: emp.department || "",
-          joinDate: emp.joinDate ? emp.joinDate.split("T")[0] : "",
-          status: emp.status || "active",
-          notes: emp.notes || "",
-          basicSalary: emp.basicSalary || 0,
-          avatar: emp.avatar || ""
-        });
-
+        setName(emp.name || "");
+        setEmail(emp.email || "");
+        setPhone(emp.phone || "");
+        setDob(emp.dateOfBirth ? emp.dateOfBirth.split("T")[0] : "");
+        setJobRole(emp.jobRole || "");
+        setDepartment(emp.department || "");
+        setJoinDate(emp.joinDate ? emp.joinDate.split("T")[0] : "");
+        setStatus(emp.status || "active");
+        setBasicSalary(emp.basicSalary || "");
+        // setNotes(emp.notes || "");
+        setAvatar(emp.avatar || "");
       } catch (err) {
-        console.error("Error fetching employee:", err);
-        alert("Failed to load employee data.");
+        alert("Employee load failed");
         navigate("/employees");
       } finally {
         setLoading(false);
@@ -55,115 +52,196 @@ export default function EditEmployee() {
     fetchEmployee();
   }, [id, navigate]);
 
- const handleUpdate = async (e) => {
-  e.preventDefault();
-  try {
-    const formData = new FormData();
+  // ================= UPDATE =================
+  const handleUpdate = async (e) => {
+    e.preventDefault();
 
-    // Append all fields except avatar
-    for (const key in employee) {
-      if (key !== "avatar") formData.append(key, employee[key]);
+    try {
+      const formData = new FormData();
+      formData.append("name", name);
+      formData.append("email", email);
+      formData.append("phone", phone);
+      formData.append("dateOfBirth", dob); //  DOB
+      formData.append("jobRole", jobRole);
+      formData.append("department", department);
+      formData.append("joinDate", joinDate);
+      formData.append("status", status);
+      formData.append("basicSalary", basicSalary);
+      // formData.append("notes", notes);
+
+      if (avatarFile) {
+        formData.append("avatar", avatarFile);
+      }
+
+      await updateEmployeeProfile(id, formData);
+      alert("Employee updated");
+      navigate("/employees");
+    } catch (err) {
+      alert("Update failed");
     }
+  };
 
-    // Append avatar only if a new file is selected
-    if (avatarFile) formData.append("avatar", avatarFile);
-
-    await updateEmployeeProfile(id, formData);
-    alert("Employee updated successfully!");
-    navigate("/employees");
-  } catch (err) {
-    console.error("Error updating employee:", err.response || err);
-    alert("Failed to update employee.");
-  }
-};
-
-
-  if (loading) {
-    return <Layout><div className='p-6 text-center text-xs'>Loading...</div></Layout>;
-  }
+  // if (loading) {
+  //   return (
+  //     <Layout>
+  //       <div className="p-6 text-center text-sm">Loading...</div>
+  //     </Layout>
+  //   );
+  // }
 
   return (
     <Layout>
-      <div className='min-h-screen flex items-center justify-center bg-gray-200 p-2'>
-        <div className='p-4 max-w-2xl w-full'>
-          <h2 className="text-sm font-semibold mb-3">Edit Employee</h2>
+      <div className="max-w-2xl mx-auto mt-6 bg-white p-5 rounded-lg shadow text-sm">
 
-          <form onSubmit={handleUpdate} className="grid grid-cols-2 gap-2 bg-gray-100 p-3 rounded shadow text-xs">
+        <h2 className="font-semibold mb-4">Edit Employee</h2>
 
-            {/* Avatar */}
-            <div className="flex flex-col items-center col-span-2">
-              <img
-                src={avatarFile ? URL.createObjectURL(avatarFile) : (employee.avatar || "https://via.placeholder.com/60")}
-                alt="Avatar"
-                className="w-16 h-16 rounded-full mb-1 object-cover"
+        <form onSubmit={handleUpdate} className="space-y-3">
+
+          {/* Avatar */}
+          <div className="flex flex-col items-center">
+            <img
+              src={avatarFile ? URL.createObjectURL(avatarFile) : avatar || "/default-avatar.png"}
+              className="w-16 h-16 rounded-full  object-cover border mb-2"
+            />
+            <input
+              type="file"
+              accept="image/*"
+              onChange={e => setAvatarFile(e.target.files[0])}
+              className="text-xs cursor-pointer"
+            />
+          </div>
+
+          {/* Name */}
+          <div>
+            <label className="block mb-1">Name</label>
+            <input
+              className="w-full border rounded px-3 py-2"
+              value={name}
+              onChange={e => setName(e.target.value)}
+            />
+          </div>
+
+          {/* DOB + Email */}
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="block mb-1">Date of Birth</label>
+              <input
+                type="date"
+                className="w-full border rounded px-3 py-2"
+                value={dob}
+                onChange={e => setDob(e.target.value)}
               />
-              <input type="file" accept="image/*" onChange={e => setAvatarFile(e.target.files[0])} className="text-xs"/>
+
             </div>
 
-            {/* Text inputs */}
-            {["name","email","phone","jobRole","department", "basicSalary", "notes"].map(f => (
-              <div key={f} className="flex flex-col">
-                <label className="capitalize">{f}</label>
-                {f === "notes" ? (
-                  <textarea
-                    value={employee.notes}
-                    onChange={e => setEmployee({...employee, notes: e.target.value})}
-                    className="border p-1 rounded text-xs"
-                  />
-                ) : (
-                  <input
-                    type="text"
-                    value={employee[f]}
-                    onChange={e => setEmployee({...employee, [f]: e.target.value})}
-                    className="border p-1 rounded text-xs"
-                  />
-                )}
-              </div>
-            ))}
+            <div>
+              <label className="block mb-1">Email</label>
+              <input
+                className="w-full border rounded px-3 py-2"
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+              />
+            </div>
+          </div>
 
-            {/* Status */}
-            <div className="flex flex-col">
-              <label>Status</label>
+          {/* Phone + Department */}
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="block mb-1">Phone</label>
+              <input
+                className="w-full border rounded px-3 py-2"
+                value={phone}
+                onChange={e => setPhone(e.target.value)}
+              />
+            </div>
+
+            <div>
+              <label className="block mb-1">Department</label>
+              <input
+                className="w-full border rounded px-3 py-2"
+                value={department}
+                onChange={e => setDepartment(e.target.value)}
+              />
+            </div>
+          </div>
+
+          {/* Job Role + Status */}
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="block mb-1">Job Role</label>
+              <input
+                className="w-full border rounded px-3 py-2"
+                value={jobRole}
+                onChange={e => setJobRole(e.target.value)}
+              />
+            </div>
+
+            <div>
+              <label className="block mb-1">Status</label>
               <select
-                value={employee.status}
-                onChange={e => setEmployee({...employee, status: e.target.value})}
-                className="border p-1 rounded text-xs"
+                className="w-full border rounded px-3 py-2"
+                value={status}
+                onChange={e => setStatus(e.target.value)}
               >
                 <option value="active">Active</option>
                 <option value="inactive">Inactive</option>
               </select>
             </div>
+          </div>
 
-            {/* Join Date */}
-            <div className="flex flex-col">
-              <label>Join Date</label>
+          {/* Join Date + Salary */}
+          <div className="grid grid-cols-2 gap-3">
+            <div>
+              <label className="block mb-1">Join Date</label>
               <input
                 type="date"
-                value={employee.joinDate}
-                onChange={e => setEmployee({...employee, joinDate: e.target.value})}
-                className="border p-1 rounded text-xs"
+                className="w-full border rounded px-3 py-2"
+                value={joinDate}
+                onChange={e => setJoinDate(e.target.value)}
               />
             </div>
 
-            {/* Buttons */}
-            <div className="flex justify-between col-span-2">
-              <button
-                type="button"
-                onClick={() => navigate("/employees")}
-                className="bg-gray-400 hover:bg-gray-500 text-white px-3 py-1 rounded text-xs"
-              >
-                Cancel
-              </button>
-
-              <button
-                type="submit"
-                className="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded text-xs"
-              >
-                Update
-              </button>
+            <div>
+              <label className="block mb-1">Basic Salary</label>
+              <input
+                className="w-full border rounded px-3 py-2"
+                value={basicSalary}
+                onChange={e => setBasicSalary(e.target.value)}
+              />
             </div>
-          </form>
-        </div>
+          </div>
+
+          {/* Notes */}
+
+          {/* <div>
+            <label className="block mb-1">Notes</label>
+            <textarea
+              rows="2"
+              className="w-full border rounded px-3 py-2 resize-none"
+              value={notes}
+              onChange={e => setNotes(e.target.value)}
+            />
+          </div> */}
+
+          {/* Buttons */}
+          <div className="flex justify-between pt-2">
+            <button
+              type="button"
+              onClick={() => navigate("/employees")}
+              className="px-4 py-2 bg-gray-400 cursor-pointer text-white rounded"
+            >
+              Cancel
+            </button>
+
+            <button
+              type="submit"
+              className="px-4 py-2 bg-lime-400 cursor-pointer text-white rounded hover:bg-lime-500"
+            >
+              Update
+            </button>
+          </div>
+
+        </form>
       </div>
     </Layout>
   );

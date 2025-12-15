@@ -73,7 +73,7 @@ export default function AdminManagement() {
         {(user.role === "owner" || user.role === "admin") && (
           <button
             onClick={() => navigate("/admin/add-user")}
-            className="mb-2 px-2 py-1 bg-green-600 text-white text-xs rounded"
+            className="mb-2 px-2 py-1 bg-green-600 cursor-pointer text-white text-xs rounded"
           >
             + Add New User
           </button>
@@ -120,7 +120,7 @@ export default function AdminManagement() {
                       {u.role !== "owner" && (
                         <button
                           onClick={() => handleToggle(u)}
-                          className="px-2 py-0.5 bg-red-500 text-white rounded text-[10px]"
+                          className="px-2 py-0.5 bg-red-500 text-white cursor-pointer rounded text-[10px]"
                         >
                           {u.role === "admin"
                             ? "Demote"
@@ -133,7 +133,7 @@ export default function AdminManagement() {
                       {u.role !== "owner" && (
                         <button
                           onClick={() => handleDelete(u._id)}
-                          className="px-2 py-0.5 bg-gray-600 text-white rounded text-[10px]"
+                          className="px-2 py-0.5 bg-gray-600 cursor-pointer text-white rounded text-[10px]"
                         >
                           Delete
                         </button>
