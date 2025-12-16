@@ -20,6 +20,7 @@ export default function EditEmployee() {
   const [status, setStatus] = useState("active");
   const [basicSalary, setBasicSalary] = useState("");
   // const [notes, setNotes] = useState("");
+  const [password, setPassword] = useState("");
  
 
 
@@ -70,7 +71,8 @@ export default function EditEmployee() {
       formData.append("status", status);
       formData.append("basicSalary", basicSalary);
       // formData.append("notes", notes);
-      
+      if (password) formData.append("password", password);
+
 
 
       if (avatarFile) {
@@ -214,7 +216,16 @@ export default function EditEmployee() {
               />
             </div>
           </div>
-          
+          <div className="mb-3">
+  <label className="block mb-1">Password</label>
+  <input
+    type="password"
+    className="w-full border rounded px-3 py-2"
+    value={password}
+    onChange={e => setPassword(e.target.value)}
+  />
+</div>
+
 
           {/* Notes */}
 

@@ -11,6 +11,10 @@ const api = axios.create({
 
 
 
+// utils/api.js
+export const getMyProfile = () => api.get("/employees/me/profile");
+
+
 // Employee APIs
 export const getEmployees = async () => {
   const res = await api.get("/employees");

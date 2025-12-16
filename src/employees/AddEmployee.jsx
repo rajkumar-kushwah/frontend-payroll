@@ -19,6 +19,7 @@ export default function EmployeeAdd() {
   const [status, setStatus] = useState("active");
   const [basicSalary, setBasicSalary] = useState("");
   // const [notes, setNotes] = useState("");
+  const [password, setPassword] = useState("");
 
 
   const handleAdd = async () => {
@@ -39,6 +40,8 @@ export default function EmployeeAdd() {
       formData.append("status", status);
       formData.append("basicSalary", basicSalary);
       // formData.append("notes", notes);
+      formData.append("password", password);
+
 
       if (avatarFile) {
         formData.append("avatar", avatarFile);
@@ -173,6 +176,17 @@ export default function EmployeeAdd() {
         />
       </div>
     </div>
+
+    <div className="mb-3">
+  <label className="block mb-1">Password</label>
+  <input
+    type="password"
+    className="w-full border rounded px-2 py-1"
+    value={password}
+    onChange={e => setPassword(e.target.value)}
+  />
+</div>
+
 
     {/* Notes */}
 
