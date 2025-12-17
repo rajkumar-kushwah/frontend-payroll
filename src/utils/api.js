@@ -69,8 +69,8 @@ export const addUser = (user) => api.post("/company/add-user", user);
 export const getAdminDashboardData = () => api.get("/admin-dashboard");
 
 // TOGGLE (Promote ↔ Demote + Active ↔ Inactive)
-export const toggleUser = (userId) =>
-  api.put(`/company/user/toggle/${userId}`);
+export const toggleUser = (userId,newRole) =>
+  api.put(`/company/user/toggle/${userId}`, { newRole });
 
 // DELETE user
 export const deleteUser = (userId) =>
@@ -80,6 +80,17 @@ export const getWorkSchedules = async () => {
   const res = await api.get("/workSchedule"); // fix typo
   return res.data;
 };
+ 
+// 🔹 Fetch only employees (non-admin)
+export const getEmployeesForAdminPromotion = () =>
+  api.get("/employees?onlyEmployees=true");
+
+
+// 🔹 Promote employee → admin
+export const promoteEmployeeToAdmin = (employeeId) =>
+  api.put(`/company/employee/promote/${employeeId}`);
+
+
 
 
 export const addWorkSchedule = async (data) => {

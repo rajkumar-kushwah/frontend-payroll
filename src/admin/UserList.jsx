@@ -55,15 +55,14 @@ export default function AddUser() {
           >
             <option value="user">Employee</option>
             <option value="admin">Admin</option>
-            <option value="ceo">CEO</option>
-            <option value="hr">HR</option>
-            <option value="manager">Manager</option>
           </select>
-          <div className="flex sm:flex-row justify-between">
-            <button type="back" className=" bg-gray-500 text-white px-3 py-1.5 cursor-pointer rounded text-sm" onClick={() => navigate("/admin")}>back</button>
-          <button type="submit" className="bg-lime-500 text-white px-3 py-1.5 cursor-pointer rounded text-sm">
-            Add User
-          </button>
+          <div className="flex justify-between mt-2">
+            <button type="button" onClick={() => navigate("/admin")} className="bg-gray-500 text-white px-3 py-1.5 rounded text-sm">
+              Back
+            </button>
+            <button type="submit" className="bg-lime-500 text-white px-3 py-1.5 rounded text-sm">
+              Add User
+            </button>
           </div>
         </form>
       </div>
