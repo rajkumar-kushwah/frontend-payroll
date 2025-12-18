@@ -13,7 +13,7 @@ import ApplyLeaveModal from "../leaves/ApplyLeaveModal";
 
 import { useUser } from "../context/UserContext"; // use context
 import Layout from "../components/Layout";
-import Employee from "../../../employee-management/models/Employee";
+
 
 const LeaveDashboard = () => {
   const { user, loading } = useUser();
