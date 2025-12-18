@@ -22,7 +22,8 @@ import AdminList from './admin/AdminManagment';
 import AddUser from './admin/UserList';
 import WorkScheduleMain from './worksechudel/WorkScheduleMain';
 import AttendancePage from './attendances/AttendancePage';
-import LeaveMainPage from './leaves/LeaveMainPage';
+import LeaveDashboard from './leaves/LeaveMainPage';
+
 
 function App() {
   return (
@@ -52,7 +53,7 @@ function App() {
         <Route path='/admin/add-user' element={<ProtectedRoute><AddUser /></ProtectedRoute>} />
         <Route path="/worksechudel" element={<ProtectedRoute><WorkScheduleMain /></ProtectedRoute>} />
         <Route path="/attendance-page" element={<ProtectedRoute><AttendancePage /></ProtectedRoute>} />
-        <Route path="/leave" element={<ProtectedRoute><LeaveMainPage /></ProtectedRoute>}/>
+        <Route path="/leave"  element={<ProtectedRoute><LeaveDashboard /></ProtectedRoute>}/>
         {/* protected route end */}
       </Routes>
     </Router>

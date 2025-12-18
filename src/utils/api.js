@@ -172,43 +172,19 @@ export const deleteAttendance = async (id) => {
 };
 
 // leave APIs
+// Client
+export const applyLeaveApi = (data) => api.post("/leaves", data);
 
+export const getMyLeavesApi = () => api.get("/leaves/my");
 
-// 1️ Add Leave
-export const addLeave = async (data) => {
-  const res = await api.post("/leave", data);
-  return res.data;
-};
+// Admin / Owner / HR
+// Admin / Owner / HR → Leaves with optional status filter
+export const getLeavesApi = (status) =>
+  api.get(`/leaves${status ? `?status=${status}` : ""}`);
 
-// 2️ Get Leaves by Month
-export const getLeavesByMonth = async (year, month) => {
-  const res = await api.get(`/leave/${year}/${month}`);
-  return res.data;
-};
+export const updateLeaveStatusApi = (id, status) =>
+  api.put(`/leaves/${id}`, { status });
 
-// 3️ Get All Leaves (optional, main page table)
-export const getLeaves = async () => {
-  const res = await api.get("/leave");
-  return res.data;
-};
-
-// 4️ Delete Leave
-export const deleteLeave = async (_id) => {
-  const res = await api.delete(`/leave/${_id}`);
-  return res.data;
-};
-
-// 5️ Update Leave
-export const updateLeave = async (_id, data) => {
-  const res = await api.put(`/leave/${_id}`, data);
-  return res.data;
-};
-
-// 6️ Get Employees for select dropdown
-export const getAllEmployees = async () => {
-  const res = await api.get("/leave/employees");
-  return res.data;
-};
 
 
 // Profile APIs

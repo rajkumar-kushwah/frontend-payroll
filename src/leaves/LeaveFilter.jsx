@@ -1,0 +1,22 @@
+import React from "react";
+
+const LeaveFilter = ({ filter, setFilter }) => {
+  return (
+    <div className="flex items-center gap-2">
+      <h4 className="font-semibold mr-2">Status:</h4>
+      {["pending", "approved", "rejected"].map((s) => (
+        <button
+          key={s}
+          onClick={() => setFilter(s)}
+          className={`px-3 py-1 rounded border ${
+            filter === s ? "bg-blue-500 text-white" : "bg-white text-gray-700 border-gray-300"
+          }`}
+        >
+          {s.toUpperCase()}
+        </button>
+      ))}
+    </div>
+  );
+};
+
+export default LeaveFilter;
