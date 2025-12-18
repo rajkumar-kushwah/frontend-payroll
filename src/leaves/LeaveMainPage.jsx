@@ -3,6 +3,7 @@ import {
   getLeavesApi,
   updateLeaveStatusApi,
   getMyLeavesApi,
+  deleteLeaveApi,
 } from "../utils/api";
 
 import LeaveTable from "../leaves/LeaveTable";
@@ -12,6 +13,7 @@ import ApplyLeaveModal from "../leaves/ApplyLeaveModal";
 
 import { useUser } from "../context/UserContext"; // use context
 import Layout from "../components/Layout";
+import Employee from "../../../employee-management/models/Employee";
 
 const LeaveDashboard = () => {
   const { user, loading } = useUser();
@@ -55,6 +57,19 @@ const LeaveDashboard = () => {
     }
   };
 
+
+  const handleDelete = async (id) => {
+  if (!window.confirm("Are you sure you want to delete this leave?")) return;
+  try {
+    await deleteLeaveApi(id);
+    fetchLeaves(); // refresh table
+  } catch (err) {
+    console.error(err);
+    alert("Failed to delete leave");
+  }
+};
+
+
   if (loading) return <p className="text-center mt-10">Loading user...</p>;
   if (!user) return <p className="text-center mt-10">User not found</p>;
 
@@ -62,10 +77,10 @@ const LeaveDashboard = () => {
     <Layout>
       <div className="flex flex-col gap-4">
         {/* HEADER */}
-        <div className="flex justify-between items-center">
-          <h2 className="text-xl font-semibold">Leave Management</h2>
+        <div className="flex flex-wrap justify-between items-center">
+          <h2 className="text-sm font-semibold">Leave Management</h2>
 
-          <div className="flex items-center gap-2">
+          <div className="flex  items-center gap-2">
             {user?.role !== "employee" && (
               <LeaveFilter filter={filter} setFilter={setFilter} />
             )}
@@ -73,7 +88,7 @@ const LeaveDashboard = () => {
             {user?.role === "employee" && (
               <button
                 onClick={() => setOpenApply(true)}
-                className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600"
+                className="px-2 py-1 bg-blue-500 text-xs text-white rounded hover:bg-blue-600"
               >
                 + Apply Leave
               </button>
@@ -85,6 +100,7 @@ const LeaveDashboard = () => {
         <LeaveTable
           leaves={filteredLeaves}
           onView={(leave) => setSelectedLeave(leave)}
+           onDelete={handleDelete}
         />
 
         {/* MODALS */}

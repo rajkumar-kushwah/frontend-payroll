@@ -177,7 +177,9 @@ export const applyLeaveApi = (data) => api.post("/leaves", data);
 
 export const getMyLeavesApi = () => api.get("/leaves/my");
 
-// Admin / Owner / HR
+// delete leave
+export const deleteLeaveApi = (id) => api.delete(`/leaves/${id}`);
+
 // Admin / Owner / HR → Leaves with optional status filter
 export const getLeavesApi = (status) =>
   api.get(`/leaves${status ? `?status=${status}` : ""}`);

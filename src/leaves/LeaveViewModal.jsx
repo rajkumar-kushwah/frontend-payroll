@@ -9,19 +9,23 @@ const LeaveViewModal = ({ leave, user, onClose, onApprove, onReject }) => {
         <h3 className="text-lg font-semibold mb-4">Leave Detail</h3>
 
         <div className="mb-2">
-          <span className="font-semibold">Date:</span>{" "}
+          <span className="font-semibold text-sm">Date:</span>{" "}
           {new Date(leave.date).toLocaleDateString()}
         </div>
         <div className="mb-2">
-          <span className="font-semibold">Type:</span> {leave.type}
+          <span className="font-semibold text-sm">EmpID:</span>{" "}
+          {leave.employeeCode}
         </div>
         <div className="mb-2">
-          <span className="font-semibold">Reason:</span> {leave.reason}
+          <span className="font-semibold text-sm">Type:</span> {leave.type}
+        </div>
+        <div className="mb-2">
+          <span className="font-semibold text-sm">Reason:</span> {leave.reason}
         </div>
         <div className="mb-4">
-          <span className="font-semibold">Status:</span>{" "}
+          <span className="font-semibold text-sm">Status:</span>{" "}
           <span
-            className={`capitalize font-medium ${
+            className={`capitalize font-medium text-sm ${
               leave.status === "approved"
                 ? "text-green-600"
                 : leave.status === "rejected"
@@ -38,13 +42,13 @@ const LeaveViewModal = ({ leave, user, onClose, onApprove, onReject }) => {
           <div className="flex justify-end gap-2 mb-2">
             <button
               onClick={onApprove}
-              className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+              className="px-2 py-1 bg-green-500 text-sm text-white rounded hover:bg-green-600"
             >
               Approve
             </button>
             <button
               onClick={onReject}
-              className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+              className="px-2 py-1 bg-red-500 text-white text-sm rounded hover:bg-red-600"
             >
               Reject
             </button>
@@ -54,7 +58,7 @@ const LeaveViewModal = ({ leave, user, onClose, onApprove, onReject }) => {
         <div className="flex justify-end">
           <button
             onClick={onClose}
-            className="px-4 py-2 border rounded hover:bg-gray-100"
+            className="px-2 py-1 text-xs border rounded hover:bg-gray-100"
           >
             Close
           </button>

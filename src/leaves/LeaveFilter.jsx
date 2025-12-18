@@ -2,8 +2,8 @@ import React from "react";
 
 const LeaveFilter = ({ filter, setFilter }) => {
   return (
-    <div className="flex items-center gap-2">
-      <h4 className="font-semibold mr-2">Status:</h4>
+    <div className="flex text-xs items-center gap-2">
+      <h4 className="font-semibold text-sm mr-2">Status:</h4>
       {["pending", "approved", "rejected"].map((s) => (
         <button
           key={s}
