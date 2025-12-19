@@ -12,7 +12,7 @@ const LeaveFilter = ({ filter, setFilter }) => {
             filter === s ? "bg-blue-500 text-white" : "bg-white text-gray-700 border-gray-300"
           }`}
         >
-          {s.toUpperCase()}
+          {s.charAt(0).toUpperCase() + s.slice(1).toLowerCase()}
         </button>
       ))}
     </div>
