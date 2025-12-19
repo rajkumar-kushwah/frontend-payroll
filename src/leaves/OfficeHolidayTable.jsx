@@ -5,7 +5,7 @@ const OfficeHolidayTable = ({ holidays = [], user, onDelete }) => {
     user?.role === "hr";
 
   return (
-    <div className="border rounded bg-white">
+    <div className="border overflow-x-auto rounded bg-white">
         <h4 className="text-xs font-bold">Office Holidays</h4>
       <table className="w-full text-xs">
         <thead className="bg-gray-100">
@@ -39,7 +39,7 @@ const OfficeHolidayTable = ({ holidays = [], user, onDelete }) => {
                   <td className="p-2">
                     <button
                       onClick={() => onDelete(h._id)}
-                      className="text-red-500 text-xs cursor-pointer hover:underline"
+                      className="px-2 py-1 bg-red-500 hover:bg-red-600 cursor-pointer text-xs text-white rounded"
                     >
                       Delete
                     </button>
