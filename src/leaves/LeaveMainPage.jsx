@@ -4,15 +4,21 @@ import {
   updateLeaveStatusApi,
   getMyLeavesApi,
   deleteLeaveApi,
+   getOfficeHolidaysApi,
+  deleteOfficeHolidayApi,
 } from "../utils/api";
 
 import LeaveTable from "../leaves/LeaveTable";
 import LeaveFilter from "../leaves/LeaveFilter";
 import LeaveViewModal from "../leaves/LeaveViewModal";
 import ApplyLeaveModal from "../leaves/ApplyLeaveModal";
-
+import OfficeLeaveForm from "../leaves/OfficeLeaveForm";
 import { useUser } from "../context/UserContext"; // use context
 import Layout from "../components/Layout";
+import OfficeHolidayTable from "../leaves/OfficeHolidayTable";
+
+
+
 
 
 const LeaveDashboard = () => {
@@ -21,6 +27,11 @@ const LeaveDashboard = () => {
   const [filter, setFilter] = useState("pending");
   const [selectedLeave, setSelectedLeave] = useState(null);
   const [openApply, setOpenApply] = useState(false);
+  const [openOfficeLeave, setOpenOfficeLeave] = useState(false);
+  // const [officeHolidays, setOfficeHolidays] = useState([]);
+  const {  officeHolidays, setOfficeHolidays } = useUser();
+
+
 
   const fetchLeaves = async () => {
     if (!user) return;
@@ -59,15 +70,37 @@ const LeaveDashboard = () => {
 
 
   const handleDelete = async (id) => {
-  if (!window.confirm("Are you sure you want to delete this leave?")) return;
+    if (!window.confirm("Are you sure you want to delete this leave?")) return;
+    try {
+      await deleteLeaveApi(id);
+      fetchLeaves(); // refresh table
+    } catch (err) {
+      console.error(err);
+      alert("Failed to delete leave");
+    }
+  };
+
+  const fetchOfficeHolidays = async () => {
   try {
-    await deleteLeaveApi(id);
-    fetchLeaves(); // refresh table
+    const res = await getOfficeHolidaysApi();
+    setOfficeHolidays(res.data.data);
   } catch (err) {
     console.error(err);
-    alert("Failed to delete leave");
   }
 };
+
+useEffect(() => {
+  if (user && user.role !== "employee") {
+    fetchOfficeHolidays();
+  }
+}, [user]);
+
+const handleOfficeDelete = async (id) => {
+  if (!window.confirm("Delete this holiday?")) return;
+  await deleteOfficeHolidayApi(id);
+  fetchOfficeHolidays();
+};
+
 
 
   if (loading) return <p className="text-center mt-10">Loading user...</p>;
@@ -80,9 +113,17 @@ const LeaveDashboard = () => {
         <div className="flex flex-wrap justify-between items-center">
           <h2 className="text-sm font-semibold">Leave Management</h2>
 
-          <div className="flex  items-center gap-2">
+          <div className="flex flex-wrap justify-end items-center gap-2">
             {user?.role !== "employee" && (
-              <LeaveFilter filter={filter} setFilter={setFilter} />
+              <>
+                <LeaveFilter filter={filter} setFilter={setFilter} />
+                <button
+                  onClick={() => setOpenOfficeLeave(true)}
+                  className="px-2 py-1  bg-green-500 text-xs text-white rounded hover:bg-green-600"
+                >
+                  + Office Leave
+                </button>
+              </>
             )}
 
             {user?.role === "employee" && (
@@ -94,14 +135,31 @@ const LeaveDashboard = () => {
               </button>
             )}
           </div>
+
         </div>
 
         {/* TABLE */}
         <LeaveTable
           leaves={filteredLeaves}
           onView={(leave) => setSelectedLeave(leave)}
-           onDelete={handleDelete}
+          onDelete={handleDelete}
         />
+
+        {openOfficeLeave && (
+          <OfficeLeaveForm
+            onClose={() => setOpenOfficeLeave(false)}
+            onSuccess={fetchLeaves} // refresh table
+          />
+        )}
+
+        {user?.role !== "employee" && (
+          <OfficeHolidayTable
+            holidays={officeHolidays}
+             user={user}
+            onDelete={handleOfficeDelete}
+          />
+        )}
+
 
         {/* MODALS */}
         {selectedLeave && (

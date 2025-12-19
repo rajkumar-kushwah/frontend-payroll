@@ -186,8 +186,33 @@ export const getLeavesApi = (status) =>
 
 export const updateLeaveStatusApi = (id, status) =>
   api.put(`/leaves/${id}`, { status });
+// ======================================================
 
 
+// Office leaves
+// utils/officeHolidayApi.js (ya utils/api.js me hi)
+
+// Get all office holidays (HR/Admin/Owner)
+export const getOfficeHolidaysApi = () => {
+  return api.get("/holidays");
+};
+
+// Add new office holiday
+export const addOfficeHolidayApi = (data) => {
+  return api.post("/holidays", data);
+};
+
+// Update office holiday
+export const updateOfficeHolidayApi = (id, data) => {
+  return api.put(`/holidays/${id}`, data);
+};
+
+// Delete office holiday
+export const deleteOfficeHolidayApi = (id) => {
+  return api.delete(`/holidays/${id}`);
+};
+
+ // =====================================================
 
 // Profile APIs
 export const getProfile = () => api.get("/auth/profile");
