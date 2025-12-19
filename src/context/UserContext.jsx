@@ -33,7 +33,8 @@ export const UserProvider = ({ children }) => {
       const token = localStorage.getItem("token");
       if (!token) return;
 
-      setLoading(true);
+         if (!user) setLoading(true);
+      // setLoading(true);
       try {
         const res = await getProfile();
         if (res.data) {
@@ -58,7 +59,7 @@ export const UserProvider = ({ children }) => {
       try {
         const res = await getOfficeHolidaysApi();
         setOfficeHolidays(res.data.data);
-        setHolidayLoaded(true); // 🔥 cache flag
+        setHolidayLoaded(true); //  cache flag
       } catch (err) {
         console.error("Office holiday fetch failed", err);
       }
@@ -75,7 +76,7 @@ export const UserProvider = ({ children }) => {
         logout,
         loading,
 
-        // 👇 expose holidays
+        //  expose holidays
         officeHolidays,
         setOfficeHolidays,
       }}
