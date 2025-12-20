@@ -42,9 +42,9 @@ export default function AttendanceRow({ record, refresh }) {
       <td className="p-1">{record.totalHours || 0}</td>
       <td className="p-1">{record.overtimeHours || 0}</td>
       <td className="flex gap-1 justify-center p-1">
-        {canCheckIn && <button onClick={checkIn} className="bg-green-500 text-white text-xs p-1 rounded">Check-in</button>}
-        {canCheckOut && <button onClick={checkOut} className="bg-blue-500 text-white text-xs p-1 rounded">Check-out</button>}
-        <button onClick={deleteRecord} className="bg-red-500 text-white text-xs p-1 rounded">Delete</button>
+        {canCheckIn && <button onClick={checkIn} className="bg-lime-500 hover:bg-lime-600 text-white text-xs p-1 rounded">Check-in</button>}
+        {canCheckOut && <button onClick={checkOut} className="bg-blue-500 hover:bg-blue-600 text-white text-xs p-1 rounded">Check-out</button>}
+        <button onClick={deleteRecord} className="bg-red-500 hover:bg-red-600 text-white text-xs p-1 rounded">Delete</button>
       </td>
     </tr>
   );

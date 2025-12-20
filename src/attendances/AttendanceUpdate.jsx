@@ -106,7 +106,7 @@ return (
       </button>
       <button
         onClick={handleUpdate}
-        className={`bg-blue-500 text-white p-1 cursor-pointer rounded text-xs ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
+        className={`bg-blue-500 hover:bg-blue-600 text-white p-1 cursor-pointer rounded text-xs ${loading ? "opacity-50 cursor-not-allowed" : ""}`}
         disabled={loading}
       >
         {loading ? "Updating..." : "Update"}
