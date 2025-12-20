@@ -76,7 +76,7 @@ export default function AttendanceTable({
               <td className="p-3 flex gap-1 justify-center flex-wrap">
                 {!att.checkIn && (
                   <button
-                    className="bg-lime-400 text-white px-2 py-1 rounded text-[10px] shadow-sm"
+                    className="bg-lime-400 hover:bg-lime-500 text-white px-2 py-1 rounded text-[10px] shadow-sm"
                     onClick={() => onCheckIn(att.employeeId?._id)}
                   >
                     Check In
@@ -85,7 +85,7 @@ export default function AttendanceTable({
 
                 {att.checkIn && !att.checkOut && (
                   <button
-                    className="bg-blue-500 text-white px-2 py-1 cursor-pointer rounded text-[10px] shadow-sm"
+                    className="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 cursor-pointer rounded text-[10px] shadow-sm"
                     onClick={() => onCheckOut(att.employeeId?._id)}
                   >
                     Check Out
