@@ -212,7 +212,7 @@ export default function MainAttendancePage() {
 
           <button
             onClick={handleCheckIn}
-            className="bg-lime-400 text-white px-2 py-1 cursor-pointer rounded text-xs flex items-center gap-1"
+            className="bg-lime-400 hover:bg-lime-500 text-white px-2 py-1 cursor-pointer rounded text-xs flex items-center gap-1"
           >
             <FaCheck size={12} /> Check In
           </button>
