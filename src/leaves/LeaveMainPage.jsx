@@ -131,7 +131,7 @@ const LeaveDashboard = () => {
         {/* LEAVE TABLE */}
         <LeaveTable
           leaves={filteredLeaves}
-          userRole={user.role}   
+         user={user}   
           onView={(leave) => setSelectedLeave(leave)}
           onDelete={handleDelete}
         />
