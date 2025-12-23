@@ -5,7 +5,8 @@ import { ChevronDown } from "lucide-react";
 const ApplyLeaveModal = ({ onClose, onSuccess }) => {
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState({
-    date: "",
+    startDate: "",
+    endDate: "",
     type: "casual",
     reason: "",
   });
@@ -13,8 +14,13 @@ const ApplyLeaveModal = ({ onClose, onSuccess }) => {
   const [loading, setLoading] = useState(false);
 
   const submit = async () => {
-    if (!form.date || !form.reason) {
+    if (!form.startDate || !form.endDate || !form.reason) {
       alert("Please fill all fields");
+      return;
+    }
+
+    if (new Date(form.startDate) > new Date(form.endDate)) {
+      alert("Start date cannot be after end date");
       return;
     }
 
@@ -22,11 +28,11 @@ const ApplyLeaveModal = ({ onClose, onSuccess }) => {
       setLoading(true);
       await applyLeaveApi(form);
       alert("Leave applied successfully");
-      onSuccess && onSuccess(); 
+      onSuccess && onSuccess();
       onClose();
     } catch (err) {
       console.error(err);
-      alert("Failed to apply leave");
+      alert(err?.response?.data?.message || "Failed to apply leave");
     } finally {
       setLoading(false);
     }
@@ -37,20 +43,37 @@ const ApplyLeaveModal = ({ onClose, onSuccess }) => {
       <div className="bg-white p-6 rounded shadow-md text-xs w-full max-w-sm">
         <h3 className="text-sm font-semibold mb-4">Apply Leave</h3>
 
+        {/* Start Date */}
+        <label className="block mb-1">Start Date</label>
         <input
           type="date"
           className="w-full mb-3 p-2 border rounded"
-          value={form.date}
-          onChange={(e) => setForm({ ...form, date: e.target.value })}
+          value={form.startDate}
+          onChange={(e) =>
+            setForm({ ...form, startDate: e.target.value })
+          }
         />
 
-        {/* Custom Dropdown */}
+        {/* End Date */}
+        <label className="block mb-1">End Date</label>
+        <input
+          type="date"
+          className="w-full mb-3 p-2 border rounded"
+          value={form.endDate}
+          onChange={(e) =>
+            setForm({ ...form, endDate: e.target.value })
+          }
+        />
+
+        {/* Leave Type Dropdown */}
         <div className="relative w-full mb-3">
           <div
             className="p-2 border rounded cursor-pointer flex justify-between items-center"
             onClick={() => setOpen(!open)}
           >
-            <span>{form.type.charAt(0).toUpperCase() + form.type.slice(1)}</span>
+            <span>
+              {form.type.charAt(0).toUpperCase() + form.type.slice(1)}
+            </span>
             <ChevronDown
               className={`transition-transform duration-200 ${
                 open ? "rotate-180" : ""
@@ -61,33 +84,30 @@ const ApplyLeaveModal = ({ onClose, onSuccess }) => {
 
           {open && (
             <div className="absolute w-full border rounded mt-1 bg-white z-20 shadow-md">
-              <div
-                className="p-2 hover:bg-gray-100 cursor-pointer"
-                onClick={() => {
-                  setForm({ ...form, type: "casual" });
-                  setOpen(false);
-                }}
-              >
-                Casual
-              </div>
-              <div
-                className="p-2 hover:bg-gray-100 cursor-pointer"
-                onClick={() => {
-                  setForm({ ...form, type: "sick" });
-                  setOpen(false);
-                }}
-              >
-                Sick
-              </div>
+              {["casual", "sick", "paid", "unpaid"].map((t) => (
+                <div
+                  key={t}
+                  className="p-2 hover:bg-gray-100 cursor-pointer"
+                  onClick={() => {
+                    setForm({ ...form, type: t });
+                    setOpen(false);
+                  }}
+                >
+                  {t.charAt(0).toUpperCase() + t.slice(1)}
+                </div>
+              ))}
             </div>
           )}
         </div>
 
+        {/* Reason */}
         <textarea
           className="w-full mb-3 p-2 border rounded"
           placeholder="Reason"
           value={form.reason}
-          onChange={(e) => setForm({ ...form, reason: e.target.value })}
+          onChange={(e) =>
+            setForm({ ...form, reason: e.target.value })
+          }
         />
 
         <div className="flex justify-end gap-2">

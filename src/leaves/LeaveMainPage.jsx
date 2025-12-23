@@ -4,7 +4,7 @@ import {
   updateLeaveStatusApi,
   getMyLeavesApi,
   deleteLeaveApi,
-   getOfficeHolidaysApi,
+  getOfficeHolidaysApi,
   deleteOfficeHolidayApi,
 } from "../utils/api";
 
@@ -13,37 +13,32 @@ import LeaveFilter from "../leaves/LeaveFilter";
 import LeaveViewModal from "../leaves/LeaveViewModal";
 import ApplyLeaveModal from "../leaves/ApplyLeaveModal";
 import OfficeLeaveForm from "../leaves/OfficeLeaveForm";
-import { useUser } from "../context/UserContext"; // use context
-import Layout from "../components/Layout";
 import OfficeHolidayTable from "../leaves/OfficeHolidayTable";
-
-
-
-
+import { useUser } from "../context/UserContext";
+import Layout from "../components/Layout";
 
 const LeaveDashboard = () => {
   const { user, loading } = useUser();
+
   const [leaves, setLeaves] = useState([]);
   const [filter, setFilter] = useState("pending");
   const [selectedLeave, setSelectedLeave] = useState(null);
   const [openApply, setOpenApply] = useState(false);
   const [openOfficeLeave, setOpenOfficeLeave] = useState(false);
-  // const [officeHolidays, setOfficeHolidays] = useState([]);
-  const {  officeHolidays, setOfficeHolidays } = useUser();
+  const [officeHolidays, setOfficeHolidays] = useState([]);
 
-
+  /* ================= LEAVES ================= */
 
   const fetchLeaves = async () => {
     if (!user) return;
 
     try {
-      if (user.role === "employee") {
-        const res = await getMyLeavesApi();
-        setLeaves(res.data.data);
-      } else {
-        const res = await getLeavesApi();
-        setLeaves(res.data.data);
-      }
+      const res =
+        user.role === "employee"
+          ? await getMyLeavesApi()
+          : await getLeavesApi();
+
+      setLeaves(res.data.data);
     } catch (err) {
       console.error("Failed to fetch leaves:", err);
     }
@@ -68,40 +63,36 @@ const LeaveDashboard = () => {
     }
   };
 
-
   const handleDelete = async (id) => {
     if (!window.confirm("Are you sure you want to delete this leave?")) return;
+    await deleteLeaveApi(id);
+    fetchLeaves();
+  };
+
+  /* ================= OFFICE HOLIDAYS ================= */
+
+  const fetchOfficeHolidays = async () => {
     try {
-      await deleteLeaveApi(id);
-      fetchLeaves(); // refresh table
+      const res = await getOfficeHolidaysApi();
+      setOfficeHolidays(res.data.data);
     } catch (err) {
       console.error(err);
-      alert("Failed to delete leave");
     }
   };
 
-  const fetchOfficeHolidays = async () => {
-  try {
-    const res = await getOfficeHolidaysApi();
-    setOfficeHolidays(res.data.data);
-  } catch (err) {
-    console.error(err);
-  }
-};
+  useEffect(() => {
+    if (user && user.role !== "employee") {
+      fetchOfficeHolidays();
+    }
+  }, [user]);
 
-useEffect(() => {
-  if (user && user.role !== "employee") {
+  const handleOfficeDelete = async (id) => {
+    if (!window.confirm("Delete this holiday?")) return;
+    await deleteOfficeHolidayApi(id);
     fetchOfficeHolidays();
-  }
-}, [user]);
+  };
 
-const handleOfficeDelete = async (id) => {
-  if (!window.confirm("Delete this holiday?")) return;
-  await deleteOfficeHolidayApi(id);
-  fetchOfficeHolidays();
-};
-
-
+  /* ================= UI ================= */
 
   if (loading) return <p className="text-center mt-10">Loading user...</p>;
   if (!user) return <p className="text-center mt-10">User not found</p>;
@@ -113,53 +104,46 @@ const handleOfficeDelete = async (id) => {
         <div className="flex flex-wrap justify-between items-center">
           <h2 className="text-sm font-semibold">Leave Management</h2>
 
-          <div className="flex flex-wrap justify-end items-center gap-2">
-            {user?.role !== "employee" && (
+          <div className="flex gap-2">
+            {user.role !== "employee" && (
               <>
                 <LeaveFilter filter={filter} setFilter={setFilter} />
                 <button
                   onClick={() => setOpenOfficeLeave(true)}
-                  className="px-2 py-1  bg-green-500 text-xs text-white rounded hover:bg-green-600"
+                  className="px-2 py-1 bg-green-500 text-xs text-white rounded"
                 >
                   + Office Leave
                 </button>
               </>
             )}
 
-            {user?.role === "employee" && (
+            {user.role === "employee" && (
               <button
                 onClick={() => setOpenApply(true)}
-                className="px-2 py-1 bg-blue-500 text-xs text-white rounded hover:bg-blue-600"
+                className="px-2 py-1 bg-blue-500 text-xs text-white rounded"
               >
                 + Apply Leave
               </button>
             )}
           </div>
-
         </div>
 
-        {/* TABLE */}
+        {/* LEAVE TABLE */}
         <LeaveTable
           leaves={filteredLeaves}
+          userRole={user.role}   
           onView={(leave) => setSelectedLeave(leave)}
           onDelete={handleDelete}
         />
 
-        {openOfficeLeave && (
-          <OfficeLeaveForm
-            onClose={() => setOpenOfficeLeave(false)}
-            onSuccess={fetchLeaves} // refresh table
-          />
-        )}
-
-        {user?.role !== "employee" && (
+        {/* OFFICE HOLIDAYS */}
+        {user.role !== "employee" && (
           <OfficeHolidayTable
             holidays={officeHolidays}
-             user={user}
+            user={user}
             onDelete={handleOfficeDelete}
           />
         )}
-
 
         {/* MODALS */}
         {selectedLeave && (
@@ -176,6 +160,13 @@ const handleOfficeDelete = async (id) => {
           <ApplyLeaveModal
             onClose={() => setOpenApply(false)}
             onSuccess={fetchLeaves}
+          />
+        )}
+
+        {openOfficeLeave && (
+          <OfficeLeaveForm
+            onClose={() => setOpenOfficeLeave(false)}
+            onSuccess={fetchOfficeHolidays}
           />
         )}
       </div>

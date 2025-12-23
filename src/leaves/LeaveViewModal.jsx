@@ -4,28 +4,61 @@ const LeaveViewModal = ({ leave, user, onClose, onApprove, onReject }) => {
   if (!leave) return null;
 
   return (
-    <div className="fixed inset-0  bg-opacity-50 flex items-center justify-center z-50">
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
       <div className="bg-white p-6 rounded shadow-md w-full max-w-md">
-        <h3 className="text-lg font-semibold mb-4">Leave Detail</h3>
+        <h3 className="text-lg font-semibold mb-4">Leave Details</h3>
 
-        <div className="mb-2">
-          <span className="font-semibold text-sm">Date:</span>{" "}
-          {new Date(leave.date).toLocaleDateString()}
+        {/* Employee Info */}
+        <div className="flex items-center gap-3 mb-4">
+          {leave.avatar ? (
+            <img
+              src={leave.avatar}
+              alt={leave.name}
+              className="w-10 h-10 rounded-full object-cover"
+            />
+          ) : (
+            <div className="w-10 h-10 rounded-full bg-gray-400 text-white flex items-center justify-center font-semibold">
+              {leave.name?.charAt(0)?.toUpperCase() || "?"}
+            </div>
+          )}
+
+          <div>
+            <div className="font-semibold text-sm">{leave.name}</div>
+            <div className="text-xs text-gray-500">
+              EmpID: {leave.employeeCode}
+            </div>
+          </div>
         </div>
-        <div className="mb-2">
-          <span className="font-semibold text-sm">EmpID:</span>{" "}
-          {leave.employeeCode}
+
+        {/* Date Range */}
+        <div className="mb-2 text-sm">
+          <span className="font-semibold">From:</span>{" "}
+          {new Date(leave.startDate).toLocaleDateString()}
         </div>
-        <div className="mb-2">
-          <span className="font-semibold text-sm">Type:</span> {leave.type}
+        <div className="mb-2 text-sm">
+          <span className="font-semibold">To:</span>{" "}
+          {new Date(leave.endDate).toLocaleDateString()}
         </div>
-        <div className="mb-2">
-          <span className="font-semibold text-sm">Reason:</span> {leave.reason}
+
+        <div className="mb-2 text-sm">
+          <span className="font-semibold">Total Days:</span>{" "}
+          {leave.totalDays}
         </div>
-        <div className="mb-4">
-          <span className="font-semibold text-sm">Status:</span>{" "}
+
+        <div className="mb-2 text-sm">
+          <span className="font-semibold">Type:</span>{" "}
+          <span className="capitalize">{leave.type}</span>
+        </div>
+
+        <div className="mb-2 text-sm">
+          <span className="font-semibold">Reason:</span>{" "}
+          {leave.reason || "-"}
+        </div>
+
+        <div className="mb-4 text-sm">
+          <span className="font-semibold">Status:</span>{" "}
           <span
-            className={`capitalize font-medium text-sm ${
+            className={`capitalize font-semibold ml-1 ${
               leave.status === "approved"
                 ? "text-green-600"
                 : leave.status === "rejected"
@@ -37,18 +70,18 @@ const LeaveViewModal = ({ leave, user, onClose, onApprove, onReject }) => {
           </span>
         </div>
 
-        {/* Approve / Reject for admin/HR */}
+        {/* Approve / Reject */}
         {user?.role !== "employee" && leave.status === "pending" && (
-          <div className="flex justify-end gap-2 mb-2">
+          <div className="flex justify-end gap-2 mb-3">
             <button
               onClick={onApprove}
-              className="px-2 py-1 bg-green-500 text-sm text-white rounded hover:bg-green-600"
+              className="px-3 py-1 bg-green-500 text-sm text-white rounded hover:bg-green-600"
             >
               Approve
             </button>
             <button
               onClick={onReject}
-              className="px-2 py-1 bg-red-500 text-white text-sm rounded hover:bg-red-600"
+              className="px-3 py-1 bg-red-500 text-sm text-white rounded hover:bg-red-600"
             >
               Reject
             </button>
@@ -58,7 +91,7 @@ const LeaveViewModal = ({ leave, user, onClose, onApprove, onReject }) => {
         <div className="flex justify-end">
           <button
             onClick={onClose}
-            className="px-2 py-1 text-xs border rounded hover:bg-gray-100"
+            className="px-3 py-1 text-xs border rounded hover:bg-gray-100"
           >
             Close
           </button>

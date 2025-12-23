@@ -24,7 +24,8 @@ const MyLeaves = () => {
         <table className="min-w-full border border-gray-300">
           <thead className="bg-gray-100">
             <tr>
-              <th className="py-1 px-2 border-b text-left">Date</th>
+              <th className="py-2 px-2 border-b text-left">From</th>
+              <th className="py-2 px-2 border-b text-left">To</th>
               <th className="py-2 px-2 border-b text-left">Type</th>
               <th className="py-2 px-2 border-b text-left">Reason</th>
               <th className="py-2 px-2 border-b text-left">Status</th>
@@ -34,12 +35,19 @@ const MyLeaves = () => {
           <tbody>
             {leaves.length > 0 ? (
               leaves.map((l) => (
-                <tr key={l._id} className="hover:bg-gray-50">
+                <tr key={l._id} className="hover:bg-gray-50 text-sm">
                   <td className="py-1 px-2 border-b">
-                    {new Date(l.date).toLocaleDateString()}
+                    {new Date(l.startDate).toLocaleDateString()}
                   </td>
-                  <td className="py-1 px-2 border-b capitalize">{l.type}</td>
-                  <td className="py-1 px-2 border-b">{l.reason}</td>
+                  <td className="py-1 px-2 border-b">
+                    {new Date(l.endDate).toLocaleDateString()}
+                  </td>
+                  <td className="py-1 px-2 border-b capitalize">
+                    {l.type}
+                  </td>
+                  <td className="py-1 px-2 border-b">
+                    {l.reason || "-"}
+                  </td>
                   <td className="py-1 px-2 border-b capitalize font-medium">
                     <span
                       className={
@@ -57,7 +65,7 @@ const MyLeaves = () => {
               ))
             ) : (
               <tr>
-                <td colSpan="2" className="py-2 text-center text-gray-500">
+                <td colSpan="5" className="py-3 text-center text-gray-500">
                   No leaves found
                 </td>
               </tr>
