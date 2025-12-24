@@ -101,10 +101,10 @@ export default function AdminManagement() {
   return (
     <Layout>
       <div className="p-2 text-xs">
-        <h1 className="text-sm font-bold mb-2">Owner / Admin Management</h1>
+        <h1 className="text-sm font-bold mb-2">Admin Management</h1>
 
         {/* ===== Promote Employee ===== */}
-        {user?.role === "owner" && (
+        {/* {user?.role === "owner" && (
           <div className="mb-3 flex flex-col sm:flex-row gap-2">
             <div className="relative w-full sm:w-64">
               <input
@@ -161,7 +161,7 @@ export default function AdminManagement() {
               Promote to Admin
             </button>
           </div>
-        )}
+        )} */}
 
         {/* ===== Add New Admin/User ===== */}
         {(user.role === "owner" || user.role === "admin") && (
