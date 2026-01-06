@@ -14,7 +14,9 @@ const OfficeHolidayTable = ({ holidays = [], user, onDelete }) => {
         <thead className="bg-gray-100">
           <tr>
             <th className="p-2 text-left border-b">Title</th>
-            <th className="p-2 text-left border-b">Date</th>
+            <th className="p-2 text-left border-b">Start Date</th>
+            <th className="p-2 text-left border-b">End Date</th>
+            <th className="p-2 text-left border-b">Total Days</th>
             <th className="p-2 text-left border-b">Type</th>
             <th className="p-2 text-left border-b">Description</th>
             {canDelete && <th className="p-2 text-left border-b">Action</th>}
@@ -25,7 +27,7 @@ const OfficeHolidayTable = ({ holidays = [], user, onDelete }) => {
           {holidays.length === 0 ? (
             <tr>
               <td
-                colSpan={canDelete ? 5 : 4}
+                colSpan={canDelete ? 6 : 5}
                 className="p-3 text-center text-gray-500"
               >
                 No office holidays found
@@ -36,16 +38,20 @@ const OfficeHolidayTable = ({ holidays = [], user, onDelete }) => {
               <tr key={h._id} className="border-t">
                 <td className="p-2 text-left border-b">{h.title}</td>
                 <td className="p-2 text-left border-b">
-                  {new Date(h.date).toLocaleDateString()}
+                  {new Date(h.startDate).toLocaleDateString()}
                 </td>
+                <td className="p-2 text-left border-b">
+                  {new Date(h.endDate).toLocaleDateString()}
+                </td>
+                <td className="p-2 text-left border-b">{h.totalDays}</td>
                 <td className="p-2 text-left border-b capitalize">{h.type}</td>
-                <td className="p-2  text-left border-b">{h.description || "-"}</td>
+                <td className="p-2 text-left border-b">{h.description || "-"}</td>
 
                 {canDelete && (
                   <td className="p-2 text-left border-b">
                     <button
                       onClick={() => onDelete(h._id)}
-                      className="px-2 py-1 text-left bg-red-500 hover:bg-red-600 cursor-pointer text-xs text-white rounded"
+                      className="px-2 py-1 bg-red-500 hover:bg-red-600 cursor-pointer text-xs text-white rounded"
                     >
                       Delete
                     </button>

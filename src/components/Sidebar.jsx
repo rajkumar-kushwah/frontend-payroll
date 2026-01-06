@@ -149,9 +149,9 @@ export default function Sidebar({ isOpen, toggle }) {
           </NavLink>
 
           <NavLink
-            to="/payrolls"
+            to="/payroll"
             className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition ${isActive(
-              "/payrolls"
+              "/payroll"
             )}`}
           >
             <Wallet className="w-4 h-4" />

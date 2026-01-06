@@ -222,6 +222,40 @@ export const updateProfile = (data, isFormData = false) =>
   });
 
 
+
+//  Payroll APIs
+
+
+// 1️ Generate / Save Payroll Summary
+export const savePayroll = (employeeId, month, notes = "") => {
+  return api.post("/payroll/generate", {
+    employeeId,
+    month,
+    notes,
+  });
+};
+
+// 2️ Get all payroll summaries (Month / Filters)
+export const getPayrolls = (params = {}) => {
+  // params = { month, employeeId, department }
+  return api.get("/payroll", { params });
+};
+
+// 3️ Get single employee payroll (Payslip)
+export const getPayrollByEmployee = (employeeId, month) => {
+  return api.get("/payroll/single", {
+    params: { employeeId, month },
+  });
+};
+// 4️ Export all payrolls for a month (CSV)
+export const exportPayrollCsv = (month) => {
+  return api.get("/payroll/export/csv", {
+    params: { month },
+    responseType: "blob", // important for file download
+  });
+};
+
+
   // DELETE Account
 export const deleteAccount = () => api.delete("/auth/delete-account");
 export const updatePassword = (data) => api.put("/auth/update-password", data);

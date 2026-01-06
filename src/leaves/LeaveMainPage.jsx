@@ -71,14 +71,15 @@ const LeaveDashboard = () => {
 
   /* ================= OFFICE HOLIDAYS ================= */
 
-  const fetchOfficeHolidays = async () => {
-    try {
-      const res = await getOfficeHolidaysApi();
-      setOfficeHolidays(res.data.data);
-    } catch (err) {
-      console.error(err);
-    }
-  };
+ const fetchOfficeHolidays = async () => {
+  try {
+    const res = await getOfficeHolidaysApi();
+    setOfficeHolidays(res.data.data);
+  } catch (err) {
+    console.error(err);
+  }
+};
+
 
   useEffect(() => {
     if (user && user.role !== "employee") {

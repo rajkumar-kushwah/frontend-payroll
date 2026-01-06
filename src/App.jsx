@@ -23,6 +23,7 @@ import AddUser from './admin/UserList';
 import WorkScheduleMain from './worksechudel/WorkScheduleMain';
 import AttendancePage from './attendances/AttendancePage';
 import LeaveDashboard from './leaves/LeaveMainPage';
+import PayrollPage from './payroll/PayrollPage';
 
 
 function App() {
@@ -54,6 +55,7 @@ function App() {
         <Route path="/worksechudel" element={<ProtectedRoute><WorkScheduleMain /></ProtectedRoute>} />
         <Route path="/attendance-page" element={<ProtectedRoute><AttendancePage /></ProtectedRoute>} />
         <Route path="/leave"  element={<ProtectedRoute><LeaveDashboard /></ProtectedRoute>}/>
+        <Route path="/payroll" element={<ProtectedRoute><PayrollPage/></ProtectedRoute>} />
         {/* protected route end */}
       </Routes>
     </Router>
