@@ -7,7 +7,6 @@ const OfficeLeaveForm = ({ onClose, onSuccess }) => {
     title: "",
     startDate: "",
     endDate: "",
-    type: "PAID",
     description: "",
   });
   const [loading, setLoading] = useState(false);
@@ -20,7 +19,6 @@ const OfficeLeaveForm = ({ onClose, onSuccess }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validation
     if (!form.startDate || !form.endDate) {
       return alert("Start date and End date are required");
     }
@@ -30,9 +28,9 @@ const OfficeLeaveForm = ({ onClose, onSuccess }) => {
 
     setLoading(true);
     try {
-      await addOfficeHolidayApi(form); // send start & end date to API
-      onSuccess(); // parent table refresh
-      onClose();   // close modal
+      await addOfficeHolidayApi(form); // backend will handle type & isPaid
+      onSuccess();
+      onClose();
     } catch (err) {
       console.error(err);
       alert(err.response?.data?.message || "Something went wrong");
@@ -86,21 +84,6 @@ const OfficeLeaveForm = ({ onClose, onSuccess }) => {
               required
               className="w-full text-xs border p-2 rounded"
             />
-          </div>
-
-          {/* Type */}
-          <div>
-            <label className="block text-sm font-medium">Type</label>
-            <select
-              name="type"
-              value={form.type}
-              onChange={handleChange}
-              className="w-full text-xs border p-2 rounded"
-            >
-              <option value="PAID">Paid</option>
-              <option value="OPTIONAL">Optional</option>
-              <option value="UNPAID">Unpaid</option>
-            </select>
           </div>
 
           {/* Description */}

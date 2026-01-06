@@ -17,7 +17,6 @@ const OfficeHolidayTable = ({ holidays = [], user, onDelete }) => {
             <th className="p-2 text-left border-b">Start Date</th>
             <th className="p-2 text-left border-b">End Date</th>
             <th className="p-2 text-left border-b">Total Days</th>
-            <th className="p-2 text-left border-b">Type</th>
             <th className="p-2 text-left border-b">Description</th>
             {canDelete && <th className="p-2 text-left border-b">Action</th>}
           </tr>
@@ -27,7 +26,7 @@ const OfficeHolidayTable = ({ holidays = [], user, onDelete }) => {
           {holidays.length === 0 ? (
             <tr>
               <td
-                colSpan={canDelete ? 6 : 5}
+                colSpan={canDelete ? 5 : 4}
                 className="p-3 text-center text-gray-500"
               >
                 No office holidays found
@@ -44,7 +43,6 @@ const OfficeHolidayTable = ({ holidays = [], user, onDelete }) => {
                   {new Date(h.endDate).toLocaleDateString()}
                 </td>
                 <td className="p-2 text-left border-b">{h.totalDays}</td>
-                <td className="p-2 text-left border-b capitalize">{h.type}</td>
                 <td className="p-2 text-left border-b">{h.description || "-"}</td>
 
                 {canDelete && (

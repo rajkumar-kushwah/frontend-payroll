@@ -7,26 +7,26 @@ const ApplyLeaveModal = ({ onClose, onSuccess }) => {
   const [form, setForm] = useState({
     startDate: "",
     endDate: "",
-    type: "casual",
+    type: "casual", // default leave type
     reason: "",
   });
 
   const [loading, setLoading] = useState(false);
 
+  const leaveTypes = ["casual", "sick", "personal", "other"]; // real-world leave types
+
   const submit = async () => {
     if (!form.startDate || !form.endDate || !form.reason) {
-      alert("Please fill all fields");
-      return;
+      return alert("Please fill all fields");
     }
 
     if (new Date(form.startDate) > new Date(form.endDate)) {
-      alert("Start date cannot be after end date");
-      return;
+      return alert("Start date cannot be after end date");
     }
 
     try {
       setLoading(true);
-      await applyLeaveApi(form);
+      await applyLeaveApi(form); // backend handles status = pending by default
       alert("Leave applied successfully");
       onSuccess && onSuccess();
       onClose();
@@ -49,9 +49,7 @@ const ApplyLeaveModal = ({ onClose, onSuccess }) => {
           type="date"
           className="w-full mb-3 p-2 border rounded"
           value={form.startDate}
-          onChange={(e) =>
-            setForm({ ...form, startDate: e.target.value })
-          }
+          onChange={(e) => setForm({ ...form, startDate: e.target.value })}
         />
 
         {/* End Date */}
@@ -60,9 +58,7 @@ const ApplyLeaveModal = ({ onClose, onSuccess }) => {
           type="date"
           className="w-full mb-3 p-2 border rounded"
           value={form.endDate}
-          onChange={(e) =>
-            setForm({ ...form, endDate: e.target.value })
-          }
+          onChange={(e) => setForm({ ...form, endDate: e.target.value })}
         />
 
         {/* Leave Type Dropdown */}
@@ -71,20 +67,16 @@ const ApplyLeaveModal = ({ onClose, onSuccess }) => {
             className="p-2 border rounded cursor-pointer flex justify-between items-center"
             onClick={() => setOpen(!open)}
           >
-            <span>
-              {form.type.charAt(0).toUpperCase() + form.type.slice(1)}
-            </span>
+            <span>{form.type.charAt(0).toUpperCase() + form.type.slice(1)}</span>
             <ChevronDown
-              className={`transition-transform duration-200 ${
-                open ? "rotate-180" : ""
-              }`}
+              className={`transition-transform duration-200 ${open ? "rotate-180" : ""}`}
               size={16}
             />
           </div>
 
           {open && (
             <div className="absolute w-full border rounded mt-1 bg-white z-20 shadow-md">
-              {["casual", "sick", "paid", "unpaid"].map((t) => (
+              {leaveTypes.map((t) => (
                 <div
                   key={t}
                   className="p-2 hover:bg-gray-100 cursor-pointer"
@@ -105,11 +97,10 @@ const ApplyLeaveModal = ({ onClose, onSuccess }) => {
           className="w-full mb-3 p-2 border rounded"
           placeholder="Reason"
           value={form.reason}
-          onChange={(e) =>
-            setForm({ ...form, reason: e.target.value })
-          }
+          onChange={(e) => setForm({ ...form, reason: e.target.value })}
         />
 
+        {/* Buttons */}
         <div className="flex justify-end gap-2">
           <button
             onClick={onClose}
