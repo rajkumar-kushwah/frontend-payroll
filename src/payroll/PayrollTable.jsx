@@ -33,7 +33,7 @@ const PayrollTable = ({ payrolls = [], month }) => {
             <th className="px-2 py-2 border-r text-center">Total work</th>
             <th className="px-2 py-2 border-r text-center">Present</th>
             <th className="px-2 py-2 border-r text-center">Paid Leave</th>
-            <th className="px-2 py-2 border-r text-center">Unpaid Leave</th>
+            {/* <th className="px-2 py-2 border-r text-center">Unpaid Leave</th> */}
             <th className="px-2 py-2 border-r text-center">Holidays</th>
             <th className="px-2 py-2 border-r text-center">Weekly Off</th>
             <th className="px-2 py-2 border-r text-center">Missing</th>
@@ -74,7 +74,7 @@ const PayrollTable = ({ payrolls = [], month }) => {
                 <td className="px-2 py-2 border-r text-center">{item.totalWorking}</td>
                 <td className="px-2 py-2 border-r text-center">{item.present}</td>
                 <td className="px-2 py-2 border-r text-center">{item.paidLeaves}</td>
-                <td className="px-2 py-2 border-r text-center">{item.unpaidLeaves}</td>
+                {/* <td className="px-2 py-2 border-r text-center">{item.unpaidLeaves}</td> */}
                 <td className="px-2 py-2 border-r text-center">{item.officeHolidays}</td>
                 <td className="px-2 py-2 border-r text-center">{item.weeklyOffCount}</td>
                 <td className="px-2 py-2 border-r text-center">{item.missingDays}</td>
