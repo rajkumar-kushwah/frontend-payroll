@@ -42,7 +42,7 @@ const PayrollTable = ({ payrolls = [], onGenerateSlip }) => {
                 <td className="px-2 py-2 border-r text-center">{p.present || 0}</td>
                 <td className="px-2 py-2 border-r text-center">{p.leave || 0}</td>
                 <td className="px-2 py-2 border-r text-center">{p.officeHolidays || 0}</td>
-                <td className="px-2 py-2 border-r text-center">{p.weekOffCount || 0}</td>
+                <td className="px-2 py-2 border-r text-center">{p.weeklyOff || 0}</td>
                 <td className="px-2 py-2 border-r text-center">{p.missingDays || 0}</td>
                 <td className="px-2 py-2 border-r text-center">{p.overtimeHours || 0}</td>
                 <td className="px-2 py-2 text-center">
