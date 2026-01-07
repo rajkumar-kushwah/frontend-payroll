@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Layout from "../components/Layout";
 import PayrollTable from "./PayrollTable";
 import PayrollFilters from "./PayrollFilters";
-import { getPayrolls, getPayrollByEmployee, exportPayrollCsv } from "../utils/api";
+import { getPayrolls, exportPayrollCsv } from "../utils/api";
 
 function PayrollPage() {
   const monthNames = [
@@ -41,35 +41,26 @@ function PayrollPage() {
     }
   };
 
-  const handleGenerateSlip = async (employeeId) => {
-    try {
-      const res = await getPayrollByEmployee(employeeId, month);
-      alert(`Payslip for ${res.data.name} fetched`);
-    } catch (err) {
-      console.error(err);
-      alert(err?.response?.data?.message || "Failed to fetch payslip");
-    }
-  };
 
   // Export CSV for all employees
-  const handleExportCsv = async () => {
-    try {
-      const res = await exportPayrollCsv(month);
+ const handleExportEmployeeCsv = async (employeeId) => {
+  try {
+    const res = await exportPayrollCsv(month, employeeId);
+    const blob = new Blob([res.data], { type: "text/csv" });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", `Payroll_${employeeId}_${month}.csv`);
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    window.URL.revokeObjectURL(url);
+  } catch (err) {
+    console.error(err);
+    alert(err?.response?.data?.message || "Failed to export payroll");
+  }
+};
 
-      const blob = new Blob([res.data], { type: "text/csv" });
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = url;
-      link.setAttribute("download", `Payroll_${month}.csv`);
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-      window.URL.revokeObjectURL(url);
-    } catch (err) {
-      console.error(err);
-      alert("Failed to export CSV");
-    }
-  };
 
   return (
     <Layout>
@@ -81,15 +72,7 @@ function PayrollPage() {
         {/* Month + Year Filter */}
         <PayrollFilters month={month} setMonth={setMonth} />
 
-        {/* Export CSV Button */}
-        <div className="flex justify-end space-x-2">
-          <button
-            onClick={handleExportCsv}
-            className="px-3 py-1 bg-blue-600 text-white text-xs rounded hover:bg-blue-700"
-          >
-            Export CSV
-          </button>
-        </div>
+      
 
         {/* Payroll Table */}
         {loading ? (
@@ -100,7 +83,7 @@ function PayrollPage() {
           <PayrollTable
             payrolls={Array.isArray(payrolls) ? payrolls : []}
             month={month}
-            onGenerateSlip={handleGenerateSlip}
+            onGenerateSlip={handleExportEmployeeCsv}
           />
         )}
       </div>

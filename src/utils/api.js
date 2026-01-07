@@ -248,10 +248,13 @@ export const getPayrollByEmployee = (employeeId, month) => {
   });
 };
 // 4️ Export all payrolls for a month (CSV)
-export const exportPayrollCsv = (month) => {
+export const exportPayrollCsv = (month, employeeId) => {
   return api.get("/payroll/export/csv", {
-    params: { month },
-    responseType: "blob", // important for file download
+    params: {
+      month,
+      employeeId, // optional
+    },
+    responseType: "blob", // file download
   });
 };
 
@@ -262,7 +265,7 @@ export const exportPayrollPdf = (employeeId, month) => {
     responseType: "blob", // important for file download
   });
 };
-  
+
 
   // DELETE Account
 export const deleteAccount = () => api.delete("/auth/delete-account");
