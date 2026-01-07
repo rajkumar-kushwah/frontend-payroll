@@ -2,7 +2,7 @@ import React from "react";
 
 const PayrollTable = ({ payrolls = [], month, onGenerateSlip }) => {
   return (
-    <div className="overflow-x-auto">
+    <div className="overflow-x-auto w-full ">
       <table className="min-w-full border border-gray-300 text-xs">
         <thead className="bg-gray-100">
           <tr className="border-b border-gray-300 text-gray-700">
@@ -39,7 +39,7 @@ const PayrollTable = ({ payrolls = [], month, onGenerateSlip }) => {
                       alt={p.name}
                       className="w-6 h-6 rounded-full object-cover"
                     />
-                    <span className="whitespace-nowrap">{p.name}</span>
+                    <span className="font-medium overflow-hidden truncate whitespace-nowrap">{p.name}</span>
                   </div>
                 </td>
 
