@@ -255,6 +255,14 @@ export const exportPayrollCsv = (month) => {
   });
 };
 
+// 5️ Export single employee payroll as PDF
+export const exportPayrollPdf = (employeeId, month) => {
+  return api.get("/payroll/export/pdf", {
+    params: { employeeId, month },
+    responseType: "blob", // important for file download
+  });
+};
+  
 
   // DELETE Account
 export const deleteAccount = () => api.delete("/auth/delete-account");

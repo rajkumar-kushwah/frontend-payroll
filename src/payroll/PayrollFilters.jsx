@@ -7,9 +7,8 @@ const monthNames = [
 
 const PayrollFilters = ({ month, setMonth }) => {
   const currentYear = new Date().getFullYear();
-  const years = [currentYear - 1, currentYear, currentYear + 1]; // last, current, next year
+  const years = [currentYear - 1, currentYear, currentYear + 1];
 
-  // Split current month value
   const [selectedMonth, selectedYear] = month.split(" ");
 
   const handleMonthChange = (m) => setMonth(`${m} ${selectedYear}`);
