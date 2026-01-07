@@ -262,9 +262,10 @@ export const exportPayrollCsv = (month, employeeId) => {
 export const exportPayrollPdf = (employeeId, month) => {
   return api.get("/payroll/export/pdf", {
     params: { employeeId, month },
-    responseType: "blob", // important for file download
+    responseType: "blob"
   });
 };
+
 
 
   // DELETE Account

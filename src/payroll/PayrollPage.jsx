@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import Layout from "../components/Layout";
 import PayrollTable from "./PayrollTable";
 import PayrollFilters from "./PayrollFilters";
-import { getPayrolls, exportPayrollCsv } from "../utils/api";
+import { getPayrolls, exportPayrollPdf } from "../utils/api"; // <-- use PDF API
 
 function PayrollPage() {
   const monthNames = [
@@ -26,8 +26,6 @@ function PayrollPage() {
     setLoading(true);
     try {
       const res = await getPayrolls({ month });
-
-      // Ensure payrolls is always an array
       if (res.data && Array.isArray(res.data.data)) {
         setPayrolls(res.data.data);
       } else {
@@ -41,26 +39,26 @@ function PayrollPage() {
     }
   };
 
+  // Export PDF for single employee
+  const handleExportEmployeePdf = async (employeeId, employeeName) => {
+    try {
+      const res = await exportPayrollPdf(employeeId, month);
 
-  // Export CSV for all employees
- const handleExportEmployeeCsv = async (employeeId) => {
-  try {
-    const res = await exportPayrollCsv(month, employeeId);
-    const blob = new Blob([res.data], { type: "text/csv" });
-    const url = window.URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.setAttribute("download", `Payroll_${employeeId}_${month}.csv`);
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-    window.URL.revokeObjectURL(url);
-  } catch (err) {
-    console.error(err);
-    alert(err?.response?.data?.message || "Failed to export payroll");
-  }
-};
-
+      // Create blob & download
+      const blob = new Blob([res.data], { type: "application/pdf" });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", `Payslip_${employeeName}_${month}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error(err);
+      alert(err?.response?.data?.message || "Failed to export payroll PDF");
+    }
+  };
 
   return (
     <Layout>
@@ -72,8 +70,6 @@ function PayrollPage() {
         {/* Month + Year Filter */}
         <PayrollFilters month={month} setMonth={setMonth} />
 
-      
-
         {/* Payroll Table */}
         {loading ? (
           <div className="text-xs text-gray-500 py-6 text-center">
@@ -83,7 +79,9 @@ function PayrollPage() {
           <PayrollTable
             payrolls={Array.isArray(payrolls) ? payrolls : []}
             month={month}
-            onGenerateSlip={handleExportEmployeeCsv}
+            onGenerateSlip={handleExportEmployeePdf} 
+              
+            
           />
         )}
       </div>

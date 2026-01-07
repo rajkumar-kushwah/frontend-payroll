@@ -46,7 +46,7 @@ const PayrollTable = ({ payrolls = [], onGenerateSlip }) => {
                 <td className="px-2 py-2 border-r text-center">{p.missingDays || 0}</td>
                 <td className="px-2 py-2 border-r text-center">{p.overtimeHours || 0}</td>
                 <td className="px-2 py-2 text-center">
-                  <button onClick={() => onGenerateSlip(p.employeeId)} className="border border-blue-600 text-blue-600 px-2 py-1 rounded hover:bg-blue-50">
+                  <button onClick={() => onGenerateSlip(p.employeeId, p.name)} className="border border-blue-600 text-blue-600 px-2 py-1 rounded hover:bg-blue-50">
                     export
                   </button>
                 </td>
