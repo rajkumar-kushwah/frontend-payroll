@@ -14,7 +14,8 @@ import {
 
 export default function MainAttendancePage() {
 
-  // INSTANT DATA LOAD (from localStorage)
+
+
   const [employees, setEmployees] = useState(() => {
     const saved = localStorage.getItem("attendanceEmployees");
     return saved ? JSON.parse(saved) : [];
@@ -29,9 +30,11 @@ export default function MainAttendancePage() {
   const [filters, setFilters] = useState({ search: "", status: "", date: "" });
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [editingRecord, setEditingRecord] = useState(null);
+
   const dropdownRef = useRef(null);
 
-  // Close dropdown on outside click
+ 
+
   useEffect(() => {
     const handler = (e) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
@@ -42,12 +45,13 @@ export default function MainAttendancePage() {
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
-  // Fetch employees (BACKGROUND fetch + CACHE UPDATE)
+ 
+
   const fetchEmployees = async () => {
     try {
-      const data = await getWorkSchedules();
+      const res = await getWorkSchedules();
 
-      const emps = (data.data || [])
+      const emps = (res.data || [])
         .filter(e => e.employeeId)
         .map(e => ({
           _id: e.employeeId._id,
@@ -58,103 +62,128 @@ export default function MainAttendancePage() {
 
       setEmployees(emps);
       localStorage.setItem("attendanceEmployees", JSON.stringify(emps));
-
     } catch (err) {
-      console.error("Employee Fetch Error:", err);
+      console.error("Employee fetch error:", err);
     }
   };
 
-  // Fetch attendance (BACKGROUND fetch + CACHE UPDATE)
+  
+
   const fetchAttendance = async () => {
     try {
+      
+      localStorage.removeItem("attendanceList");
+
       const params = {};
       if (filters.status) params.status = filters.status;
 
-      if (filters.date && filters.date.trim() !== "") {
+      if (filters.date?.trim()) {
         params.startDate = filters.date;
         params.endDate = filters.date;
       }
 
-      const data = await getAttendance(params);
-      const list = data.data || [];
+      const res = await getAttendance(params);
+      const list = res.data || [];
 
       setAttendanceList(list);
-
-      // UPDATE CACHE
       localStorage.setItem("attendanceList", JSON.stringify(list));
-
     } catch (err) {
-      console.error("Attendance Fetch Error:", err);
+      console.error("Attendance fetch error:", err);
       setAttendanceList([]);
     }
   };
 
-  // Check-in
-  const handleCheckIn = async () => {
-    if (!selectedEmployee) return alert("Please select an employee!");
+ 
 
+  const handleCheckIn = async () => {
+    if (!selectedEmployee) {
+      alert("Please select an employee");
+      return;
+    }
+
+    //  CORRECT CONDITION CHECK
     const alreadyCheckedIn = attendanceList.find(
-      a => a.employeeId?._id === selectedEmployee && a.status === "checked-in"
+      a =>
+        a.employeeId?._id === selectedEmployee &&
+        a.checkIn &&
+        !a.checkOut
     );
 
-    if (alreadyCheckedIn) return alert("Employee already checked in!");
+    if (alreadyCheckedIn) {
+      alert("Employee already checked in");
+      return;
+    }
 
     try {
       await checkIn(selectedEmployee);
-      fetchAttendance();
-      alert("Check-in recorded!");
+      await fetchAttendance();
+      alert("Check-in successful");
     } catch {
       alert("Check-in failed");
     }
   };
 
-  // Check-out
-  const handleCheckOut = async (empId) => {
-    const record = attendanceList.find(a => a.employeeId?._id === empId);
+ 
 
-    if (!record) return alert("No check-in record found!");
-    if (record.status === "checked-out")
-      return alert("Employee already checked out!");
+  const handleCheckOut = async (empId) => {
+    const record = attendanceList.find(
+      a => a.employeeId?._id === empId
+    );
+
+    if (!record) {
+      alert("No check-in record found");
+      return;
+    }
+
+    if (record.checkOut) {
+      alert("Already checked out");
+      return;
+    }
 
     try {
       await checkOut(empId);
-      fetchAttendance();
-      alert("Checked out!");
+      await fetchAttendance();
+      alert("Check-out successful");
     } catch {
       alert("Check-out failed");
     }
   };
 
-  // Delete
+
+
   const handleDelete = async (id) => {
     try {
       await deleteAttendance(id);
-      fetchAttendance();
-      alert("Deleted!");
+      await fetchAttendance();
+      alert("Deleted successfully");
     } catch {
       alert("Delete failed");
     }
   };
 
-  const handleEdit = (record) => setEditingRecord(record);
+
+
+  const handleEdit = (record) => {
+    setEditingRecord(record);
+  };
 
   const closeEditModal = () => {
     setEditingRecord(null);
-    fetchAttendance();
   };
 
-  // Initial background fetch
+
+
   useEffect(() => {
     fetchEmployees();
     fetchAttendance();
   }, []);
 
-  // Fetch attendance on filter change
   useEffect(() => {
     fetchAttendance();
   }, [filters.status, filters.date]);
 
-  // Search filter
+
+
   const filteredAttendance = attendanceList.filter((a) => {
     if (!filters.search) return true;
     const s = filters.search.toLowerCase();
@@ -164,16 +193,19 @@ export default function MainAttendancePage() {
     );
   });
 
+
+
   return (
     <Layout>
       <div className="p-2 flex flex-col gap-4">
+
         <h2 className="text-sm font-semibold">Daily Attendance</h2>
 
-        {/* Dropdown */}
+        {/* Employee Dropdown */}
         <div className="flex gap-2 items-center">
           <div ref={dropdownRef} className="relative w-48">
             <div
-              className="flex items-center justify-between border border-gray-300 rounded px-2 py-1 text-xs bg-white cursor-pointer"
+              className="border rounded px-2 py-1 text-xs bg-white cursor-pointer"
               onClick={() => setDropdownOpen(!dropdownOpen)}
             >
               {selectedEmployee
@@ -193,16 +225,16 @@ export default function MainAttendancePage() {
                   -- Select Employee --
                 </li>
 
-                {employees.map((e) => (
+                {employees.map(e => (
                   <li
                     key={e._id}
-                    className="p-2 hover:bg-gray-100 flex items-center gap-2 cursor-pointer"
+                    className="p-2 hover:bg-gray-100 cursor-pointer flex items-center gap-2"
                     onClick={() => {
                       setSelectedEmployee(e._id);
                       setDropdownOpen(false);
                     }}
                   >
-                    <img src={e.avatar} className="w-5 h-5 rounded-full" alt="" />
+                    <img src={e.avatar} className="w-5 h-5 rounded-full" />
                     {e.name} ({e.employeeCode})
                   </li>
                 ))}
@@ -212,7 +244,7 @@ export default function MainAttendancePage() {
 
           <button
             onClick={handleCheckIn}
-            className="bg-lime-400 hover:bg-lime-500 text-white px-2 py-1 cursor-pointer rounded text-xs flex items-center gap-1"
+            className="bg-lime-400 hover:bg-lime-500 text-white px-2 py-1 rounded text-xs flex items-center gap-1"
           >
             <FaCheck size={12} /> Check In
           </button>
@@ -231,13 +263,15 @@ export default function MainAttendancePage() {
           onEdit={handleEdit}
         />
 
+        {/* Edit Modal */}
         {editingRecord && (
           <AttendanceUpdate
             record={editingRecord}
-            onUpdate={fetchAttendance}
+            onUpdate={fetchAttendance} 
             onClose={closeEditModal}
           />
         )}
+
       </div>
     </Layout>
   );
