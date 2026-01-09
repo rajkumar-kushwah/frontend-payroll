@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { getProfile, getOfficeHolidaysApi } from "../utils/api";
-import {   getPayrolls } from "../utils/api";
+import { getPayrolls } from "../utils/api";
 
 
 const UserContext = createContext();
@@ -18,8 +18,8 @@ export const UserProvider = ({ children }) => {
   const [holidayLoaded, setHolidayLoaded] = useState(false);
 
   // Global payroll cache
-const [payrolls, setPayrolls] = useState([]);
-const [payrollLoaded, setPayrollLoaded] = useState(false);
+  const [payrolls, setPayrolls] = useState([]);
+  const [payrollLoaded, setPayrollLoaded] = useState(false);
 
 
   const updateUser = (data) => {
@@ -42,9 +42,9 @@ const [payrollLoaded, setPayrollLoaded] = useState(false);
         setLoading(false);
         return;
       }
-         
 
-         if (!user) setLoading(true);
+
+      if (!user) setLoading(true);
       // setLoading(true);
       try {
         const res = await getProfile();
@@ -52,9 +52,15 @@ const [payrollLoaded, setPayrollLoaded] = useState(false);
           updateUser(res.data);
         }
       } catch (err) {
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
-        setUser(null);
+        //  sirf token invalid ho tab logout
+        if (err.response && err.response.status === 401) {
+          localStorage.removeItem("token");
+          localStorage.removeItem("user");
+          setUser(null);
+        } else {
+          // network / server issue
+          console.log("Network issue, user not logged out");
+        }
       } finally {
         setLoading(false);
       }
@@ -81,26 +87,26 @@ const [payrollLoaded, setPayrollLoaded] = useState(false);
 
   // 🔹 PAYROLL FETCH
   useEffect(() => {
-  const fetchPayrolls = async () => {
-    if (!user || payrollLoaded) return;
+    const fetchPayrolls = async () => {
+      if (!user || payrollLoaded) return;
 
-    try {
-      const monthNames = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
-      const currentDate = new Date();
-      const month = `${monthNames[currentDate.getMonth()]} ${currentDate.getFullYear()}`;
+      try {
+        const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        const currentDate = new Date();
+        const month = `${monthNames[currentDate.getMonth()]} ${currentDate.getFullYear()}`;
 
-      const res = await getPayrolls({ month });
-      if (res.data && Array.isArray(res.data.data)) {
-        setPayrolls(res.data.data);
+        const res = await getPayrolls({ month });
+        if (res.data && Array.isArray(res.data.data)) {
+          setPayrolls(res.data.data);
+        }
+        setPayrollLoaded(true);
+      } catch (err) {
+        console.error("Payroll fetch failed", err);
       }
-      setPayrollLoaded(true);
-    } catch (err) {
-      console.error("Payroll fetch failed", err);
-    }
-  };
+    };
 
-  fetchPayrolls();
-}, [user, payrollLoaded]);
+    fetchPayrolls();
+  }, [user, payrollLoaded]);
 
   return (
     <UserContext.Provider
@@ -115,8 +121,8 @@ const [payrollLoaded, setPayrollLoaded] = useState(false);
         setOfficeHolidays,
 
         // payroll
-    payrolls,
-    setPayrolls,
+        payrolls,
+        setPayrolls,
       }}
     >
       {children}
