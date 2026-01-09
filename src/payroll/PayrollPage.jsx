@@ -1,50 +1,49 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import Layout from "../components/Layout";
 import PayrollTable from "./PayrollTable";
 import PayrollFilters from "./PayrollFilters";
-import { getPayrolls, exportPayrollPdf } from "../utils/api"; // <-- use PDF API
+import { getPayrolls, exportPayrollPdf } from "../utils/api"; 
+import { useUser } from "../context/UserContext";
 
 function PayrollPage() {
+  const { user, payrolls, setPayrolls } = useUser(); // Global context
+
   const monthNames = [
     "Jan","Feb","Mar","Apr","May","Jun",
     "Jul","Aug","Sep","Oct","Nov","Dec"
   ];
 
   const currentDate = new Date();
-  const [month, setMonth] = useState(
+  const [month, setMonth] = React.useState(
     `${monthNames[currentDate.getMonth()]} ${currentDate.getFullYear()}`
   );
-  const [payrolls, setPayrolls] = useState([]);
-  const [loading, setLoading] = useState(false);
 
-  // Fetch payrolls whenever month changes
+
+  // fetch payrolls background me
   useEffect(() => {
-    fetchPayrolls();
-  }, [month]);
+    const fetchPayrolls = async () => {
+      if (!user) return; // wait until user loaded
 
-  const fetchPayrolls = async () => {
-    setLoading(true);
-    try {
-      const res = await getPayrolls({ month });
-      if (res.data && Array.isArray(res.data.data)) {
-        setPayrolls(res.data.data);
-      } else {
+      try {
+        const res = await getPayrolls({ month });
+        if (res.data && Array.isArray(res.data.data)) {
+          setPayrolls(res.data.data); //  Update global context
+        } else {
+          setPayrolls([]);
+        }
+      } catch (err) {
+        console.error(err);
         setPayrolls([]);
       }
-    } catch (err) {
-      console.error(err);
-      setPayrolls([]);
-    } finally {
-      setLoading(false);
-    }
-  };
+    };
 
-  // Export PDF for single employee
+    fetchPayrolls();
+  }, [month, user, setPayrolls]);
+
+  //  Export PDF
   const handleExportEmployeePdf = async (employeeId, employeeName) => {
     try {
       const res = await exportPayrollPdf(employeeId, month);
-
-      // Create blob & download
       const blob = new Blob([res.data], { type: "application/pdf" });
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
@@ -67,23 +66,14 @@ function PayrollPage() {
           Payroll Summary
         </h2>
 
-        {/* Month + Year Filter */}
         <PayrollFilters month={month} setMonth={setMonth} />
 
-        {/* Payroll Table */}
-        {loading ? (
-          <div className="text-xs text-gray-500 py-6 text-center">
-            Loading payroll data...
-          </div>
-        ) : (
-          <PayrollTable
-            payrolls={Array.isArray(payrolls) ? payrolls : []}
-            month={month}
-            onGenerateSlip={handleExportEmployeePdf} 
-              
-            
-          />
-        )}
+        {/* Payroll Table (data turant show) */}
+        <PayrollTable
+          payrolls={Array.isArray(payrolls) ? payrolls : []}
+          month={month}
+          onGenerateSlip={handleExportEmployeePdf} 
+        />
       </div>
     </Layout>
   );

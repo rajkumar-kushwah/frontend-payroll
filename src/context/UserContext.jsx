@@ -15,6 +15,11 @@ export const UserProvider = ({ children }) => {
   const [officeHolidays, setOfficeHolidays] = useState([]);
   const [holidayLoaded, setHolidayLoaded] = useState(false);
 
+  // Global payroll cache
+const [payrolls, setPayrolls] = useState([]);
+const [payrollLoaded, setPayrollLoaded] = useState(false);
+
+
   const updateUser = (data) => {
     setUser(data);
     localStorage.setItem("user", JSON.stringify(data));
@@ -72,6 +77,29 @@ export const UserProvider = ({ children }) => {
     fetchOfficeHolidays();
   }, [user, holidayLoaded]);
 
+  // 🔹 PAYROLL FETCH
+  useEffect(() => {
+  const fetchPayrolls = async () => {
+    if (!user || payrollLoaded) return;
+
+    try {
+      const monthNames = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+      const currentDate = new Date();
+      const month = `${monthNames[currentDate.getMonth()]} ${currentDate.getFullYear()}`;
+
+      const res = await getPayrolls({ month });
+      if (res.data && Array.isArray(res.data.data)) {
+        setPayrolls(res.data.data);
+      }
+      setPayrollLoaded(true);
+    } catch (err) {
+      console.error("Payroll fetch failed", err);
+    }
+  };
+
+  fetchPayrolls();
+}, [user, payrollLoaded]);
+
   return (
     <UserContext.Provider
       value={{
@@ -83,6 +111,10 @@ export const UserProvider = ({ children }) => {
         //  expose holidays
         officeHolidays,
         setOfficeHolidays,
+
+        // payroll
+    payrolls,
+    setPayrolls,
       }}
     >
       {children}
