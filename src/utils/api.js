@@ -265,6 +265,14 @@ export const exportPayrollPdf = (employeeId, month) => {
     responseType: "blob"
   });
 };
+// time 
+export const decimalToHHMM = (decimalHours) => {
+  if (!decimalHours) return "0:00";
+  const totalMinutes = Math.round(decimalHours * 60);
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
+  return `${hours}:${minutes.toString().padStart(2, "0")}`;
+};
 
 
 
