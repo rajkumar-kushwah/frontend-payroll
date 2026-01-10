@@ -41,23 +41,40 @@ function PayrollPage() {
   }, [month, user, setPayrolls]);
 
   //  Export PDF
-  const handleExportEmployeePdf = async (employeeId, employeeName) => {
-    try {
-      const res = await exportPayrollPdf(employeeId, month);
-      const blob = new Blob([res.data], { type: "application/pdf" });
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = url;
-      link.setAttribute("download", `Payslip_${employeeName}_${month}.pdf`);
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-      window.URL.revokeObjectURL(url);
-    } catch (err) {
-      console.error(err);
-      alert(err?.response?.data?.message || "Failed to export payroll PDF");
-    }
-  };
+ const handleExportEmployeePdf = async (employeeId, employeeName) => {
+  try {
+    const res = await exportPayrollPdf(employeeId, month);
+
+    // --------- LOCAL STORAGE LOG ----------
+    const logs = JSON.parse(localStorage.getItem("reportLogs")) || [];
+
+    logs.push({
+      employeeId,
+      employeeName,
+      month,
+      type: "payroll-pdf",
+      createdAt: new Date().toISOString(),
+    });
+
+    localStorage.setItem("reportLogs", JSON.stringify(logs));
+    // --------------------------------------
+
+    const blob = new Blob([res.data], { type: "application/pdf" });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", `Payslip_${employeeName}_${month}.pdf`);
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    window.URL.revokeObjectURL(url);
+
+  } catch (err) {
+    console.error(err);
+    alert("Failed to export payroll PDF");
+  }
+};
+
 
   return (
     <Layout>
