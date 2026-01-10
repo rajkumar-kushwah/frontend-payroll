@@ -171,6 +171,7 @@ export default function EmployeeAdd() {
         <label className="block mb-1">Basic Salary</label>
         <input
           className="w-full border rounded px-2 py-1"
+          type="number"
           value={basicSalary}
           onChange={e => setBasicSalary(e.target.value)}
         />
