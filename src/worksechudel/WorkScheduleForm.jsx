@@ -101,7 +101,7 @@ export default function WorkScheduleForm({ selectedSchedule, onSubmit, onClose }
           <h3 className="text-sm font-semibold">
             {selectedSchedule ? "Edit Schedule" : "Add Schedule"}
           </h3>
-          <button onClick={onClose} className="text-xs font-bold">Back</button>
+          <button onClick={onClose} className="text-xs cursor-pointer font-bold">Back</button>
         </div>
 
         <form className="flex flex-col gap-2 text-xs" onSubmit={handleSubmit}>

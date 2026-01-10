@@ -101,7 +101,7 @@ const LeaveTable = ({ leaves = [], onView, onDelete, userRole }) => {
                 <td className="flex gap-2 p-2">
                   <button
                     onClick={() => onView(l)}
-                    className="px-2 py-1 bg-blue-500 text-white text-xs rounded"
+                    className="px-2 py-1 bg-blue-500 text-white cursor-pointer text-xs rounded"
                   >
                     View
                   </button>
@@ -109,7 +109,7 @@ const LeaveTable = ({ leaves = [], onView, onDelete, userRole }) => {
                   {!isEmployee && (
                     <button
                       onClick={() => onDelete(l._id)}
-                      className="px-2 py-1 bg-red-500 text-white text-xs rounded"
+                      className="px-2 py-1 bg-red-500 text-white cursor-pointer text-xs rounded"
                     >
                       Delete
                     </button>

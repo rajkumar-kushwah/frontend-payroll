@@ -213,7 +213,7 @@ export default function ProfileSettings() {
       {/* Update button */}
       <button
         type="submit"
-        className="bg-lime-400 text-white px-4 py-2 rounded hover:bg-lime-500 mt-4"
+        className="bg-lime-400 text-white cursor-pointer px-4 py-2 rounded hover:bg-lime-500 mt-4"
       >
         Update Profile
       </button>

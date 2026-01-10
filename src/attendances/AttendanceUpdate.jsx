@@ -95,13 +95,13 @@ export default function AttendanceUpdate({ record, onUpdate, onClose }) {
         />
 
         <div className="flex justify-between mt-2">
-          <button onClick={onClose} className="bg-gray-300 p-1 rounded text-xs">
+          <button onClick={onClose} className="bg-gray-300 cursor-pointer p-1 rounded text-xs">
             Cancel
           </button>
           <button
             onClick={handleUpdate}
             disabled={loading}
-            className="bg-blue-500 hover:bg-blue-600 text-white p-1 rounded text-xs"
+            className="bg-blue-500 hover:bg-blue-600 text-white cursor-pointer p-1 rounded text-xs"
           >
             {loading ? "Updating..." : "Update"}
           </button>

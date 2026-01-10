@@ -12,20 +12,20 @@ const formatTime12 = (time) => {
 
 export default function WorkScheduleTable({ schedules, onEdit, onDelete }) {
     return (
-        <div className="overflow-x-auto w-full">
+        <div className="overflow-x-auto w-full border border-gray-300">
             <table className="w-full text-xs">
                 <thead>
-                    <tr className="bg-gray-100">
-                        <th className="p-2 text-left">Name</th>
-                        <th className="p-2 text-left">Emp ID</th>
-                        <th className="p-2 text-left">Shift Name</th>
-                        <th className="p-2 text-left">Shift Type</th>
-                        <th className="p-2 text-left">Effective Date</th>
-                        <th className="p-2 text-left">Fixed In</th>
-                        <th className="p-2 text-left">Fixed Out</th>
-                        <th className="p-2 text-left">Weekly Off</th>
-                        <th className="p-2 text-left">Break</th>
-                        <th className="p-2 text-left">Actions</th>
+                    <tr className="bg-gray-200 border border-gray-300">
+                        <th className="p-2 text-left border-r border-gray-300  ">Name</th>
+                        <th className="p-2 text-left border-r border-gray-300 ">Emp ID</th>
+                        <th className="p-2 text-left border-r border-gray-300 ">Shift Name</th>
+                        <th className="p-2 text-left border-r border-gray-300 ">Shift Type</th>
+                        <th className="p-2 text-left border-r border-gray-300 ">Effective Date</th>
+                        <th className="p-2 text-left border-r border-gray-300 ">Fixed In</th>
+                        <th className="p-2 text-left border-r border-gray-300 ">Fixed Out</th>
+                        <th className="p-2 text-left border-r border-gray-300 ">Weekly Off</th>
+                        <th className="p-2 text-left border-r border-gray-300 ">Break</th>
+                        <th className="p-2 text-left border-r border-gray-300 ">Actions</th>
                     </tr>
                 </thead>
 
@@ -43,7 +43,7 @@ export default function WorkScheduleTable({ schedules, onEdit, onDelete }) {
                                 <tr key={sch._id} className="hover:bg-gray-50">
 
                                     {/* Employee Name + Avatar */}
-                                    <td className="p-2 flex items-center gap-2">
+                                    <td className="p-2 flex items-center gap-2 border-r border-gray-300">
                                         <img
                                             src={emp.avatar || "/default-avatar.png"}
                                             alt={emp.name || "Employee"}
@@ -53,33 +53,33 @@ export default function WorkScheduleTable({ schedules, onEdit, onDelete }) {
                                     </td>
 
                                     {/* Employee ID */}
-                                    <td className="p-2 text-gray-700 font-semibold">
+                                    <td className="p-2 text-gray-700 font-semibold border-r border-gray-300">
                                         {emp.employeeCode || "N/A"}
                                     </td>
 
 
 
                                     {/* Shift Details */}
-                                    <td className="p-2">{sch.shiftName || "Default Shift"}</td>
-                                    <td className="p-2">{sch.shiftType || "Full-day"}</td>
-                                    <td className="p-2">{sch.effectiveFrom ? new Date(sch.effectiveFrom).toLocaleDateString() : "N/A"}</td>
-                                    <td className="p-2">{formatTime12(sch.inTime)}</td>
-                                    <td className="p-2">{formatTime12(sch.outTime)}</td>
+                                    <td className="p-2 border-r border-gray-300">{sch.shiftName || "Default Shift"}</td>
+                                    <td className="p-2 border-r border-gray-300">{sch.shiftType || "Full-day"}</td>
+                                    <td className="p-2 border-r border-gray-300">{sch.effectiveFrom ? new Date(sch.effectiveFrom).toLocaleDateString() : "N/A"}</td>
+                                    <td className="p-2 border-r border-gray-300">{formatTime12(sch.inTime)}</td>
+                                    <td className="p-2 border-r border-gray-300">{formatTime12(sch.outTime)}</td>
 
                                     {/* Weekly Off */}
-                                    <td className="p-2">
+                                    <td className="p-2 border-r border-gray-300">
                                         {(sch.weeklyOff || []).join(", ")}
                                     </td>
 
                                     {/* Break Time */}
-                                    <td className="p-2">
+                                    <td className="p-2 border-r border-gray-300">
                                         {sch.breakStart && sch.breakEnd
                                             ? `${formatTime12(sch.breakStart)} - ${formatTime12(sch.breakEnd)}`
                                             : "-"}
                                     </td>
 
                                     {/* Action Buttons */}
-                                    <td className="p-2 flex gap-2">
+                                    <td className="p-2 flex gap-2 ">
                                         <button
                                             onClick={() => onEdit(sch)}
                                             className="bg-yellow-400 text-white px-2 py-1 cursor-pointer rounded text-xs hover:bg-yellow-500"

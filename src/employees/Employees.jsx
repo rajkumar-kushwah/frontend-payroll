@@ -110,31 +110,31 @@ export default function Employees() {
         </div>
 
       {/* ===== EMPLOYEES TABLE ===== */}
-    <div className="overflow-x-auto w-full">
-  <table className="w-full min-w-[900px] border-collapse text-left">
-    <thead className="bg-gray-100 sticky top-0 z-10">
+    <div className="overflow-x-auto w-full mt-2">
+  <table className="w-full min-w-[900px] border-collapse text-left border-r border-gray-300">
+    <thead className="bg-gray-200 sticky top-0 z-10 border border-gray-300">
       <tr>
         {["ID","Name","Email","Phone","DOB","Role","Dept","Status","Join","BasicSalary","Actions"].map(h => (
-          <th key={h} className="px-3 py-2 border-b text-left text-xs whitespace-nowrap">{h}</th>
+          <th key={h} className="px-3 py-2 border-b border-r border-gray-300 text-left text-xs whitespace-nowrap">{h}</th>
         ))}
       </tr>
     </thead>
     <tbody>
       {filteredEmployees.map(emp => (
-        <tr key={emp._id} className="hover:bg-gray-50 border-b text-xs">
-          <td className="px-3 py-2 whitespace-nowrap">{emp.employeeCode}</td>
-          <td className="px-3 py-2 flex items-center gap-2 whitespace-nowrap">
+        <tr key={emp._id} className="hover:bg-gray-50 border text-xs  border-gray-300">
+          <td className="px-3 py-2 whitespace-nowrap border-r border-gray-300">{emp.employeeCode}</td>
+          <td className="px-3 py-2 flex items-center gap-2 whitespace-nowrap border-r border-gray-300">
             <img src={emp.avatar || "/default-avatar.png"} alt="avatar" className="w-5 h-5 rounded-full object-cover" />
             {emp.name}
           </td>
-          <td className="px-3 py-2 whitespace-nowrap">{emp.email}</td>
-          <td className="px-3 py-2 whitespace-nowrap">{emp.phone || "-"}</td>
-          <td className="px-3 py-2 whitespace-nowrap">{emp.dateOfBirth ? new Date(emp.dateOfBirth).toLocaleDateString() : "-"}</td>
-          <td className="px-3 py-2 whitespace-nowrap">{emp.jobRole}</td>
-          <td className="px-3 py-2 whitespace-nowrap">{emp.department}</td>
-          <td className="px-3 py-2 whitespace-nowrap">{emp.status}</td>
-          <td className="px-3 py-2 whitespace-nowrap">{emp.joinDate ? new Date(emp.joinDate).toLocaleDateString() : "-"}</td>
-          <td className="px-3 py-2 whitespace-nowrap">{emp.basicSalary || "-"}</td>
+          <td className="px-3 py-2 whitespace-nowrap border-r border-gray-300">{emp.email}</td>
+          <td className="px-3 py-2 whitespace-nowrap border-r border-gray-300">{emp.phone || "-"}</td>
+          <td className="px-3 py-2 whitespace-nowrap border-r border-gray-300">{emp.dateOfBirth ? new Date(emp.dateOfBirth).toLocaleDateString() : "-"}</td>
+          <td className="px-3 py-2 whitespace-nowrap border-r border-gray-300">{emp.jobRole}</td>
+          <td className="px-3 py-2 whitespace-nowrap border-r border-gray-300">{emp.department}</td>
+          <td className="px-3 py-2 whitespace-nowrap border-r border-gray-300">{emp.status}</td>
+          <td className="px-3 py-2 whitespace-nowrap border-r border-gray-300">{emp.joinDate ? new Date(emp.joinDate).toLocaleDateString() : "-"}</td>
+          <td className="px-3 py-2 whitespace-nowrap border-r border-gray-300">{emp.basicSalary || "-"}</td>
           {/* <td className="px-3 py-2 whitespace-nowrap">{emp.notes || "-"}</td> */}
 
           

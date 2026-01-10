@@ -72,13 +72,13 @@ export default function EmployeeDetailPage() {
         <div className="flex justify-between mt-2">
           <button
             onClick={handleDeleteEmployee}
-            className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded text-xs"
+            className="bg-red-500 hover:bg-red-600 text-white cursor-pointer px-3 py-1 rounded text-xs"
           >
             Delete
           </button>
           <button
             onClick={() => navigate("/employees")}
-            className="bg-gray-500 hover:bg-gray-600 text-white px-3 py-1 rounded text-xs"
+            className="bg-gray-500 hover:bg-gray-600 text-white cursor-pointer px-3 py-1 rounded text-xs"
           >
             Back
           </button>

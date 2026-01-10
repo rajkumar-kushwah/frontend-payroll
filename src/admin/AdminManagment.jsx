@@ -175,9 +175,9 @@ export default function AdminManagement() {
 
         {/* ===== Admin Table ===== */}
         <div className="overflow-x-auto">
-          <table className="w-full text-xs border">
+          <table className="w-full  text-xs border border-gray-300">
             <thead>
-              <tr className="bg-gray-200">
+              <tr className="bg-gray-200  text-left">
                 <th className="p-1">Name</th>
                 <th className="p-1">Email</th>
                 <th className="p-1">Role</th>
@@ -188,7 +188,7 @@ export default function AdminManagement() {
             <tbody>
               {users.length ? (
                 users.map((u) => (
-                  <tr key={u._id} className="border-t">
+                  <tr key={u._id} className="border-t border-gray-200">
                     <td className="p-1">{u.name}</td>
                     <td className="p-1">{u.email}</td>
                     <td className="p-1">
@@ -200,7 +200,7 @@ export default function AdminManagement() {
                           onChange={(e) =>
                             handleToggle(u, e.target.value)
                           }
-                          className="border p-1 rounded text-xs"
+                          className="border p-1 rounded text-xs cursor-pointer border-gray-300"
                         >
                           <option value="user">User</option>
                           <option value="admin">Admin</option>

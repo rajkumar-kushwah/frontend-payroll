@@ -75,13 +75,13 @@ const LeaveViewModal = ({ leave, user, onClose, onApprove, onReject }) => {
           <div className="flex justify-end gap-2 mb-3">
             <button
               onClick={onApprove}
-              className="px-3 py-1 bg-green-500 text-sm text-white rounded hover:bg-green-600"
+              className="px-3 py-1 bg-green-500 text-sm cursor-pointer text-white rounded hover:bg-green-600"
             >
               Approve
             </button>
             <button
               onClick={onReject}
-              className="px-3 py-1 bg-red-500 text-sm text-white rounded hover:bg-red-600"
+              className="px-3 py-1 bg-red-500 text-sm cursor-pointer text-white rounded hover:bg-red-600"
             >
               Reject
             </button>
@@ -91,7 +91,7 @@ const LeaveViewModal = ({ leave, user, onClose, onApprove, onReject }) => {
         <div className="flex justify-end">
           <button
             onClick={onClose}
-            className="px-3 py-1 text-xs border rounded hover:bg-gray-100"
+            className="px-3 py-1 text-xs cursor-pointer border rounded hover:bg-gray-100"
           >
             Close
           </button>

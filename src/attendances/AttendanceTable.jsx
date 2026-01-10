@@ -35,8 +35,9 @@ export default function AttendanceTable({
 
   return (
     <div className="w-full overflow-x-auto rounded-lg bg-transparent scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent">
-      <table className="w-full text-xs border-collapse min-w-[750px]">
-        <thead className="bg-gray-100/70 backdrop-blur-sm sticky top-0 z-10 text-gray-700">
+      <table className="w-full text-xs border border-gray-300 border-collapse min-w-[750px]">
+      <thead className="bg-gray-200 border-b border-gray-400">
+
           <tr>
             <th className="p-3 text-left">Employee</th>
             <th className="p-3 text-center">Date</th>
@@ -53,30 +54,30 @@ export default function AttendanceTable({
           {attendanceList.map((att) => (
             <tr
               key={att._id}
-              className=" hover:bg-gray-50/70 transition-all text-[11px]"
+              className=" hover:bg-gray-50/70 transition-all  border border-gray-300  text-[11px]"
             >
               <td className="p-2 flex items-center gap-2 flex-wrap">
                 <img
                   src={att.employeeId?.avatar || "/default-avatar.png"}
                   className="w-6 h-6 rounded-full border border-gray-300"
                 />
-                <div className="flex flex-col leading-tight">
+                <div className="flex  flex-col leading-tight">
                   <span className="text-[11px] font-medium">{att.employeeId?.name}</span>
                   <span className="text-[10px] text-gray-500">{att.employeeId?.employeeCode || "-"}</span>
                 </div>
               </td>
 
-              <td className="p-3 text-center">{formatDate(att.date || att.checkIn)}</td>
-              <td className="p-3 text-center">{formatTime12(att.checkIn)}</td>
-              <td className="p-3 text-center">{formatTime12(att.checkOut)}</td>
-              <td className="p-3 text-center">{att.status || "-"}</td>
-              <td className="p-3 text-center">{formatDecimalHours(att.totalHours)}</td>
-              <td className="p-3 text-center">{formatDecimalHours(att.overtimeHours)}</td>
+              <td className="p-3 text-center border border-gray-300">{formatDate(att.date || att.checkIn)}</td>
+              <td className="p-3 text-center border border-gray-300">{formatTime12(att.checkIn)}</td>
+              <td className="p-3 text-center border border-gray-300">{formatTime12(att.checkOut)}</td>
+              <td className="p-3 text-center border border-gray-300">{att.status || "-"}</td>
+              <td className="p-3 text-center border border-gray-300">{formatDecimalHours(att.totalHours)}</td>
+              <td className="p-3 text-center border border-gray-300">{formatDecimalHours(att.overtimeHours)}</td>
 
               <td className="p-3 flex gap-1 justify-center flex-wrap">
                 {!att.checkIn && (
                   <button
-                    className="bg-lime-400 hover:bg-lime-500 text-white px-2 py-1 rounded text-[10px] shadow-sm"
+                    className="bg-lime-400 hover:bg-lime-500 text-white cursor-pointer px-2 py-1 rounded text-[10px] shadow-sm"
                     onClick={() => onCheckIn(att.employeeId?._id)}
                   >
                     Check In

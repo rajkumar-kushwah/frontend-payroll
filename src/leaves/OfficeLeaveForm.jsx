@@ -102,7 +102,7 @@ const OfficeLeaveForm = ({ onClose, onSuccess }) => {
             <button
               type="button"
               onClick={onClose}
-              className="px-2 py-1 text-xs border rounded"
+              className="px-2 py-1 text-xs cursor-pointer border rounded"
             >
               Cancel
             </button>
@@ -110,7 +110,7 @@ const OfficeLeaveForm = ({ onClose, onSuccess }) => {
             <button
               type="submit"
               disabled={loading}
-              className="px-2 py-1 text-xs bg-blue-600 text-white rounded"
+              className="px-2 py-1 text-xs bg-blue-600 cursor-pointer border text-white rounded"
             >
               {loading ? "Saving..." : "Add"}
             </button>

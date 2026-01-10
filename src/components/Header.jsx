@@ -8,8 +8,8 @@ export default function Header({ toggle, isOpen }) {
   const { user } = useUser();
 
   const [dropdown, setDropdown] = useState(null);
-  const [query, setQuery] = useState("");        
-  const [results, setResults] = useState([]);    
+  const [query, setQuery] = useState("");
+  const [results, setResults] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -27,47 +27,47 @@ export default function Header({ toggle, isOpen }) {
   }, []);
 
   // Live Search with exact + related results
- // Live Search effect with debounce
-useEffect(() => {
-  if (!query.trim()) {
-    setResults([]);
-    return;
-  }
- 
-  setLoading(true);
-  const debounce = setTimeout(async () => {
-    try {
-      const res = await api.get(`/employees?search=${query}`);
-      const q = query.trim().toLowerCase();
-
-      // Exact matches first
-      const exactMatches = res.data.filter(emp =>
-        emp.employeeCode.replace(/^0+/, "").toLowerCase() === q.replace(/^0+/, "") ||
-        emp.phone.replace(/^0+/, "") === q.replace(/^0+/, "")
-      );
-
-      // Related matches: name/code/phone contains query, exclude exact matches
-      const relatedMatches = res.data
-        .filter(emp => !exactMatches.includes(emp) && (
-          emp.name.toLowerCase().includes(q) ||
-          emp.employeeCode.toLowerCase().includes(q) ||
-          emp.phone.includes(q)
-        ))
-        // Sort related by employeeCode ascending
-        .sort((a, b) => a.employeeCode.localeCompare(b.employeeCode));
-
-      // Combine exact first, then related
-      setResults([...exactMatches, ...relatedMatches]);
-
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
+  // Live Search effect with debounce
+  useEffect(() => {
+    if (!query.trim()) {
+      setResults([]);
+      return;
     }
-  }, 300);
 
-  return () => clearTimeout(debounce);
-}, [query]);
+    setLoading(true);
+    const debounce = setTimeout(async () => {
+      try {
+        const res = await api.get(`/employees?search=${query}`);
+        const q = query.trim().toLowerCase();
+
+        // Exact matches first
+        const exactMatches = res.data.filter(emp =>
+          emp.employeeCode.replace(/^0+/, "").toLowerCase() === q.replace(/^0+/, "") ||
+          emp.phone.replace(/^0+/, "") === q.replace(/^0+/, "")
+        );
+
+        // Related matches: name/code/phone contains query, exclude exact matches
+        const relatedMatches = res.data
+          .filter(emp => !exactMatches.includes(emp) && (
+            emp.name.toLowerCase().includes(q) ||
+            emp.employeeCode.toLowerCase().includes(q) ||
+            emp.phone.includes(q)
+          ))
+          // Sort related by employeeCode ascending
+          .sort((a, b) => a.employeeCode.localeCompare(b.employeeCode));
+
+        // Combine exact first, then related
+        setResults([...exactMatches, ...relatedMatches]);
+
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    }, 300);
+
+    return () => clearTimeout(debounce);
+  }, [query]);
 
 
   return (
@@ -82,7 +82,7 @@ useEffect(() => {
         >
           {isOpen ? "×" : "☰"}
         </button>
-        
+
 
         <div className="relative flex items-center gap-2 w-full bg-white border-black rounded-2xl py-1 px-2 text-black">
           <i className="fa fa-search text-gray-500 px-2" aria-hidden="true"></i>
@@ -103,9 +103,8 @@ useEffect(() => {
               {results.map((emp, idx) => (
                 <li
                   key={emp._id}
-                  className={`px-4 py-2 cursor-pointer flex justify-between ${
-                    idx === 0 ? "font-bold" : "hover:bg-gray-100"
-                  }`}
+                  className={`px-4 py-2 cursor-pointer flex justify-between ${idx === 0 ? "font-bold" : "hover:bg-gray-100"
+                    }`}
                   onClick={() => navigate(`/employee/${emp._id}`)}
                 >
                   <div>
@@ -131,32 +130,31 @@ useEffect(() => {
       <div className="flex items-center gap-2 ml-4 sm:gap-4 relative">
         <div className="relative" ref={userRef}>
           <div
-  className="flex items-center gap-1 cursor-pointer"
-  onClick={() => setDropdown(prev => (prev === "user" ? null : "user"))}
->
-  {/* Name first */}
-  <span className="hidden text-xs md:inline">{user?.name || "User"}</span>
+            className="flex items-center gap-1 cursor-pointer"
+            onClick={() => setDropdown(prev => (prev === "user" ? null : "user"))}
+          >
+            {/* Name first */}
+            <span className="hidden text-xs md:inline">{user?.name || "User"}</span>
 
-  {/* Avatar */}
-  {user?.avatar ? (
-    <img
-      src={user.avatar}
-      alt="avatar"
-      className="w-7 h-7 rounded-full border-1 border-black"
-    />
-  ) : (
-    <div className="w-7 h-7 rounded-full bg-gray-400 flex items-center justify-center text-white font-bold">
-      {user?.name?.charAt(0).toUpperCase() || "U"}
-    </div>
-  )}
+            {/* Avatar */}
+            {user?.avatar ? (
+              <img
+                src={user.avatar}
+                alt="avatar"
+                className="w-7 h-7 rounded-full border-1 border-black"
+              />
+            ) : (
+              <div className="w-7 h-7 rounded-full bg-gray-400 flex items-center justify-center text-white font-bold">
+                {user?.name?.charAt(0).toUpperCase() || "U"}
+              </div>
+            )}
 
-  {/* Dropdown caret */}
-  <i
-    className={`fa fa-caret-down text-sm text-gray-500 transition-transform duration-300 ${
-      dropdown === "user" ? "rotate-180" : "rotate-0"
-    }`}
-  ></i>
-</div>
+            {/* Dropdown caret */}
+            <i
+              className={`fa fa-caret-down text-sm text-gray-500 transition-transform duration-300 ${dropdown === "user" ? "rotate-180" : "rotate-0"
+                }`}
+            ></i>
+          </div>
 
 
           {dropdown === "user" && (

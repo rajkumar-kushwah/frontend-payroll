@@ -111,7 +111,7 @@ const ApplyLeaveModal = ({ onClose, onSuccess }) => {
           <button
             onClick={submit}
             disabled={loading}
-            className="px-2 py-1 text-sm bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50"
+            className="px-2 py-1 text-sm bg-blue-500 text-white cursor-pointer rounded hover:bg-blue-600 disabled:opacity-50"
           >
             {loading ? "Submitting..." : "Submit"}
           </button>

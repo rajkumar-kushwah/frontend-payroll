@@ -193,10 +193,10 @@ export default function Profile() {
               ))}
 
               <div className="flex justify-between mt-1">
-                <button type="submit" className="bg-green-500 text-black px-3 py-1 rounded hover:bg-green-600 text-xs">
+                <button type="submit" className="bg-green-500 text-black cursor-pointer px-3 py-1 rounded hover:bg-green-600 text-xs">
                   Save
                 </button>
-                <button type="button" className="bg-gray-300 px-3 py-1 rounded hover:bg-gray-400 text-xs" onClick={() => setEdit(false)}>
+                <button type="button" className="bg-gray-300 cursor-pointer px-3 py-1 rounded hover:bg-gray-400 text-xs" onClick={() => setEdit(false)}>
                   Cancel
                 </button>
               </div>
@@ -233,10 +233,10 @@ export default function Profile() {
               </p>
 
               <div className="flex justify-between mt-2">
-                <button className="bg-yellow-400 px-3 py-1 rounded hover:bg-yellow-500 text-xs" onClick={() => setEdit(true)}>
+                <button className="bg-yellow-400 px-3 py-1 cursor-pointer rounded hover:bg-yellow-500 text-xs" onClick={() => setEdit(true)}>
                   Edit Profile
                 </button>
-                <button className="bg-red-500 px-3 py-1 rounded text-white hover:bg-red-600 text-xs" onClick={() => navigate("/dashboard")}>
+                <button className="bg-red-500 px-3 py-1 cursor-pointer rounded text-white hover:bg-red-600 text-xs" onClick={() => navigate("/dashboard")}>
                   Cancel
                 </button>
               </div>

@@ -111,7 +111,7 @@ const LeaveDashboard = () => {
                 <LeaveFilter filter={filter} setFilter={setFilter} />
                 <button
                   onClick={() => setOpenOfficeLeave(true)}
-                  className="px-2 py-1 bg-green-500 text-xs text-white rounded"
+                  className="px-2 py-1 bg-green-500 text-xs cursor-pointer text-white rounded"
                 >
                   + Office Leave
                 </button>
@@ -121,7 +121,7 @@ const LeaveDashboard = () => {
             {user.role === "employee" && (
               <button
                 onClick={() => setOpenApply(true)}
-                className="px-2 py-1 bg-blue-500 text-xs text-white rounded"
+                className="px-2 py-1 bg-blue-500 text-xs cursor-pointer text-white rounded"
               >
                 + Apply Leave
               </button>

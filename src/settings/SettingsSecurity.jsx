@@ -119,7 +119,7 @@ export default function SecuritySettings() {
 
           <button
             type="submit"
-            className="w-full bg-lime-400 text-white px-3 py-1 rounded hover:bg-lime-500"
+            className="w-full bg-lime-400 text-white cursor-pointer px-3 py-1 rounded hover:bg-lime-500"
           >
             Update Password
           </button>

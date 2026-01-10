@@ -8,17 +8,17 @@ const OfficeHolidayTable = ({ holidays = [], user, onDelete }) => {
     user?.role === "hr";
 
   return (
-    <div className="border overflow-x-auto rounded bg-white">
+    <div className="border border-gray-300 overflow-x-auto rounded bg-white">
       <h4 className="text-xs font-bold mb-2">Office Holidays</h4>
-      <table className="w-full text-xs border-collapse">
+      <table className="w-full text-xs  border border-gray-300">
         <thead className="bg-gray-100">
           <tr>
-            <th className="p-2 text-left border-b">Title</th>
-            <th className="p-2 text-left border-b">Start Date</th>
-            <th className="p-2 text-left border-b">End Date</th>
-            <th className="p-2 text-left border-b">Total Days</th>
-            <th className="p-2 text-left border-b">Description</th>
-            {canDelete && <th className="p-2 text-left border-b">Action</th>}
+            <th className="p-2 text-left border-r border-gray-300">Title</th>
+            <th className="p-2 text-left border-r border-gray-300">Start Date</th>
+            <th className="p-2 text-left border-r border-gray-300">End Date</th>
+            <th className="p-2 text-left border-r border-gray-300">Total Days</th>
+            <th className="p-2 text-left border-r border-gray-300">Description</th>
+            {canDelete && <th className="p-2 text-left border-r border-gray-300">Action</th>}
           </tr>
         </thead>
 
@@ -34,19 +34,19 @@ const OfficeHolidayTable = ({ holidays = [], user, onDelete }) => {
             </tr>
           ) : (
             holidays.map((h) => (
-              <tr key={h._id} className="border-t">
-                <td className="p-2 text-left border-b">{h.title}</td>
-                <td className="p-2 text-left border-b">
+              <tr key={h._id} className=" border-t border-gray-300">
+                <td className="p-2 text-left  border-r border-gray-300">{h.title}</td>
+                <td className="p-2 text-left border-r border-gray-300">
                   {new Date(h.startDate).toLocaleDateString()}
                 </td>
-                <td className="p-2 text-left border-b">
+                <td className="p-2 text-left  border-r border-gray-300">
                   {new Date(h.endDate).toLocaleDateString()}
                 </td>
-                <td className="p-2 text-left border-b">{h.totalDays}</td>
-                <td className="p-2 text-left border-b">{h.description || "-"}</td>
+                <td className="p-2 text-left border-r border-gray-300 ">{h.totalDays}</td>
+                <td className="p-2 text-left border-r border-gray-300 ">{h.description || "-"}</td>
 
                 {canDelete && (
-                  <td className="p-2 text-left border-b">
+                  <td className="p-2 text-left">
                     <button
                       onClick={() => onDelete(h._id)}
                       className="px-2 py-1 bg-red-500 hover:bg-red-600 cursor-pointer text-xs text-white rounded"
