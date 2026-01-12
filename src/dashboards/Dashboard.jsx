@@ -217,22 +217,22 @@ export default function Dashboard() {
       </h1>
 
       {/* Buttons */}
-      <div className="flex justify-end gap-1 mb-2">
+      <div className="flex justify-end gap-1.5 mb-2">
         <button
           onClick={() => navigate("/employee/add")}
-          className="bg-blue-600 p-1 rounded text-white text-[9px]"
+          className="bg-blue-600 p-1 rounded cursor-pointer text-white text-[9px]"
         >
           + Create
         </button>
         <button
           onClick={() => navigate("/employees")}
-          className="bg-white p-1 rounded text-blue-600 text-[9px]"
+          className="bg-white p-1  rounded cursor-pointer text-blue-600 text-[9px]"
         >
           All
         </button>
         <button
           onClick={() => navigate("/attendance-page")}
-          className="bg-green-600 p-1 rounded text-white text-[9px]"
+          className="bg-green-600 p-1 rounded cursor-pointer text-white text-[9px]"
         >
           Attendance
         </button>

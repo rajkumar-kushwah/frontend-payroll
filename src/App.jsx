@@ -25,7 +25,7 @@ import AttendancePage from './attendances/AttendancePage';
 import LeaveDashboard from './leaves/LeavemainPage';
 import PayrollPage from './payroll/PayrollPage';
 import SecondCounter from './seconds/Second';
-
+import EditProfile from './profile/EditProfile';
 
 function App() {
   return (
@@ -38,6 +38,7 @@ function App() {
         <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
         <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
         <Route path="/profile" element={<ProtectedRoute><Profile/></ProtectedRoute>} />
+        <Route path="/profile/edit" element={<ProtectedRoute><EditProfile /></ProtectedRoute>} />
         <Route path="/forgot-password" element={<PublicRoute><ForgotPassword /></PublicRoute>} />
         <Route path="/verify-otp" element={<PublicRoute><VerifyOtp /></PublicRoute>} />
         <Route path="/reset-password" element={<PublicRoute><ResetPassword /></PublicRoute>} />

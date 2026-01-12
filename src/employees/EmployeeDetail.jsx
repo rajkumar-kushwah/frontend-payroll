@@ -43,7 +43,7 @@ export default function EmployeeDetailPage() {
 
   return (
     <Layout>
-      <div className="max-w-sm mx-auto bg-white shadow rounded-lg p-4 text-xs space-y-2">
+      <div className="max-w-sm mx-auto border-gray-100 shadow rounded-lg p-4 text-xs space-y-2">
         {/* Avatar + Name */}
         <div className="flex flex-col items-center mb-2">
           <img
@@ -70,12 +70,12 @@ export default function EmployeeDetailPage() {
 
         {/* Actions */}
         <div className="flex justify-between mt-2">
-          <button
+          {/* <button
             onClick={handleDeleteEmployee}
             className="bg-red-500 hover:bg-red-600 text-white cursor-pointer px-3 py-1 rounded text-xs"
           >
             Delete
-          </button>
+          </button> */}
           <button
             onClick={() => navigate("/employees")}
             className="bg-gray-500 hover:bg-gray-600 text-white cursor-pointer px-3 py-1 rounded text-xs"

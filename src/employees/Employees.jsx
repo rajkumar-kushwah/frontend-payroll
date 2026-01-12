@@ -108,7 +108,7 @@ export default function Employees() {
             <span className="hidden sm:inline cursor-pointer text-xs">+ Create</span>
           </button>
         </div>
-
+ 
       {/* ===== EMPLOYEES TABLE ===== */}
     <div className="overflow-x-auto w-full mt-2">
   <table className="w-full min-w-[900px] border-collapse text-left border-r border-gray-300">

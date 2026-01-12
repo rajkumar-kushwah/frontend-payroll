@@ -62,7 +62,7 @@ export default function EmployeeAdd() {
     {/* Close */}
     <button
       onClick={() => navigate("/employees")}
-      className="absolute top-2 right-2 text-gray-500 hover:text-black"
+      className="absolute top-2 right-2 cursor-pointer text-gray-500 hover:text-black"
     >
       <X size={18} />
     </button>

@@ -97,7 +97,7 @@ export default function EditEmployee() {
 
   return (
     <Layout>
-      <div className="max-w-2xl mx-auto mt-6 bg-white p-5 rounded-lg shadow text-sm">
+      <div className="max-w-2xl mx-auto mt-6 border-gray-100 p-5 rounded-lg shadow text-sm">
 
         <h2 className="font-semibold mb-4">Edit Employee</h2>
 
@@ -119,9 +119,9 @@ export default function EditEmployee() {
 
           {/* Name */}
           <div>
-            <label className="block mb-1">Name</label>
+            <label className="block  mb-1">Name</label>
             <input
-              className="w-full border rounded px-3 py-2"
+              className="w-full border rounded px-2 py-1"
               value={name}
               onChange={e => setName(e.target.value)}
             />
@@ -133,7 +133,7 @@ export default function EditEmployee() {
               <label className="block mb-1">Date of Birth</label>
               <input
                 type="date"
-                className="w-full border rounded px-3 py-2"
+                className="w-full border rounded px-2 py-1"
                 value={dob}
                 onChange={e => setDob(e.target.value)}
               />
@@ -143,7 +143,7 @@ export default function EditEmployee() {
             <div>
               <label className="block mb-1">Email</label>
               <input
-                className="w-full border rounded px-3 py-2"
+                className="w-full border rounded px-2 py-1"
                 value={email}
                 onChange={e => setEmail(e.target.value)}
               />
@@ -155,7 +155,7 @@ export default function EditEmployee() {
             <div>
               <label className="block mb-1">Phone</label>
               <input
-                className="w-full border rounded px-3 py-2"
+                className="w-full border rounded px-2 py-1"
                 value={phone}
                 onChange={e => setPhone(e.target.value)}
               />
@@ -164,7 +164,7 @@ export default function EditEmployee() {
             <div>
               <label className="block mb-1">Department</label>
               <input
-                className="w-full border rounded px-3 py-2"
+                className="w-full border rounded px-2 py-1"
                 value={department}
                 onChange={e => setDepartment(e.target.value)}
               />
@@ -176,7 +176,7 @@ export default function EditEmployee() {
             <div>
               <label className="block mb-1">Job Role</label>
               <input
-                className="w-full border rounded px-3 py-2"
+                className="w-full border rounded px-2 py-1"
                 value={jobRole}
                 onChange={e => setJobRole(e.target.value)}
               />
@@ -185,7 +185,7 @@ export default function EditEmployee() {
             <div>
               <label className="block mb-1">Status</label>
               <select
-                className="w-full border rounded px-3 py-2"
+                className="w-full border rounded px-2 py-1"
                 value={status}
                 onChange={e => setStatus(e.target.value)}
               >
@@ -201,7 +201,7 @@ export default function EditEmployee() {
               <label className="block mb-1">Join Date</label>
               <input
                 type="date"
-                className="w-full border rounded px-3 py-2"
+                className="w-full border rounded px-2 py-1"
                 value={joinDate}
                 onChange={e => setJoinDate(e.target.value)}
               />
@@ -210,7 +210,7 @@ export default function EditEmployee() {
             <div>
               <label className="block mb-1">Basic Salary</label>
               <input
-                className="w-full border rounded px-3 py-2"
+                className="w-full border rounded px-2 py-1"
                 value={basicSalary}
                 onChange={e => setBasicSalary(e.target.value)}
               />
@@ -220,7 +220,7 @@ export default function EditEmployee() {
   <label className="block mb-1">Password</label>
   <input
     type="password"
-    className="w-full border rounded px-3 py-2"
+    className="w-full border rounded px-2 py-1"
     value={password}
     onChange={e => setPassword(e.target.value)}
   />
@@ -244,14 +244,14 @@ export default function EditEmployee() {
             <button
               type="button"
               onClick={() => navigate("/employees")}
-              className="px-4 py-2 bg-gray-400 cursor-pointer text-white rounded"
+              className="px-2 py-1 bg-gray-400 cursor-pointer text-white rounded"
             >
               Cancel
             </button>
 
             <button
               type="submit"
-              className="px-4 py-2 bg-lime-400 cursor-pointer text-white rounded hover:bg-lime-500"
+              className="px-2 py-1 bg-lime-400 cursor-pointer text-white rounded hover:bg-lime-500"
             >
               Update
             </button>
