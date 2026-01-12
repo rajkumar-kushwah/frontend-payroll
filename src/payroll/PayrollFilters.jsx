@@ -39,7 +39,7 @@ const PayrollFilters = ({ month, setMonth }) => {
               dropdownMonthOpen ? "rotate-180" : "rotate-0"
             }`}
           >
-            <i class="fa fa-caret-down" aria-hidden="true"></i>
+            <i className="fa fa-caret-down" aria-hidden="true"></i>
           </span>
         </div>
         {dropdownMonthOpen && (
@@ -70,7 +70,7 @@ const PayrollFilters = ({ month, setMonth }) => {
               dropdownYearOpen ? "rotate-180" : "rotate-0"
             }`}
           >
-        <i class="fa fa-caret-down" aria-hidden="true"></i>
+        <i className="fa fa-caret-down" aria-hidden="true"></i>
           </span>
         </div>
         {dropdownYearOpen && (

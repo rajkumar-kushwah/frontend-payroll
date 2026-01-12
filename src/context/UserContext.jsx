@@ -1,40 +1,45 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import { getProfile, getOfficeHolidaysApi } from "../utils/api";
-import { getPayrolls } from "../utils/api";
-
+import {
+  getProfile,
+  getOfficeHolidaysApi,
+  getPayrolls,
+} from "../utils/api";
 
 const UserContext = createContext();
 
 export const UserProvider = ({ children }) => {
-  const [user, setUser] = useState(() => {
-    const stored = localStorage.getItem("user");
-    return stored ? JSON.parse(stored) : null;
-  });
+  // 🔹 AUTH USER (ONLY FROM BACKEND, NOT localStorage)
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  const [loading, setLoading] = useState(!user);
-
-  //  OFFICE HOLIDAY CACHE (GLOBAL)
+  // 🔹 OFFICE HOLIDAYS (GLOBAL CACHE)
   const [officeHolidays, setOfficeHolidays] = useState([]);
   const [holidayLoaded, setHolidayLoaded] = useState(false);
 
-  // Global payroll cache
+  // 🔹 PAYROLL (GLOBAL CACHE)
   const [payrolls, setPayrolls] = useState([]);
   const [payrollLoaded, setPayrollLoaded] = useState(false);
 
-
+  // 🔹 UPDATE USER (OPTIONAL SAVE)
   const updateUser = (data) => {
     setUser(data);
     localStorage.setItem("user", JSON.stringify(data));
   };
 
+  // 🔹 LOGOUT (SINGLE SOURCE)
   const logout = () => {
     setUser(null);
-    localStorage.removeItem("user");
-    localStorage.removeItem("token");
+    setOfficeHolidays([]);
+    setPayrolls([]);
+    setHolidayLoaded(false);
+    setPayrollLoaded(false);
+    localStorage.clear();
     window.location.href = "/login";
   };
 
-  // 🔹 USER PROFILE FETCH
+  // =====================================================
+  // 🔹 1. FETCH AUTH PROFILE (FIRST & MOST IMPORTANT)
+  // =====================================================
   useEffect(() => {
     const fetchUser = async () => {
       const token = localStorage.getItem("token");
@@ -43,71 +48,84 @@ export const UserProvider = ({ children }) => {
         return;
       }
 
-
-      if (!user) setLoading(true);
-      // setLoading(true);
+      setLoading(true);
       try {
         const res = await getProfile();
-        if (res.data) {
-          updateUser(res.data);
-        }
+        updateUser(res.data); // ✅ ONLY SOURCE OF TRUTH
       } catch (err) {
-        //  sirf token invalid ho tab logout
-        if (err.response && err.response.status === 401) {
-          localStorage.removeItem("token");
-          localStorage.removeItem("user");
-          setUser(null);
+        // ❌ 401 or 403 = INVALID SESSION
+        if (err.response?.status === 401 || err.response?.status === 403) {
+          logout();
         } else {
-          // network / server issue
-          console.log("Network issue, user not logged out");
+          console.error("Profile fetch error:", err);
         }
       } finally {
         setLoading(false);
       }
     };
+
     fetchUser();
   }, []);
 
-  // 🔹 OFFICE HOLIDAY FETCH (ONLY ONCE)
+  // =====================================================
+  // 🔹 2. FETCH OFFICE HOLIDAYS (AFTER USER CONFIRMED)
+  // =====================================================
   useEffect(() => {
-    const fetchOfficeHolidays = async () => {
-      if (!user || user.role === "employee" || holidayLoaded) return;
+    if (!user?._id) return;
+    if (user.role === "employee") return;
+    if (holidayLoaded) return;
 
+    const fetchOfficeHolidays = async () => {
       try {
         const res = await getOfficeHolidaysApi();
-        setOfficeHolidays(res.data.data);
-        setHolidayLoaded(true); //  cache flag
+        setOfficeHolidays(res.data.data || []);
+        setHolidayLoaded(true);
       } catch (err) {
-        console.error("Office holiday fetch failed", err);
+        if (err.response?.status === 401 || err.response?.status === 403) {
+          logout();
+        } else {
+          console.error("Office holiday fetch failed:", err);
+        }
       }
     };
 
     fetchOfficeHolidays();
   }, [user, holidayLoaded]);
 
-  // 🔹 PAYROLL FETCH
+  // =====================================================
+  // 🔹 3. FETCH PAYROLLS (AFTER USER CONFIRMED)
+  // =====================================================
   useEffect(() => {
-    const fetchPayrolls = async () => {
-      if (!user || payrollLoaded) return;
+    if (!user?._id) return;
+    if (payrollLoaded) return;
 
+    const fetchPayrolls = async () => {
       try {
-        const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-        const currentDate = new Date();
-        const month = `${monthNames[currentDate.getMonth()]} ${currentDate.getFullYear()}`;
+        const monthNames = [
+          "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+          "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+        ];
+        const now = new Date();
+        const month = `${monthNames[now.getMonth()]} ${now.getFullYear()}`;
 
         const res = await getPayrolls({ month });
-        if (res.data && Array.isArray(res.data.data)) {
-          setPayrolls(res.data.data);
-        }
+        setPayrolls(res.data?.data || []);
         setPayrollLoaded(true);
       } catch (err) {
-        console.error("Payroll fetch failed", err);
+        if (err.response?.status === 401 || err.response?.status === 403) {
+          logout();
+        } else {
+          console.error("Payroll fetch failed:", err);
+        }
       }
     };
 
     fetchPayrolls();
   }, [user, payrollLoaded]);
 
+  // =====================================================
+  // 🔹 CONTEXT PROVIDER
+  // =====================================================
   return (
     <UserContext.Provider
       value={{
@@ -116,11 +134,9 @@ export const UserProvider = ({ children }) => {
         logout,
         loading,
 
-        //  expose holidays
         officeHolidays,
         setOfficeHolidays,
 
-        // payroll
         payrolls,
         setPayrolls,
       }}

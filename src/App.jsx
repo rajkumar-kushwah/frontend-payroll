@@ -22,7 +22,7 @@ import AdminList from './admin/AdminManagment';
 import AddUser from './admin/UserList';
 import WorkScheduleMain from './worksechudel/WorkScheduleMain';
 import AttendancePage from './attendances/AttendancePage';
-import LeaveDashboard from './leaves/LeaveMainPage';
+import LeaveDashboard from './leaves/LeavemainPage';
 import PayrollPage from './payroll/PayrollPage';
 import SecondCounter from './seconds/Second';
 
