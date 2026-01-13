@@ -22,7 +22,7 @@ import AdminList from './admin/AdminManagment';
 import AddUser from './admin/UserList';
 import WorkScheduleMain from './worksechudel/WorkScheduleMain';
 import AttendancePage from './attendances/AttendancePage';
-import LeaveDashboard from './leaves/LeavemainPage';
+import LeavemainPage from './leaves/LeavemainPage';
 import PayrollPage from './payroll/PayrollPage';
 import SecondCounter from './seconds/Second';
 import EditProfile from './profile/EditProfile';
@@ -56,7 +56,7 @@ function App() {
         <Route path='/admin/add-user' element={<ProtectedRoute><AddUser /></ProtectedRoute>} />
         <Route path="/worksechudel" element={<ProtectedRoute><WorkScheduleMain /></ProtectedRoute>} />
         <Route path="/attendance-page" element={<ProtectedRoute><AttendancePage /></ProtectedRoute>} />
-        <Route path="/leave"  element={<ProtectedRoute><LeaveDashboard /></ProtectedRoute>}/>
+        <Route path="/leave"  element={<ProtectedRoute><LeavemainPage /></ProtectedRoute>}/>
         <Route path="/payroll" element={<ProtectedRoute><PayrollPage/></ProtectedRoute>} />
         <Route path='/second' element={<ProtectedRoute><SecondCounter /></ProtectedRoute>}/>
         {/* protected route end */}

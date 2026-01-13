@@ -95,9 +95,10 @@ html.dark .panel,
 html.dark ul,
 html.dark .bg-white,
 html.dark .bg-gray-100,
+
 html.dark .dashboard-bg {
   background-color: #0f1824 !important; /* Dark bg */
-  color: #f2f3f6 !important;           /* White text */
+  color: #dfe1e7 !important;           /* White text */
   border-color: #4b5563 !important;    /* Optional border for dark mode */
 }
 
@@ -113,13 +114,13 @@ html.dark textarea {
 
 
 html.dark span {
-  color:white !important;
+  color:rgb(226, 219, 219) !important;
 }
 html.dark div {
-  color: #c9cccf !important;
+  color: #515d64 !important;
 }
 html.dark i {
-  color: #f8f9fb !important;
+  color: #7384a7 !important;
  
   
 }

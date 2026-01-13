@@ -66,9 +66,9 @@ export default function Employees() {
       {/* ===== TOP BAR ===== */}
       <div className="flex flex-col sm:flex-row justify-between items-center mb-2 text-xs gap-2">
         <div className="flex items-center gap-3">
-          <div>{new Date().toLocaleDateString()}</div>
-          <div className="hidden sm:block">Active: {activeCount}</div>
-          <div className="hidden sm:block">Inactive: {inactiveCount}</div>
+          <p>{new Date().toLocaleDateString()}</p>
+          <p className="hidden sm:block">Active: {activeCount}</p>
+          <p className="hidden sm:block">Inactive: {inactiveCount}</p>
         </div>
 
         {/* Search + Add Button */}
