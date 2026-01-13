@@ -67,3 +67,81 @@
   100% { background-position: 0% 100%; } /* bottom again */
 }
 
+
+
+
+
+
+
+
+
+/* --------------------------
+   Global dark mode
+--------------------------- */
+
+
+/* Body aur all divs, sections, cards, panels */
+html.dark body,
+/* html.dark div, */
+html.dark section,
+html.dark main,
+/* html.dark header, */
+html.dark footer,
+html.dark aside,
+html.dark article,
+html.dark .card,
+html.dark .panel,
+/* html.dark li, */
+html.dark ul,
+html.dark .bg-white,
+html.dark .bg-gray-100,
+html.dark .dashboard-bg {
+  background-color: #0f1824 !important; /* Dark bg */
+  color: #f2f3f6 !important;           /* White text */
+  border-color: #4b5563 !important;    /* Optional border for dark mode */
+}
+
+/* Buttons and inputs */
+/* html.dark button, */
+/* html.dark input, */
+html.dark select,
+html.dark textarea {
+  background-color: #374151 !important; /* Tailwind gray-700 */
+  color: #eef0f2 !important;
+  border-color: #4b5563 !important;
+}
+
+
+html.dark span {
+  color:white !important;
+}
+html.dark div {
+  color: #c9cccf !important;
+}
+html.dark i {
+  color: #f8f9fb !important;
+ 
+  
+}
+html.dark p {
+  color: #c9cccf !important;
+  
+}
+html.dark a {
+  color: #f8f9fb !important;
+}
+html.dark th{
+  color: black;
+}
+html.dark td {
+  color: #c9cccf !important;
+  
+}
+html.dark h2{
+  color: #c9cccf !important;
+}
+html.dark label{
+  color: #c9cccf !important;
+}
+
+

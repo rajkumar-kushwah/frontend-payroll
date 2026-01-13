@@ -10,7 +10,7 @@ const PayrollTable = ({ payrolls = [], onGenerateSlip }) => {
             <th className="px-2 py-2 border-r border-gray-300">Emp Code</th>
             <th className="px-2 py-2 border-r border-gray-300">Employee</th>
             <th className="px-2 py-2 border-r border-gray-300">Month</th>
-            <th className="px-2 py-2 border-r border-gray-300 text-center">Total Work</th>
+            <th className="px-2 py-2 border-r border-gray-300 text-center">Total work days</th>
             <th className="px-2 py-2 border-r border-gray-300 text-center">Present</th>
             <th className="px-2 py-2 border-r border-gray-300 text-center">Leave</th>
             <th className="px-2 py-2 border-r border-gray-300 text-center">Holidays</th>

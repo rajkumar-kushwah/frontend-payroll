@@ -8,7 +8,7 @@ const LeaveFilter = ({ filter, setFilter }) => {
         <button
           key={s}
           onClick={() => setFilter(s)}
-          className={`px-3 py-1 rounded border ${
+          className={`px-3 py-1 rounded border cursor-pointer ${
             filter === s ? "bg-blue-500 text-white" : "bg-white text-gray-700 border-gray-300"
           }`}
         >

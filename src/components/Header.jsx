@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import api from "../utils/api";
 import { useUser } from "../context/UserContext";
-
+import DarkModeToggle from "../darkmode/DarkModeToggle";
 export default function Header({ toggle, isOpen }) {
   const navigate = useNavigate();
   const { user } = useUser();
@@ -125,6 +125,8 @@ export default function Header({ toggle, isOpen }) {
             </div>
           )}
         </div>
+              <div className="dark-mode-toggle flex flex-col items-center mr-52 "><DarkModeToggle/></div>
+
       </div>
 
       <div className="flex items-center gap-2 ml-4 sm:gap-4 relative">
