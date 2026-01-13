@@ -101,16 +101,22 @@ export default function MainAttendancePage() {
       return;
     }
 
+    const today = new Date();
+    const todayStr = today.toISOString().split("T")[0]; // DD-MM-YYYY format
+
     //  CORRECT CONDITION CHECK
-    const alreadyCheckedIn = attendanceList.find(
-      a =>
+    const alreadyCheckedIn = attendanceList.find( a => {
+      const DateStr = new Date(a.date).toISOString().split("T")[0];
+    return (
         a.employeeId?._id === selectedEmployee &&
         a.checkIn &&
-        !a.checkOut
+        !a.checkOut &&
+        DateStr === todayStr
     );
+  });
 
     if (alreadyCheckedIn) {
-      alert("Employee already checked in");
+      alert("Employee already checked in today");
       return;
     }
 
